@@ -770,6 +770,171 @@
       color: var(--teal);
       text-decoration: none;
     }
+
+    /* ── SPEAKERS TAB ── */
+    .speakers-search-wrap {
+      padding: 0.75rem 0.75rem 0.5rem;
+    }
+
+    .speakers-search {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      padding: 0.65rem 1rem 0.65rem 2.4rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,247,235,0.3)' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 0.75rem center;
+    }
+    .speakers-search:focus { border-color: var(--teal); }
+    .speakers-search::placeholder { color: var(--text-dim); }
+
+    .speakers-count {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem 0.5rem;
+    }
+
+    .speaker-item {
+      margin: 0 0.75rem 0.45rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .speaker-item.expanded { border-color: var(--border-active); }
+
+    .speaker-trigger {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+      min-height: 56px;
+    }
+
+    .speaker-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--teal);
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .speaker-info { flex: 1; min-width: 0; }
+
+    .speaker-name {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .speaker-role {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-top: 0.18rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .speaker-chevron {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      flex-shrink: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .speaker-item.expanded .speaker-chevron { transform: rotate(180deg); }
+
+    .speaker-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .speaker-body-inner {
+      padding: 0 1rem 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .speaker-company {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin: 0.65rem 0 0.6rem;
+      padding: 0.3rem 0.7rem;
+      background: var(--teal-dim);
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--teal);
+    }
+
+    .speaker-sessions-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.45rem;
+    }
+
+    .speaker-session-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.28rem 0.65rem;
+      background: rgba(255, 247, 235, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin: 0 0.35rem 0.35rem 0;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .speaker-session-chip:hover { background: rgba(7, 168, 168, 0.12); color: var(--teal); }
+
+    .speaker-session-time {
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: 0.68rem;
+    }
+
+    .speakers-empty {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
   </style>
 </head>
 <body>
@@ -784,8 +949,9 @@
     </div>
     <nav class="tab-nav" role="tablist">
       <button class="tab-btn active" role="tab" data-tab="schedule" aria-selected="true">Schedule</button>
+      <button class="tab-btn" role="tab" data-tab="speakers" aria-selected="false">Speakers</button>
       <button class="tab-btn" role="tab" data-tab="notes" aria-selected="false">
-        My Notes <span class="note-count" id="noteCount"></span>
+        Notes <span class="note-count" id="noteCount"></span>
       </button>
     </nav>
   </header>
@@ -801,6 +967,14 @@
         <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener">emwhawaii.com</a>
         &nbsp;·&nbsp; Presented by Blue Startups
       </footer>
+    </section>
+
+    <section id="speakersTab" class="tab-content" role="tabpanel">
+      <div class="speakers-search-wrap">
+        <input class="speakers-search" type="search" id="speakerSearch" placeholder="Search speakers…" aria-label="Search speakers">
+      </div>
+      <p class="speakers-count" id="speakersCount"></p>
+      <div id="speakersList"></div>
     </section>
 
     <section id="notesTab" class="tab-content" role="tabpanel">
@@ -1483,6 +1657,7 @@
         p.classList.toggle('active', p.id === target + 'Tab');
       });
       if (target === 'notes') renderNotesTab();
+      if (target === 'speakers') renderSpeakers(document.getElementById('speakerSearch').value);
     });
   });
 
@@ -1529,6 +1704,151 @@
       document.execCommand('copy');
       finish();
     }
+  });
+
+  // ──────────────────────────────────────────────────────────
+  //  SPEAKERS DATA  —  Thursday April 9 presenters
+  // ──────────────────────────────────────────────────────────
+  const SPEAKERS = [
+    { name: "Abigail Wen",        role: "Author & Filmmaker",               company: "New York Times Bestselling Author",     sessions: ["thu-11"] },
+    { name: "Alex Fielding",      role: "Chief Executive Officer",           company: "Privateer",                            sessions: ["thu-08"] },
+    { name: "Angela Laprete",     role: "Producer",                          company: "ICAN",                                 sessions: ["thu-12"] },
+    { name: "Ashley Lukens",      role: "Director",                          company: "Ashley Lukens Consulting",             sessions: ["thu-02"] },
+    { name: "Bill Bryant",        role: "General Partner",                   company: "Threshold Ventures",                   sessions: ["thu-14", "thu-19"] },
+    { name: "Bill Reichert",      role: "General Partner",                   company: "Pegasus Tech Ventures",                sessions: ["thu-20", "thu-21"] },
+    { name: "Brent Freeman",      role: "Founder & CEO",                     company: "Alchemy of Joy",                       sessions: ["thu-10", "thu-17"] },
+    { name: "Brian Keaulana",     role: "Producer",                          company: "ICAN",                                 sessions: ["thu-12"] },
+    { name: "Chenoa Farnsworth",  role: "Managing Partner",                  company: "Blue Startups",                        sessions: ["thu-04", "thu-22"] },
+    { name: "Chris Yeh",          role: "Founding Partner",                  company: "Blitzscaling Ventures",                sessions: ["thu-15"] },
+    { name: "Dan Dan Li",         role: "Founder",                           company: "Popshop Live",                         sessions: ["thu-11"] },
+    { name: "David Holt",         role: "Program Director",                  company: "Blue Startups",                        sessions: ["thu-04", "thu-22"] },
+    { name: "Helena Janulis",     role: "Director of Operations",            company: "Investable Oceans",                    sessions: ["thu-07"] },
+    { name: "Henk Rogers",        role: "Founder",                           company: "Blue Planet Alliance",                 sessions: ["thu-08"] },
+    { name: "Holly Liu",          role: "Co-founder",                        company: "VENN",                                 sessions: ["thu-11"] },
+    { name: "James Tokioka",      role: "Director",                          company: "Hawaiʻi DBEDT",                        sessions: ["thu-06"] },
+    { name: "Jeannie Yang",       role: "Ex-SVP Product & CPO",              company: "Smule",                                sessions: ["thu-11"] },
+    { name: "John Lim",           role: "Chief Strategy Officer",            company: "Pegasus Tech Ventures",                sessions: ["thu-18"] },
+    { name: "Keyvan Peymani",     role: "VC Facilitator",                    company: "VC 1-on-1 Meetings",                   sessions: ["thu-14"] },
+    { name: "Maya Rogers",        role: "President & CEO",                   company: "Tetris",                               sessions: ["thu-04", "thu-20", "thu-22"] },
+    { name: "Miki Hardisty",      role: "Co-founder & CEO",                  company: "ʻŌlelo Intelligence",                  sessions: ["thu-20"] },
+    { name: "Paʻa Sibbett",       role: "Writer & Creator",                  company: "Chief of War (Apple TV+)",             sessions: ["thu-12"] },
+    { name: "Rayfe Gaspar-Asaoka",role: "Partner",                           company: "Geodesic Capital",                     sessions: ["thu-14", "thu-19"] },
+    { name: "Rich Robinson",      role: "Entrepreneur-in-Residence",         company: "Animoca Brands",                       sessions: ["thu-20"] },
+    { name: "Summer Kim",         role: "Partner & Head of User Research",   company: "StratMinds VC",                        sessions: ["thu-14", "thu-19"] },
+    { name: "Tey Bannerman",      role: "Human-Centred AI Advisor",          company: "McKinsey & Company",                   sessions: ["thu-16"] },
+    { name: "Tim Draper",         role: "Founder",                           company: "Draper Associates",                    sessions: ["thu-09"] },
+    { name: "Trung Lam",          role: "Executive Director",                company: "Hawaii Technology Development Corp.",  sessions: ["thu-07"] },
+  ].sort((a, b) => a.name.localeCompare(b.name));
+
+  function initials(name) {
+    return name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+  }
+
+  function sessionTitle(id) {
+    const s = SCHEDULE.find(s => s.id === id);
+    return s ? s.title : id;
+  }
+
+  function sessionTime(id) {
+    const s = SCHEDULE.find(s => s.id === id);
+    return s ? s.time : '';
+  }
+
+  function renderSpeakers(filter = '') {
+    const q = filter.toLowerCase().trim();
+    const list = q
+      ? SPEAKERS.filter(s => s.name.toLowerCase().includes(q) || s.company.toLowerCase().includes(q) || s.role.toLowerCase().includes(q))
+      : SPEAKERS;
+
+    const countEl = document.getElementById('speakersCount');
+    countEl.textContent = `${list.length} speaker${list.length !== 1 ? 's' : ''} · Thursday Apr 9`;
+
+    if (list.length === 0) {
+      document.getElementById('speakersList').innerHTML = `<div class="speakers-empty">No speakers match "${esc(filter)}"</div>`;
+      return;
+    }
+
+    document.getElementById('speakersList').innerHTML = list.map(sp => {
+      const sid = 'spk-' + sp.name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+      const chips = sp.sessions.map(id => `
+        <span class="speaker-session-chip" data-session-id="${id}" role="button" tabindex="0">
+          <span class="speaker-session-time">${esc(sessionTime(id))}</span>
+          ${esc(sessionTitle(id))}
+        </span>
+      `).join('');
+      return `
+        <div class="speaker-item" id="${sid}">
+          <button class="speaker-trigger" aria-expanded="false" data-spk="${sid}">
+            <div class="speaker-avatar" aria-hidden="true">${initials(sp.name)}</div>
+            <div class="speaker-info">
+              <div class="speaker-name">${esc(sp.name)}</div>
+              <div class="speaker-role">${esc(sp.role)} · ${esc(sp.company)}</div>
+            </div>
+            <span class="speaker-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="speaker-body" id="spkbody-${sid}">
+            <div class="speaker-body-inner">
+              <div class="speaker-company">🏢 ${esc(sp.company)}</div>
+              <p class="speaker-sessions-label">Sessions on Thursday</p>
+              <div>${chips}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Accordion
+    document.querySelectorAll('.speaker-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.spk;
+        const item = document.getElementById(id);
+        const body = document.getElementById('spkbody-' + id);
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+          btn.setAttribute('aria-expanded', 'false');
+          item.classList.remove('expanded');
+        } else {
+          body.style.maxHeight = body.scrollHeight + 500 + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+          item.classList.add('expanded');
+        }
+      });
+    });
+
+    // Session chips → jump to schedule
+    document.querySelectorAll('.speaker-session-chip').forEach(chip => {
+      const jump = () => {
+        const sessionId = chip.dataset.sessionId;
+        // Switch to schedule tab
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          const isSchedule = b.dataset.tab === 'schedule';
+          b.classList.toggle('active', isSchedule);
+          b.setAttribute('aria-selected', isSchedule ? 'true' : 'false');
+        });
+        document.querySelectorAll('.tab-content').forEach(p => {
+          p.classList.toggle('active', p.id === 'scheduleTab');
+        });
+        // Open the session accordion then scroll to it
+        setTimeout(() => {
+          const item = document.getElementById('item-' + sessionId);
+          if (!item) return;
+          const trigger = item.querySelector('.session-trigger');
+          if (trigger && trigger.getAttribute('aria-expanded') !== 'true') {
+            toggleSession(sessionId);
+          }
+          item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 80);
+      };
+      chip.addEventListener('click', jump);
+      chip.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') jump(); });
+    });
+  }
+
+  // Search
+  document.getElementById('speakerSearch').addEventListener('input', e => {
+    renderSpeakers(e.target.value);
   });
 
   // ──────────────────────────────────────────────────────────
