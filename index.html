@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>EMW 2026 — Student Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #001329;
+      --surface: #002040;
+      --surface-elevated: #0a2a4a;
+      --surface-input: #0d2d50;
+      --primary: #003571;
+      --teal: #07a8a8;
+      --teal-dim: rgba(7, 168, 168, 0.15);
+      --orange: #c8531d;
+      --orange-dim: rgba(200, 83, 29, 0.15);
+      --lime: #afcd53;
+      --lime-dim: rgba(175, 205, 83, 0.15);
+      --text: #fff7eb;
+      --text-muted: rgba(255, 247, 235, 0.55);
+      --text-dim: rgba(255, 247, 235, 0.32);
+      --border: rgba(255, 247, 235, 0.08);
+      --border-active: rgba(7, 168, 168, 0.35);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font-display: 'Sen', sans-serif;
+      --font-body: 'Manrope', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding-top: env(safe-area-inset-top, 0);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem 0.75rem;
+      gap: 1rem;
+    }
+
+    .conference-name {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .conference-meta {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .header-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--teal-dim);
+      color: var(--teal);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .header-link:hover { background: rgba(7, 168, 168, 0.25); }
+
+    /* ── TAB NAV ── */
+    .tab-nav {
+      display: flex;
+      border-top: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      min-height: 44px;
+    }
+
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 12%;
+      right: 12%;
+      height: 2px;
+      background: var(--teal);
+      transform: scaleX(0);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 2px;
+    }
+
+    .tab-btn.active { color: var(--teal); }
+    .tab-btn.active::after { transform: scaleX(1); }
+
+    .note-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal);
+      color: var(--bg);
+      border-radius: 999px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      font-family: var(--font-display);
+      line-height: 1;
+    }
+    .note-count:empty { display: none; }
+
+    /* ── TAB PANELS ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── MAIN ── */
+    main {
+      padding: 0 0 6rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ── DATE HEADER ── */
+    .date-header {
+      padding: 1.25rem 1.25rem 0.75rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .date-label {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .date-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ── SESSION ITEM ── */
+    .session-item {
+      margin: 0 0.75rem 0.5rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: border-color 0.25s;
+    }
+
+    .session-item.expanded {
+      border-color: var(--border-active);
+    }
+
+    .session-item.type-meal,
+    .session-item.type-break,
+    .session-item.type-background {
+      opacity: 0.6;
+    }
+
+    /* ── SESSION TRIGGER ── */
+    .session-trigger {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      user-select: none;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+      min-height: 58px;
+    }
+
+    .session-time {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+      padding-top: 0.25rem;
+      min-width: 54px;
+      letter-spacing: 0.03em;
+    }
+
+    .session-main { flex: 1; min-width: 0; }
+
+    .session-badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.3rem;
+    }
+
+    .badge-keynote      { background: var(--orange-dim);               color: #e07840; }
+    .badge-fireside     { background: rgba(0, 53, 113, 0.45);          color: #6aabdf; }
+    .badge-panel        { background: var(--teal-dim);                 color: var(--teal); }
+    .badge-pitch        { background: rgba(200, 83, 29, 0.2);          color: #e07840; }
+    .badge-roundtable   { background: var(--lime-dim);                 color: var(--lime); }
+    .badge-networking   { background: rgba(175, 205, 83, 0.1);         color: #c4df6a; }
+    .badge-mindfulness  { background: rgba(91, 211, 162, 0.12);        color: #5bd3a2; }
+    .badge-ceremony     { background: rgba(255, 200, 80, 0.13);        color: #ffc850; }
+    .badge-meal         { background: rgba(255, 247, 235, 0.06);       color: var(--text-dim); }
+    .badge-break        { background: rgba(255, 247, 235, 0.06);       color: var(--text-dim); }
+    .badge-welcome      { background: var(--teal-dim);                 color: var(--teal); }
+    .badge-presentation { background: rgba(0, 53, 113, 0.45);          color: #6aabdf; }
+    .badge-announcement { background: rgba(255, 247, 235, 0.06);       color: var(--text-dim); }
+    .badge-background   { background: rgba(255, 247, 235, 0.04);       color: var(--text-dim); }
+
+    .session-title {
+      font-family: var(--font-display);
+      font-size: 0.93rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+      display: block;
+    }
+
+    .session-speaker {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      font-weight: 500;
+      display: block;
+    }
+
+    .session-chevron {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      padding-top: 0.35rem;
+      flex-shrink: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .session-item.expanded .session-chevron { transform: rotate(180deg); }
+
+    /* ── SESSION BODY (accordion) ── */
+    .session-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .session-body-inner {
+      padding: 0 1rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .session-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      padding: 0.75rem 0 0.65rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .meta-icon { font-size: 0.82rem; }
+
+    .session-description {
+      font-size: 0.84rem;
+      line-height: 1.68;
+      color: rgba(255, 247, 235, 0.75);
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── SUB-ITEMS ── */
+    .sub-items-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin: 0.25rem 0 0.5rem;
+    }
+
+    .sub-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .sub-item {
+      padding: 0.55rem 0.75rem;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: var(--radius-sm);
+      border-left: 2px solid var(--teal);
+    }
+
+    .sub-item-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .sub-item-speaker {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.18rem;
+    }
+
+    /* ── SESSION ACTIONS ── */
+    .session-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ── STUDENT SUMMARY ── */
+    .summary-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--lime-dim);
+      border: 1px solid rgba(175, 205, 83, 0.2);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--lime);
+      font-family: var(--font-body);
+      font-size: 0.79rem;
+      font-weight: 600;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+      min-height: 44px;
+    }
+    .summary-toggle:hover { background: rgba(175, 205, 83, 0.12); }
+
+    .summary-toggle .s-chevron {
+      margin-left: auto;
+      font-size: 0.68rem;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: rgba(175, 205, 83, 0.6);
+    }
+    .summary-toggle.open .s-chevron { transform: rotate(180deg); }
+
+    .summary-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .summary-text {
+      padding: 0.75rem;
+      background: rgba(175, 205, 83, 0.05);
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      font-size: 0.82rem;
+      line-height: 1.68;
+      color: rgba(255, 247, 235, 0.85);
+      border: 1px solid rgba(175, 205, 83, 0.15);
+      border-top: none;
+    }
+
+    /* ── NOTE SECTION ── */
+    .note-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--teal-dim);
+      border: 1px solid rgba(7, 168, 168, 0.2);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--teal);
+      font-family: var(--font-body);
+      font-size: 0.79rem;
+      font-weight: 600;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+      min-height: 44px;
+    }
+    .note-toggle:hover { background: rgba(7, 168, 168, 0.12); }
+
+    .note-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--teal);
+      border-radius: 50%;
+      margin-left: auto;
+      display: none;
+      flex-shrink: 0;
+    }
+    .note-toggle.has-note .note-dot { display: block; }
+
+    .note-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .note-inner {
+      padding-top: 0.5rem;
+    }
+
+    .note-textarea {
+      width: 100%;
+      background: var(--surface-input);
+      border: 1px solid rgba(7, 168, 168, 0.2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      padding: 0.65rem 0.8rem;
+      resize: none;
+      min-height: 90px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .note-textarea:focus { border-color: var(--teal); }
+    .note-textarea::placeholder { color: var(--text-dim); }
+
+    .note-save-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      margin-top: 0.45rem;
+      padding: 0.5rem 1.1rem;
+      background: var(--teal);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s, transform 0.12s;
+      min-height: 44px;
+    }
+    .note-save-btn:hover { opacity: 0.9; }
+    .note-save-btn:active { transform: scale(0.97); }
+
+    /* ── EXT LINK ── */
+    .ext-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      background: rgba(255, 247, 235, 0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.76rem;
+      font-weight: 600;
+      min-height: 44px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .ext-link:hover { background: rgba(255, 247, 235, 0.1); color: var(--text); }
+
+    /* ── NOTES TAB ── */
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.25rem 0.75rem;
+    }
+
+    .notes-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.5rem 1rem;
+      background: var(--teal);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+      min-height: 44px;
+    }
+    .export-btn:hover { opacity: 0.9; }
+
+    .notes-empty {
+      text-align: center;
+      padding: 3.5rem 2rem;
+      color: var(--text-dim);
+    }
+
+    .notes-empty-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+
+    .notes-empty p { font-size: 0.88rem; line-height: 1.7; }
+
+    .notes-empty strong { color: var(--teal); font-weight: 600; }
+
+    .note-card {
+      margin: 0 0.75rem 0.5rem;
+      padding: 0.9rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .note-card-time {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .note-card-session {
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+
+    .note-card-text {
+      font-size: 0.85rem;
+      line-height: 1.68;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .note-card-delete {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.75rem;
+      padding: 0.35rem 0.7rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      font-family: var(--font-body);
+      min-height: 36px;
+    }
+    .note-card-delete:hover {
+      background: rgba(200, 83, 29, 0.1);
+      color: var(--orange);
+      border-color: rgba(200, 83, 29, 0.3);
+    }
+
+    /* ── EXPORT MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 19, 41, 0.85);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .modal-overlay.hidden { display: none; }
+
+    .modal-sheet {
+      background: var(--surface);
+      border: 1px solid var(--border-active);
+      border-radius: var(--radius) var(--radius) var(--radius-sm) var(--radius-sm);
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      max-height: 78dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-top-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .modal-close {
+      background: rgba(255, 247, 235, 0.08);
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: rgba(255, 247, 235, 0.15); }
+
+    .modal-body { flex: 1; overflow: auto; padding: 1rem 1.25rem 0.5rem; }
+
+    .modal-hint {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+    }
+
+    .export-textarea {
+      width: 100%;
+      height: 240px;
+      background: var(--surface-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      padding: 0.75rem;
+      resize: none;
+      outline: none;
+    }
+
+    .modal-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+
+    .copy-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--teal);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s, background 0.3s;
+      min-height: 50px;
+    }
+    .copy-btn:hover { opacity: 0.9; }
+    .copy-btn.copied { background: var(--lime); color: var(--bg); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--lime);
+      color: var(--bg);
+      padding: 0.55rem 1.25rem;
+      border-radius: 999px;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.22s, transform 0.22s;
+      pointer-events: none;
+      z-index: 300;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── FOOTER ── */
+    .app-footer {
+      text-align: center;
+      padding: 1.5rem 1.25rem 2rem;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .app-footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div>
+        <span class="conference-name">East Meets West</span>
+        <span class="conference-meta">2026 · Thursday, Apr 9 · Sheraton Waikiki</span>
+      </div>
+      <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener" class="header-link" title="Official EMW site">↗</a>
+    </div>
+    <nav class="tab-nav" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="schedule" aria-selected="true">Schedule</button>
+      <button class="tab-btn" role="tab" data-tab="notes" aria-selected="false">
+        My Notes <span class="note-count" id="noteCount"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="scheduleTab" class="tab-content active" role="tabpanel">
+      <div class="date-header">
+        <span class="date-label">Thursday, April 9</span>
+        <span class="date-sub">Sheraton Waikiki · Honolulu, Hawaiʻi</span>
+      </div>
+      <div id="scheduleList"></div>
+      <footer class="app-footer">
+        <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener">emwhawaii.com</a>
+        &nbsp;·&nbsp; Presented by Blue Startups
+      </footer>
+    </section>
+
+    <section id="notesTab" class="tab-content" role="tabpanel">
+      <div class="notes-header">
+        <span class="notes-title">My Notes</span>
+        <button class="export-btn" id="exportBtn">Export ↓</button>
+      </div>
+      <div id="notesList"></div>
+    </section>
+  </main>
+
+  <!-- Export modal -->
+  <div class="modal-overlay hidden" id="exportModal" role="dialog" aria-modal="true" aria-label="Export your notes">
+    <div class="modal-sheet">
+      <div class="modal-top">
+        <span class="modal-top-title">Export My Notes</span>
+        <button class="modal-close" id="closeModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint">Select all and copy, or use the button below.</p>
+        <textarea class="export-textarea" id="exportTextarea" readonly aria-label="Your notes formatted for export"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  // ──────────────────────────────────────────────────────────
+  //  SCHEDULE DATA  —  East Meets West 2026, Thursday Apr 9
+  // ──────────────────────────────────────────────────────────
+  const SCHEDULE = [
+    {
+      id: "thu-01",
+      time: "7:00 AM",
+      timeEnd: "4:00 PM",
+      title: "Exhibitors Hall Open",
+      type: "background",
+      speaker: "AEP Hawaii · Alchemy of Joy · Blue Startups · Hawaii Angels · Morgan Stanley · Vensure · VENN · NEC X · Pegasus Tech Ventures",
+      location: "Foyer",
+      description: "The exhibition hall is open throughout the entire day in the foyer. Featuring booths from AEP Hawaii, Alchemy of Joy, Blue Startups, Hawaii Angels, Morgan Stanley, Vensure Employer Solutions, VENN, NEC X, and Pegasus Tech Ventures.",
+      studentSummary: "Walk through the Foyer any time to meet the organizations sponsoring the conference. Pick up business cards, ask what they do, and explore different career paths in tech, venture capital, and sustainability. Don't be shy — everyone here is happy to talk.",
+      subItems: []
+    },
+    {
+      id: "thu-02",
+      time: "7:30 AM",
+      timeEnd: "8:55 AM",
+      title: "Women's Breakfast",
+      type: "meal",
+      speaker: "Ashley Lukens (host)",
+      location: "Ballroom D",
+      description: "A breakfast gathering hosted by Ashley Lukens, Director of Ashley Lukens Consulting. Designed to connect women in tech, entrepreneurship, and leadership before the main conference begins.",
+      studentSummary: "A networking breakfast specifically for women at the conference, hosted by leadership consultant Ashley Lukens.",
+      subItems: []
+    },
+    {
+      id: "thu-03",
+      time: "8:00 AM",
+      timeEnd: "9:15 AM",
+      title: "Registration & Coffee",
+      type: "meal",
+      speaker: "",
+      location: "Foyer",
+      description: "Check-in and badge pickup. Coffee and light refreshments available in the foyer while you get settled.",
+      studentSummary: "Grab your badge and a coffee before the conference kicks off. Good time to look around and get oriented.",
+      subItems: []
+    },
+    {
+      id: "thu-04",
+      time: "9:15 AM",
+      timeEnd: "9:20 AM",
+      title: "Welcome to East Meets West",
+      type: "welcome",
+      speaker: "Chenoa Farnsworth · David Holt · Maya Rogers",
+      location: "Main Stage",
+      description: "Opening remarks from the conference organizers at Blue Startups, welcoming attendees to East Meets West 2026. Featuring managing partner Chenoa Farnsworth, program director David Holt, and Maya Rogers (President & CEO of Tetris).",
+      studentSummary: "The official kick-off of the day! The organizers — Chenoa Farnsworth (who runs Blue Startups, a Hawaiʻi startup accelerator), David Holt, and Maya Rogers (yes, the CEO of the company that makes Tetris) — welcome everyone and set the tone for what's ahead.",
+      subItems: []
+    },
+    {
+      id: "thu-05",
+      time: "9:20 AM",
+      timeEnd: "9:25 AM",
+      title: "Opening Oli",
+      type: "ceremony",
+      speaker: "",
+      location: "Main Stage",
+      description: "A traditional Hawaiian chant (oli) performed to bless the gathering and honor the land of Hawaiʻi where the event is held.",
+      studentSummary: "An oli is a Hawaiian chant — a living tradition used to set intention, honor the place, and connect the people gathering here. This kind of cultural opening is common at events in Hawaiʻi and reflects the values of the host community. It only lasts a few minutes but it's meaningful.",
+      subItems: []
+    },
+    {
+      id: "thu-06",
+      time: "9:25 AM",
+      timeEnd: "9:30 AM",
+      title: "Hawaiʻi State DBEDT Director Welcome",
+      type: "presentation",
+      speaker: "James Tokioka",
+      location: "Main Stage",
+      description: "Welcome remarks from James Tokioka, Director of the Hawaiʻi Department of Business, Economic Development & Tourism (DBEDT) — the state agency responsible for growing Hawaiʻi's economy.",
+      studentSummary: "James Tokioka runs the state agency in charge of growing Hawaiʻi's economy and attracting business. The fact that he's here signals that the state government actively supports the tech and startup ecosystem — it's not just a private party, it's part of Hawaiʻi's economic strategy.",
+      subItems: []
+    },
+    {
+      id: "thu-07",
+      time: "9:30 AM",
+      timeEnd: "9:50 AM",
+      title: "Launching Prosperity: Hawaiʻi's Space and Blue Economy Strategy",
+      type: "panel",
+      speaker: "Trung Lam · Helena Janulis",
+      location: "Main Stage",
+      description: "A panel on how Hawaiʻi is positioning itself as a center for the space economy and ocean-based industries. Trung Lam is Executive Director of the Hawaii Technology Development Corporation (HTDC); Helena Janulis is Director of Operations at Investable Oceans.",
+      studentSummary: "Hawaiʻi isn't just beaches and tourism — it's becoming a hub for space launches and ocean tech. The state's location near the equator is great for rocket launches, and being surrounded by the Pacific Ocean makes it ideal for ocean-monitoring and underwater robotics. This session explains the economic strategy behind it.",
+      subItems: []
+    },
+    {
+      id: "thu-08",
+      time: "9:50 AM",
+      timeEnd: "10:15 AM",
+      title: "From Hawaiʻi to Orbit: Building the Future of Space",
+      type: "fireside",
+      speaker: "Henk Rogers · Alex Fielding",
+      location: "Main Stage",
+      description: "A fireside conversation on the growing commercial space economy. Henk Rogers is the entrepreneur who licensed Tetris globally and founded the Blue Planet Alliance, a clean energy nonprofit. Alex Fielding is CEO of Privateer, a company that maps and tracks space debris orbiting Earth.",
+      studentSummary: "Henk Rogers is the guy who brought Tetris to the world in the 1980s — and now he's working on clean energy and space. Alex Fielding's company Privateer tracks thousands of pieces of junk (old satellites, rocket parts) flying around Earth at 17,000 mph. Space debris is a real problem: if we don't fix it, we could lose the ability to use space at all. This talk covers the next frontier of the space economy.",
+      subItems: []
+    },
+    {
+      id: "thu-09",
+      time: "10:15 AM",
+      timeEnd: "10:45 AM",
+      title: "Fireside Chat with Tim Draper",
+      type: "fireside",
+      speaker: "Tim Draper",
+      location: "Main Stage",
+      description: "A conversation with venture capitalist Tim Draper, founder of Draper Associates — one of the most influential VC firms in Silicon Valley. Known for early bets on Tesla, SpaceX, Skype, Baidu, and Bitcoin before any of them were household names.",
+      studentSummary: "Tim Draper is legendary in the startup world. He invested in Tesla, SpaceX, and Bitcoin when almost nobody believed in them. He's also known for bold, unconventional ideas — like proposing that California be split into separate states, and moving to El Salvador when it adopted Bitcoin. This is a rare chance to hear how a top investor actually thinks about spotting the future before it arrives.",
+      subItems: []
+    },
+    {
+      id: "thu-10",
+      time: "10:45 AM",
+      timeEnd: "11:05 AM",
+      title: "Mindfulness Intro and Interlude",
+      type: "mindfulness",
+      speaker: "Brent Freeman",
+      location: "Main Stage",
+      description: "A guided mindfulness and breathwork session with Brent Freeman, Founder & CEO of Alchemy of Joy. Designed to give attendees a mental reset before the next set of sessions.",
+      studentSummary: "Brent Freeman teaches mindfulness practices used by top executives and founders to reduce stress and stay sharp. This short session is basically a mental reset: breathing exercises and a moment to be fully present. Even if this sounds unfamiliar, give it a try — it's short, and actually works.",
+      subItems: []
+    },
+    {
+      id: "thu-11",
+      time: "11:20 AM",
+      timeEnd: "11:55 AM",
+      title: "Intersection of Entertainment and AI",
+      type: "panel",
+      speaker: "Holly Liu · Dan Dan Li · Jeannie Yang · Abigail Wen",
+      location: "Main Stage",
+      description: "A panel on how artificial intelligence is reshaping entertainment, storytelling, and creative industries. Featuring Holly Liu (Co-founder, VENN gaming network), Dan Dan Li (Founder, Popshop Live), Jeannie Yang (Ex-SVP Product & CPO, Smule), and Abigail Wen (NYT bestselling author and filmmaker).",
+      studentSummary: "AI is changing how movies, music, games, books, and social media get made. This panel brings together a gaming network co-founder, a live-shopping platform founder, an app music executive, and a bestselling author/filmmaker to debate what AI means for creative work. Will AI replace creators, or become their most powerful tool? And what happens to human originality?",
+      subItems: []
+    },
+    {
+      id: "thu-12",
+      time: "11:55 AM",
+      timeEnd: "12:30 PM",
+      title: "A Conversation with the Writer/Creator of Chief of War",
+      type: "panel",
+      speaker: "Paʻa Sibbett · Angela Laprete · Brian Keaulana",
+      location: "Main Stage",
+      description: "A discussion with the creative team behind 'Chief of War,' a major Apple TV+ series depicting Hawaiʻi's history from a Native Hawaiian perspective. Featuring writer/creator Paʻa Sibbett and producers Angela Laprete and Brian Keaulana from ICAN.",
+      studentSummary: "Chief of War is an Apple TV+ series that tells Hawaiʻi's pre-contact and colonial history from a Native Hawaiian point of view — the first time this story has been told at this scale for mainstream TV. The creators talk about the responsibility of representing indigenous culture accurately, the years it took to get Hollywood to fund it, and what it means for Hawaiian identity and pride.",
+      subItems: []
+    },
+    {
+      id: "thu-13",
+      time: "12:35 PM",
+      timeEnd: "1:30 PM",
+      title: "Lunch @ Sheraton",
+      type: "meal",
+      speaker: "",
+      location: "Hawaii Ballroom",
+      description: "Lunch break served in the Hawaii Ballroom. A great opportunity to decompress and connect with other attendees in a relaxed setting.",
+      studentSummary: "Lunch in the Hawaii Ballroom. This is prime networking time — less formal than the main sessions. Challenge yourself to sit near someone new and ask them what brought them here. Most people at conferences love talking about their work when someone genuinely asks.",
+      subItems: []
+    },
+    {
+      id: "thu-14",
+      time: "1:30 PM",
+      timeEnd: "2:15 PM",
+      title: "VC 1-on-1 Meetings",
+      type: "networking",
+      speaker: "Keyvan Peymani · Summer Kim · Tom Toy · Bill Bryant + more",
+      location: "Designated Area",
+      description: "Startup founders meet venture capitalists for scheduled one-on-one pitch conversations. VC firms represented include Animoca Brands, StratMinds VC, SCV × SBI, Threshold Ventures, SuccessVP, OM.VC, Kamehameha Schools, Moment Ventures, Geodesic Capital, Builders VC, Quest Venture Partners, Hawaii Angels, Tenacity Venture Capital, and Mana Up.",
+      studentSummary: "This is where startup founders get face time with investors who could fund their companies. Venture capitalists (VCs) give money to early-stage startups in exchange for a small percentage of the company. The founders have usually prepared an 'elevator pitch' — a 2-minute summary of their idea, why it matters, and how they'll make money. If you're curious about how startups actually get funded, this is happening in real time nearby.",
+      subItems: [
+        { title: "Animoca Brands", speaker: "Web3 & gaming investments" },
+        { title: "StratMinds VC", speaker: "Summer Kim — deep tech & research" },
+        { title: "Threshold Ventures", speaker: "Bill Bryant — enterprise software" },
+        { title: "Geodesic Capital", speaker: "Rayfe Gaspar-Asaoka — growth-stage" },
+        { title: "Hawaii Angels", speaker: "Local angel investing network" },
+        { title: "Kamehameha Schools", speaker: "Impact investing for Hawaiʻi" },
+        { title: "Tenacity Venture Capital", speaker: "Early-stage tech" },
+        { title: "Mana Up", speaker: "Hawaiʻi-focused product accelerator" }
+      ]
+    },
+    {
+      id: "thu-15",
+      time: "1:45 PM",
+      timeEnd: "2:15 PM",
+      title: "Blitzscaling: The Sequel",
+      type: "keynote",
+      speaker: "Chris Yeh",
+      location: "Main Stage",
+      description: "A keynote by Chris Yeh, founding partner of Blitzscaling Ventures and co-author (with LinkedIn co-founder Reid Hoffman) of the book 'Blitzscaling.' Presents updated thinking on how companies scale from startup to global giant at extraordinary speed.",
+      studentSummary: "Blitzscaling is the strategy Uber, Airbnb, and LinkedIn used to grow so fast they dominated their markets before anyone could catch up — even if it meant losing money for years. Chris Yeh co-wrote the book on it. This keynote updates the playbook for today: what's changed, what still works, and what new companies need to understand about growing fast in the AI era.",
+      subItems: []
+    },
+    {
+      id: "thu-16",
+      time: "2:15 PM",
+      timeEnd: "2:45 PM",
+      title: "The Navigator's Playbook: Being Human in the Age of AI",
+      type: "keynote",
+      speaker: "Tey Bannerman",
+      location: "Main Stage",
+      description: "A keynote by Tey Bannerman, a human-centred AI advisor at McKinsey & Company, on how people and organizations can navigate AI-driven change while staying grounded in what makes us uniquely human.",
+      studentSummary: "As AI takes over more tasks, the big question is: what are humans actually for? Tey Bannerman works at McKinsey helping some of the world's biggest companies figure this out. The talk is about which skills, mindsets, and habits will be most valuable in an AI world — and why being deeply human (empathy, judgment, creativity, ethics) is actually a competitive advantage, not a weakness.",
+      subItems: []
+    },
+    {
+      id: "thu-17",
+      time: "2:45 PM",
+      timeEnd: "3:00 PM",
+      title: "Mindfulness Interlude",
+      type: "mindfulness",
+      speaker: "Brent Freeman",
+      location: "Main Stage",
+      description: "A brief mindfulness break with Brent Freeman of Alchemy of Joy — a second reset before the afternoon's final sessions.",
+      studentSummary: "Another short mindfulness break with Brent Freeman. After a full day of information, this is a chance to recharge before the big finish: the startup pitch competition.",
+      subItems: []
+    },
+    {
+      id: "thu-18",
+      time: "3:15 PM",
+      timeEnd: "3:30 PM",
+      title: "Pegasus Tech Ventures Introduction",
+      type: "presentation",
+      speaker: "John Lim",
+      location: "Main Stage",
+      description: "Introduction to Pegasus Tech Ventures — the title sponsor of East Meets West 2026 — by Chief Strategy Officer John Lim. Pegasus runs the global Startup World Cup competition.",
+      studentSummary: "Pegasus Tech Ventures is the main funder of this conference. They're also the organization behind the Startup World Cup — a global pitch competition with regional rounds on every continent, with the final in San Francisco. John Lim explains what Pegasus does and sets up the regional pitch competition that's about to happen.",
+      subItems: []
+    },
+    {
+      id: "thu-19",
+      time: "3:30 PM",
+      timeEnd: "4:30 PM",
+      title: "Startup World Cup Hawaiʻi Regional",
+      type: "pitch",
+      speaker: "Judges: Rayfe Gaspar-Asaoka · Summer Kim · Bill Bryant",
+      location: "Main Stage",
+      description: "The Startup World Cup Hawaiʻi Regional — a live pitch competition where Hawaiʻi-based startups compete for a chance to represent the state at the Startup World Cup global finals in San Francisco.",
+      studentSummary: "This is the most exciting part of the day — basically Shark Tank, live. Hawaiʻi startups get 5 minutes to pitch their companies to a panel of venture capitalists. The winner advances to the global Startup World Cup finals. Pay close attention to how each founder explains: what problem they're solving, why anyone would pay for it, and why their team can pull it off. These are real companies, this is real money, and careers change on this stage.",
+      subItems: []
+    },
+    {
+      id: "thu-20",
+      time: "4:30 PM",
+      timeEnd: "5:00 PM",
+      title: "The Pacific Bridge: Technology, Capital & Culture",
+      type: "panel",
+      speaker: "Miki Hardisty · Rich Robinson · Bill Reichert",
+      location: "Main Stage",
+      description: "A closing panel on Hawaiʻi's strategic role connecting Silicon Valley, Asia-Pacific markets, and Pacific Islander culture. Featuring Miki Hardisty (Co-founder & CEO, ʻŌlelo Intelligence — a Hawaiian language AI company), Rich Robinson (Entrepreneur-in-Residence, Animoca Brands), and Bill Reichert (General Partner, Pegasus Tech Ventures).",
+      studentSummary: "Hawaiʻi sits literally in the middle of the Pacific — between the US mainland and Asia. This panel explores why that geographic and cultural position makes Hawaiʻi important for global tech and investment. It also asks: how do Pacific Islander values (community, sustainability, aloha) shape — rather than just serve — global tech? Miki Hardisty's company ʻŌlelo Intelligence is building AI that works in the Hawaiian language, which almost no major AI supports today.",
+      subItems: []
+    },
+    {
+      id: "thu-21",
+      time: "5:00 PM",
+      timeEnd: "5:10 PM",
+      title: "Pitch Winner Announcement",
+      type: "announcement",
+      speaker: "Bill Reichert",
+      location: "Main Stage",
+      description: "Announcement of the Startup World Cup Hawaiʻi Regional winner by Bill Reichert, General Partner at Pegasus Tech Ventures.",
+      studentSummary: "The big reveal — Bill Reichert announces which Hawaiʻi startup won and will advance to the Startup World Cup global finals in San Francisco. Note which company wins and remember the name: you might be hearing about them for years to come.",
+      subItems: []
+    },
+    {
+      id: "thu-22",
+      time: "5:10 PM",
+      timeEnd: "5:15 PM",
+      title: "Wrap Up & Conclusion",
+      type: "announcement",
+      speaker: "Chenoa Farnsworth · David Holt · Maya Rogers",
+      location: "Main Stage",
+      description: "Closing remarks from the conference organizers — Chenoa Farnsworth, David Holt, and Maya Rogers.",
+      studentSummary: "The organizers close out the day. Good moment to reflect: What surprised you most today? Who do you want to follow up with? What's one idea you heard that you want to learn more about?",
+      subItems: []
+    },
+    {
+      id: "thu-23",
+      time: "5:15 PM",
+      timeEnd: "7:30 PM",
+      title: "Closing Reception",
+      type: "networking",
+      speaker: "",
+      location: "Foyer",
+      description: "Open networking reception in the foyer for all conference attendees. Drinks and light bites served.",
+      studentSummary: "The best networking opportunity of the whole day — casual, open, and everyone is here. The format is simple: walk around, find someone interesting, introduce yourself. Set a goal: have at least 3 real conversations with people you don't know. Ask what they do, what they're working on, what idea from today they found most interesting. Collect contact info. This is how professional relationships begin.",
+      subItems: []
+    }
+  ];
+
+  // ──────────────────────────────────────────────────────────
+  //  NOTES — localStorage
+  // ──────────────────────────────────────────────────────────
+  const NOTES_KEY = 'emw2026_notes';
+
+  function getNotes() {
+    try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function persistNotes(notes) {
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+    updateNoteCount();
+  }
+
+  function saveNote(sessionId, text) {
+    const notes = getNotes();
+    const session = SCHEDULE.find(s => s.id === sessionId);
+    if (text.trim()) {
+      notes[sessionId] = {
+        id: sessionId,
+        sessionTitle: session ? session.title : '',
+        sessionTime: session ? session.time : '',
+        text: text.trim(),
+        savedAt: new Date().toISOString()
+      };
+    } else {
+      delete notes[sessionId];
+    }
+    persistNotes(notes);
+    syncNoteIndicators();
+  }
+
+  function deleteNote(sessionId) {
+    const notes = getNotes();
+    delete notes[sessionId];
+    persistNotes(notes);
+    syncNoteIndicators();
+    renderNotesTab();
+  }
+
+  function updateNoteCount() {
+    const count = Object.keys(getNotes()).length;
+    const el = document.getElementById('noteCount');
+    el.textContent = count > 0 ? count : '';
+  }
+
+  function syncNoteIndicators() {
+    const notes = getNotes();
+    document.querySelectorAll('.note-toggle').forEach(btn => {
+      const id = btn.dataset.sessionId;
+      const hasNote = !!notes[id];
+      btn.classList.toggle('has-note', hasNote);
+      const labelSpan = btn.querySelector('.note-label');
+      if (labelSpan) labelSpan.textContent = hasNote ? 'Edit Note' : 'Add Note';
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────
+  //  RENDER SCHEDULE
+  // ──────────────────────────────────────────────────────────
+  const BADGE_LABELS = {
+    keynote: 'Keynote', fireside: 'Fireside', panel: 'Panel',
+    pitch: 'Pitch', roundtable: 'Roundtable', networking: 'Networking',
+    mindfulness: 'Mindfulness', ceremony: 'Ceremony', meal: 'Dining',
+    break: 'Break', welcome: 'Welcome', presentation: 'Presentation',
+    announcement: 'Closing', background: 'All Day'
+  };
+
+  function esc(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function speakerPreview(speaker, type) {
+    if (!speaker || type === 'meal' || type === 'break' || type === 'background') return '';
+    const parts = speaker.split('·');
+    const preview = parts[0].trim();
+    const extra = parts.length > 1 ? ` + ${parts.length - 1} more` : '';
+    return `<span class="session-speaker">${esc(preview)}${extra}</span>`;
+  }
+
+  function renderSchedule() {
+    const notes = getNotes();
+    const html = SCHEDULE.map(s => {
+      const hasNote = !!notes[s.id];
+      const hasSubs = s.subItems && s.subItems.length > 0;
+
+      const metaParts = [];
+      if (s.speaker && s.type !== 'meal' && s.type !== 'break' && s.type !== 'background') {
+        metaParts.push(`<span class="meta-item"><span class="meta-icon">👤</span>${esc(s.speaker)}</span>`);
+      }
+      if (s.location) {
+        metaParts.push(`<span class="meta-item"><span class="meta-icon">📍</span>${esc(s.location)}</span>`);
+      }
+      if (s.time && s.timeEnd) {
+        metaParts.push(`<span class="meta-item"><span class="meta-icon">⏱</span>${esc(s.time)} – ${esc(s.timeEnd)}</span>`);
+      }
+
+      const subItemsHtml = hasSubs ? `
+        <p class="sub-items-label">Investors / Participants</p>
+        <div class="sub-items-list">
+          ${s.subItems.map(sub => `
+            <div class="sub-item">
+              <div class="sub-item-title">${esc(sub.title)}</div>
+              ${sub.speaker ? `<div class="sub-item-speaker">${esc(sub.speaker)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+
+      return `
+        <div class="session-item type-${s.type}" id="item-${s.id}">
+          <button class="session-trigger" aria-expanded="false" data-id="${s.id}" aria-controls="body-${s.id}">
+            <span class="session-time">${esc(s.time)}</span>
+            <span class="session-main">
+              <span class="session-badge badge-${s.type}">${BADGE_LABELS[s.type] || s.type}</span>
+              <span class="session-title">${esc(s.title)}</span>
+              ${speakerPreview(s.speaker, s.type)}
+            </span>
+            <span class="session-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="session-body" id="body-${s.id}" role="region" aria-label="${esc(s.title)} details">
+            <div class="session-body-inner">
+              ${metaParts.length ? `<div class="session-meta-row">${metaParts.join('')}</div>` : ''}
+              ${s.description ? `<p class="session-description">${esc(s.description)}</p>` : ''}
+              ${subItemsHtml}
+              <div class="session-actions">
+                ${s.studentSummary ? `
+                  <button class="summary-toggle" data-id="${s.id}" aria-expanded="false">
+                    <span aria-hidden="true">🤖</span> Student Summary
+                    <span class="s-chevron" aria-hidden="true">▾</span>
+                  </button>
+                  <div class="summary-body" id="summary-${s.id}">
+                    <div class="summary-text">${esc(s.studentSummary)}</div>
+                  </div>
+                ` : ''}
+                <button class="note-toggle ${hasNote ? 'has-note' : ''}" data-session-id="${s.id}" aria-expanded="false">
+                  <span aria-hidden="true">📝</span>
+                  <span class="note-label">${hasNote ? 'Edit Note' : 'Add Note'}</span>
+                  <span class="note-dot" aria-hidden="true"></span>
+                </button>
+                <div class="note-body" id="notebody-${s.id}">
+                  <div class="note-inner">
+                    <textarea
+                      class="note-textarea"
+                      data-session-id="${s.id}"
+                      placeholder="What stood out? Questions? Connections to make..."
+                      aria-label="Note for ${esc(s.title)}"
+                    >${hasNote ? esc(notes[s.id].text) : ''}</textarea>
+                    <button class="note-save-btn" data-session-id="${s.id}">Save Note ✓</button>
+                  </div>
+                </div>
+                <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener" class="ext-link">
+                  ↗ Official EMW 2026 Site
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('scheduleList').innerHTML = html;
+    attachScheduleEvents();
+    updateNoteCount();
+  }
+
+  function attachScheduleEvents() {
+    document.querySelectorAll('.session-trigger').forEach(btn => {
+      btn.addEventListener('click', () => toggleSession(btn.dataset.id));
+    });
+
+    document.querySelectorAll('.summary-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleSummary(btn.dataset.id));
+    });
+
+    document.querySelectorAll('.note-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleNote(btn.dataset.sessionId));
+    });
+
+    document.querySelectorAll('.note-save-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.sessionId;
+        const ta = document.querySelector(`.note-textarea[data-session-id="${id}"]`);
+        if (!ta) return;
+        saveNote(id, ta.value);
+        showToast('Note saved ✓');
+        expandParent(id);
+      });
+    });
+
+    document.querySelectorAll('.note-textarea').forEach(ta => {
+      ta.addEventListener('blur', () => {
+        saveNote(ta.dataset.sessionId, ta.value);
+      });
+    });
+  }
+
+  // ── TOGGLE HELPERS ──
+
+  function toggleSession(id) {
+    const item = document.getElementById(`item-${id}`);
+    const body = document.getElementById(`body-${id}`);
+    const trigger = item.querySelector('.session-trigger');
+    const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+    if (isExpanded) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+      trigger.setAttribute('aria-expanded', 'false');
+      item.classList.remove('expanded');
+    } else {
+      body.style.maxHeight = body.scrollHeight + 2000 + 'px';
+      trigger.setAttribute('aria-expanded', 'true');
+      item.classList.add('expanded');
+    }
+  }
+
+  function toggleSummary(id) {
+    const btn = document.querySelector(`.summary-toggle[data-id="${id}"]`);
+    const body = document.getElementById(`summary-${id}`);
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+    if (isOpen) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+      btn.setAttribute('aria-expanded', 'false');
+      btn.classList.remove('open');
+    } else {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      btn.setAttribute('aria-expanded', 'true');
+      btn.classList.add('open');
+      setTimeout(() => { body.style.maxHeight = '9999px'; }, 370);
+    }
+    expandParent(id);
+  }
+
+  function toggleNote(id) {
+    const body = document.getElementById(`notebody-${id}`);
+    const btn = document.querySelector(`.note-toggle[data-session-id="${id}"]`);
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+    if (isOpen) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+      btn.setAttribute('aria-expanded', 'false');
+    } else {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      btn.setAttribute('aria-expanded', 'true');
+      setTimeout(() => {
+        body.style.maxHeight = '9999px';
+        const ta = body.querySelector('.note-textarea');
+        if (ta) ta.focus();
+      }, 200);
+    }
+    expandParent(id);
+  }
+
+  function expandParent(id) {
+    const parentBody = document.getElementById(`body-${id}`);
+    if (parentBody && parentBody.style.maxHeight !== '0px') {
+      parentBody.style.maxHeight = '9999px';
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────
+  //  RENDER NOTES TAB
+  // ──────────────────────────────────────────────────────────
+  function renderNotesTab() {
+    const notes = getNotes();
+    const noteList = Object.values(notes);
+    const container = document.getElementById('notesList');
+
+    if (noteList.length === 0) {
+      container.innerHTML = `
+        <div class="notes-empty">
+          <span class="notes-empty-icon">📝</span>
+          <p>No notes yet.<br>Tap <strong>Add Note</strong> on any session to get started.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const order = SCHEDULE.map(s => s.id);
+    noteList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+
+    container.innerHTML = noteList.map(n => `
+      <div class="note-card" id="notecard-${n.id}">
+        <div class="note-card-time">${esc(n.sessionTime)}</div>
+        <div class="note-card-session">${esc(n.sessionTitle)}</div>
+        <div class="note-card-text">${esc(n.text)}</div>
+        <button class="note-card-delete" data-id="${n.id}" aria-label="Delete note for ${esc(n.sessionTitle)}">✕ Delete</button>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('.note-card-delete').forEach(btn => {
+      btn.addEventListener('click', () => {
+        deleteNote(btn.dataset.id);
+        showToast('Note deleted');
+      });
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────
+  //  EXPORT
+  // ──────────────────────────────────────────────────────────
+  function buildExportText() {
+    const notes = getNotes();
+    const noteList = Object.values(notes);
+    if (noteList.length === 0) return 'No notes saved yet.';
+
+    const order = SCHEDULE.map(s => s.id);
+    noteList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+
+    const lines = [
+      'EAST MEETS WEST 2026 — MY NOTES',
+      'Thursday, April 9 · Sheraton Waikiki, Honolulu',
+      '─'.repeat(42),
+      '',
+      ...noteList.flatMap(n => [
+        `${n.sessionTime}  ${n.sessionTitle}`,
+        n.text,
+        ''
+      ])
+    ];
+    return lines.join('\n');
+  }
+
+  // ──────────────────────────────────────────────────────────
+  //  TOAST
+  // ──────────────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // ──────────────────────────────────────────────────────────
+  //  TAB SWITCHING
+  // ──────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+      document.querySelectorAll('.tab-content').forEach(p => {
+        p.classList.toggle('active', p.id === target + 'Tab');
+      });
+      if (target === 'notes') renderNotesTab();
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────
+  //  EXPORT MODAL
+  // ──────────────────────────────────────────────────────────
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    document.getElementById('exportTextarea').value = buildExportText();
+    document.getElementById('exportModal').classList.remove('hidden');
+  });
+
+  document.getElementById('closeModal').addEventListener('click', () => {
+    document.getElementById('exportModal').classList.add('hidden');
+  });
+
+  document.getElementById('exportModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('exportModal')) {
+      document.getElementById('exportModal').classList.add('hidden');
+    }
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const ta = document.getElementById('exportTextarea');
+    const btn = document.getElementById('copyBtn');
+    const text = ta.value;
+
+    const finish = () => {
+      btn.textContent = 'Copied! ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy to Clipboard';
+        btn.classList.remove('copied');
+      }, 2500);
+    };
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(finish).catch(() => {
+        ta.select();
+        document.execCommand('copy');
+        finish();
+      });
+    } else {
+      ta.select();
+      document.execCommand('copy');
+      finish();
+    }
+  });
+
+  // ──────────────────────────────────────────────────────────
+  //  INIT
+  // ──────────────────────────────────────────────────────────
+  renderSchedule();
+  </script>
+</body>
+</html>
