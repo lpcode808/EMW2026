@@ -411,6 +411,38 @@
 
     .meta-icon { font-size: 0.82rem; }
 
+    .meta-speaker-list {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.18rem 0.28rem;
+    }
+
+    .meta-prefix,
+    .meta-separator {
+      color: var(--text-dim);
+    }
+
+    .meta-speaker-link {
+      appearance: none;
+      background: none;
+      border: none;
+      padding: 0;
+      color: rgba(255, 247, 235, 0.9);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: rgba(7, 168, 168, 0.28);
+      text-underline-offset: 0.14rem;
+      transition: color 0.18s, text-decoration-color 0.18s;
+    }
+
+    .meta-speaker-link:hover {
+      color: var(--teal);
+      text-decoration-color: rgba(7, 168, 168, 0.7);
+    }
+
     .session-description {
       font-size: 0.84rem;
       line-height: 1.68;
@@ -1707,6 +1739,55 @@
     return 'Quick Note';
   }
 
+  function escapeAttr(str) {
+    return esc(str).replace(/'/g, '&#39;');
+  }
+
+  function normalizeSpeakerLookupName(name = '') {
+    return name
+      .replace(/^.*?:\s*/, '')
+      .replace(/\s*\([^)]*\)\s*$/g, '')
+      .trim();
+  }
+
+  function speakerByName(name) {
+    const lookup = slugify(normalizeSpeakerLookupName(name));
+    return SPEAKERS.find(speaker => speaker.id === lookup) || null;
+  }
+
+  function speakerMetaMarkup(speakerLine) {
+    const tokens = speakerLine.split('·').map(token => token.trim()).filter(Boolean);
+
+    const tokenHtml = tokens.map((token, index) => {
+      const speaker = speakerByName(token);
+      const displayName = normalizeSpeakerLookupName(token);
+      const prefixMatch = token.match(/^(.*?:)\s*/);
+      const prefix = prefixMatch ? prefixMatch[1] : '';
+      const label = prefix ? token.replace(prefixMatch[0], '').trim() : token;
+      const parts = [];
+
+      if (prefix) {
+        parts.push(`<span class="meta-prefix">${esc(prefix)}</span>`);
+      }
+
+      if (speaker) {
+        parts.push(
+          `<button class="meta-speaker-link" type="button" data-speaker-id="${speaker.id}" aria-label="Open ${escapeAttr(displayName)} in speakers">${esc(label)}</button>`
+        );
+      } else {
+        parts.push(`<span>${esc(label)}</span>`);
+      }
+
+      if (index < tokens.length - 1) {
+        parts.push(`<span class="meta-separator" aria-hidden="true">·</span>`);
+      }
+
+      return parts.join('');
+    }).join('');
+
+    return `<span class="meta-item"><span class="meta-icon">👤</span><span class="meta-speaker-list">${tokenHtml}</span></span>`;
+  }
+
   // ──────────────────────────────────────────────────────────
   //  RENDER SCHEDULE
   // ──────────────────────────────────────────────────────────
@@ -1745,7 +1826,7 @@
 
       const metaParts = [];
       if (s.speaker && s.type !== 'meal' && s.type !== 'break' && s.type !== 'background') {
-        metaParts.push(`<span class="meta-item"><span class="meta-icon">👤</span>${esc(s.speaker)}</span>`);
+        metaParts.push(speakerMetaMarkup(s.speaker));
       }
       if (s.location) {
         metaParts.push(`<span class="meta-item"><span class="meta-icon">📍</span>${esc(s.location)}</span>`);
@@ -1881,6 +1962,10 @@
 
     root.querySelectorAll('.summary-toggle').forEach(btn => {
       btn.addEventListener('click', () => toggleSummary(btn.dataset.id));
+    });
+
+    root.querySelectorAll('.meta-speaker-link').forEach(btn => {
+      btn.addEventListener('click', () => openSpeakerContext(btn.dataset.speakerId));
     });
 
     bindNoteEditors(root);
