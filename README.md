@@ -103,7 +103,7 @@ User requested `CLAUDE.md` (for future AI agents) and this `README.md` (for huma
 | **Schedule tab** | 23 sessions, tap-to-expand accordion rows |
 | **Student Summaries** | AI-written plain-language descriptions per session, toggle inside expanded row |
 | **Notes** | Session notes carry a real device-local timestamp, plus quick-note and speaker-profile note flows |
-| **Speakers tab** | 28 Thursday presenters, searchable, tapping a session chip jumps to Schedule |
+| **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, and a `g.ai` research button per speaker |
 | **My Notes tab** | Quick note composer, saved session/person notes, delete or jump back into context |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
 | **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and localStorage patterns behind the site |
