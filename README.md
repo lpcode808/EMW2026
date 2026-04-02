@@ -10,7 +10,7 @@ A mobile-first companion app for students attending **East Meets West 2026** (Th
 
 ## How This Was Built
 
-This app was built in a single Claude Code session using a conversational prompting workflow. Here's how that conversation went — useful context if you're continuing development or using this as a template for future conference guides.
+This app was built in an initial Claude Code session and then refined through follow-up conversation. Here's how that process went — useful context if you're continuing development or using this as a template for future conference guides.
 
 ### 1. Initial Request
 
@@ -94,17 +94,48 @@ User requested `CLAUDE.md` (for future AI agents) and this `README.md` (for huma
 
 > *"Might as well put a README that has an overview of how I prompted you here and answered questions... while you still have access to the very conversation."*
 
+### 9. Post-Launch Iteration
+
+After the first release, the app kept improving through a series of small, very targeted requests instead of one giant redesign.
+
+The user first pushed the notes model further:
+
+> *"Whenever someone makes a note during a session, make sure to have a real timestamp to that session of the local device time. then, in notes section, allow there to be an option to make a note without being stuck to somewhere. lastly, include a note in case someone meet someone and they click the person's profile, and then can make a note"*
+
+That led to:
+- Device-local timestamps on saved notes
+- A freeform **Quick Note** in the Notes tab
+- **Person notes** directly from expanded speaker cards
+- Typed notes in the Notes tab instead of one undifferentiated list
+
+Then the user added a research workflow to speaker profiles:
+
+> *"for the speakers list, add a thoughtful button that links out to g.ai search parm using the speaker's name and job title / company"*
+
+That became a speaker-specific **Google AI mode** link on each expanded speaker card.
+
+From there, interaction polish stayed intentionally narrow:
+
+> *"for main schedule, when you open up the event and it expands, that clicking the person's name would jump you to the expanded list in the speakers section? think carefully before overcomplicating things."*
+
+So instead of turning every speaker mention into a link, only the speaker names in the expanded schedule meta row became tappable, and only when they map cleanly to an actual speaker profile.
+
+Finally, the visual system was refined to make state and context easier to read:
+- Expanded schedule and speaker details now sit on a slightly different dark sub-surface from their tap rows
+- The Notes tab now differentiates **Quick Notes**, **Session Notes**, and **Person Notes** with subtle accent colors rather than one shared teal style
+- Small styling adjustments were made in place, preserving the original dark-mode direction instead of switching visual themes midstream
+
 ---
 
 ## App Features
 
 | Feature | Details |
 |---|---|
-| **Schedule tab** | 23 sessions, tap-to-expand accordion rows |
+| **Schedule tab** | 23 sessions, tap-to-expand accordion rows, with speaker-name jumps from expanded session details into the Speakers tab |
 | **Student Summaries** | AI-written plain-language descriptions per session, toggle inside expanded row |
 | **Notes** | Session notes carry a real device-local timestamp, plus quick-note and speaker-profile note flows |
 | **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, and a `g.ai` research button per speaker |
-| **My Notes tab** | Quick note composer, saved session/person notes, delete or jump back into context |
+| **My Notes tab** | Quick note composer, saved session/person notes, delete or jump back into context, with distinct visual treatment per note type |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
 | **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and localStorage patterns behind the site |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
@@ -121,6 +152,7 @@ For anyone building something similar:
 - **Clarify scope before build.** "Thursday only, not Wednesday" saved a lot of cleanup. Scope questions answered upfront = cleaner first pass.
 - **Name the interaction model.** "Scroll, scroll, scroll. Tap once to reveal. Tap sub-area for more." gave a precise mental model that translated directly into the accordion structure.
 - **Add features as follow-ups.** Notes and speakers were added after the initial build in natural conversation, not as upfront requirements. The single-file architecture made this easy.
+- **Keep later refinements narrow.** Requests like "just the highlighted speaker line should jump to profiles" led to cleaner UX than trying to make every related text element interactive.
 
 ---
 
