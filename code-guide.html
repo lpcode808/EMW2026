@@ -233,6 +233,66 @@
       color: var(--text-muted);
     }
 
+    .audience-panel {
+      position: relative;
+      z-index: 1;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(0, 19, 41, 0.32);
+      border: 1px solid rgba(255, 247, 235, 0.08);
+    }
+
+    .audience-title {
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .audience-copy {
+      font-size: 0.82rem;
+      line-height: 1.66;
+      color: var(--text-muted);
+    }
+
+    .audience-toggle {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 0.8rem;
+    }
+
+    .mode-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0.7rem 0.95rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 247, 235, 0.05);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .mode-btn.active {
+      background: var(--teal);
+      color: var(--bg);
+      border-color: transparent;
+    }
+
+    .mode-note {
+      margin-top: 0.65rem;
+      font-size: 0.74rem;
+      line-height: 1.55;
+      color: var(--text-dim);
+    }
+
     .chip-nav {
       display: flex;
       gap: 0.55rem;
@@ -348,6 +408,26 @@
 
     .callout strong {
       color: var(--lime);
+    }
+
+    .mode-extra {
+      display: none;
+      margin-top: 0.7rem;
+      padding: 0.78rem 0.85rem;
+      border-radius: 14px;
+      background: rgba(7, 168, 168, 0.08);
+      border: 1px solid rgba(7, 168, 168, 0.2);
+      font-size: 0.78rem;
+      line-height: 1.62;
+      color: var(--text-muted);
+    }
+
+    body[data-mode="coder"] .mode-extra {
+      display: block;
+    }
+
+    body[data-mode="beginner"] .mode-only[data-audience="coder"] {
+      display: none;
     }
 
     .search-list,
@@ -531,137 +611,185 @@
     }
   </style>
 </head>
-<body>
+<body data-mode="beginner">
   <header class="topbar">
     <div class="topbar-group">
       <a class="topbar-link primary" href="index.html">Back to the live app</a>
-      <a class="topbar-link" href="#mental-model">Start the tour</a>
+      <a class="topbar-link" href="#start-here">Start the tour</a>
     </div>
     <a class="topbar-link" href="https://emwhawaii.com/2026" target="_blank" rel="noopener">Official EMW site</a>
   </header>
 
   <main class="page">
     <section class="panel hero">
-      <p class="eyebrow">Conference Code Guide</p>
-      <h1>How this website works</h1>
+      <p class="eyebrow">Start Here</p>
+      <h1>If you can scroll Instagram or YouTube, you already get part of this site</h1>
       <p class="hero-copy">
-        This is a learner-friendly tour of the actual EMW 2026 conference site. The goal is not just to say what the code does,
-        but to help curious students understand how a real mobile website is put together: structure, styling, behavior, and saved data.
+        This page is for people who use websites all the time but may be brand new to coding. The EMW site works in a familiar way:
+        you scroll a stack of cards, tap to open more, switch tabs at the top, and save notes on your own device.
       </p>
       <div class="hero-actions">
-        <a class="action-link primary" href="#mental-model">See the big picture</a>
+        <a class="action-link primary" href="#start-here">See the simple version</a>
         <a class="action-link secondary" href="#experiments">Try safe experiments</a>
       </div>
       <div class="hero-stats" aria-label="App facts">
         <div class="stat-card">
           <span class="stat-value">2</span>
-          <span class="stat-label">HTML pages now live in the repo: the app and this guide</span>
+          <span class="stat-label">Pages in the repo that matter most right now: the live app and this guide</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">3</span>
-          <span class="stat-label">Main tabs in the app: Schedule, Speakers, and Notes</span>
+          <span class="stat-label">Top tabs in the app: Schedule, Speakers, and Notes</span>
         </div>
         <div class="stat-card">
-          <span class="stat-value">23</span>
-          <span class="stat-label">Conference sessions are stored in the schedule data array</span>
+          <span class="stat-value">1</span>
+          <span class="stat-label">Main idea: the page is a list of repeatable cards, like many apps students already use</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">0</span>
-          <span class="stat-label">Build tools needed to open the app locally in a browser</span>
+          <span class="stat-label">Extra installs needed to open the site in a browser</span>
         </div>
+      </div>
+      <div class="audience-panel" aria-label="Choose your guide mode">
+        <div class="audience-title">Pick your guide mode</div>
+        <p class="audience-copy">
+          The default version keeps the language plain and assumes you have used lots of websites but have not coded before.
+          Switch modes any time if you want a few more code words and comparisons.
+        </p>
+        <div class="audience-toggle" role="group" aria-label="Audience mode">
+          <button class="mode-btn active" type="button" data-mode="beginner" aria-pressed="true">New to coding</button>
+          <button class="mode-btn" type="button" data-mode="coder" aria-pressed="false">Done a little coding</button>
+        </div>
+        <p class="mode-note">Beginner mode is the default. The second mode reveals a few extra notes for high school students who already know basic programming.</p>
       </div>
     </section>
 
     <nav class="chip-nav" aria-label="Section links">
-      <a class="chip" href="#learning-loop">Learning loop</a>
-      <a class="chip" href="#mental-model">Mental model</a>
-      <a class="chip" href="#map">Repo map</a>
-      <a class="chip" href="#html">HTML</a>
-      <a class="chip" href="#css">CSS</a>
-      <a class="chip" href="#js">JavaScript</a>
+      <a class="chip" href="#start-here">Feels familiar</a>
+      <a class="chip" href="#learning-loop">How to explore</a>
+      <a class="chip" href="#mental-model">Big idea</a>
+      <a class="chip" href="#map">Main files</a>
+      <a class="chip" href="#html">Page outline</a>
+      <a class="chip" href="#css">Look and feel</a>
+      <a class="chip" href="#js">What happens on tap</a>
       <a class="chip" href="#storage">Saved notes</a>
-      <a class="chip" href="#scratch">Scratch bridge</a>
+      <a class="chip mode-only" data-audience="coder" href="#scratch">If you've coded</a>
       <a class="chip" href="#experiments">Experiments</a>
       <a class="chip" href="#questions">Questions</a>
     </nav>
 
-    <section class="panel section-stack" id="learning-loop">
-      <p class="eyebrow">How to learn from this code</p>
-      <h2>Predict, test, observe, then explain</h2>
+    <section class="panel section-stack" id="start-here">
+      <p class="eyebrow">Familiar First</p>
+      <h2>This site behaves like other apps you already know</h2>
       <p class="panel-copy">
-        One of the strongest ideas in the attached teaching prompt was to treat code like a mystery you can investigate.
-        That works beautifully here. Instead of trying to memorize everything, move through the code with a simple loop:
+        When you open Instagram, YouTube, or TikTok, you already know what to do: scroll, look for something interesting, tap it,
+        and open more detail. This conference site uses the same habits. It just swaps videos and posts for sessions, speakers, and notes.
       </p>
       <div class="flow-grid">
         <article class="info-card">
           <div class="step-badge">1</div>
-          <h3>Predict</h3>
-          <p>Read a variable or function name and guess what it does before you scroll further.</p>
+          <h3>Scroll a list</h3>
+          <p>The schedule is a stack of cards, like a feed. Each card is one session instead of one video or post.</p>
         </article>
         <article class="info-card">
           <div class="step-badge">2</div>
-          <h3>Search</h3>
-          <p>Use find-in-page for names like <span class="inline-code">renderSchedule</span> or <span class="inline-code">saveNote</span>.</p>
+          <h3>Tap for more</h3>
+          <p>Tapping a session opens extra details, the same way apps often open more information when you press into something.</p>
+        </article>
+        <article class="info-card">
+          <div class="step-badge">3</div>
+          <h3>Switch views</h3>
+          <p>The tabs at the top work like jumping between sections of an app: schedule, people, and your own notes.</p>
+        </article>
+        <article class="info-card">
+          <div class="step-badge">4</div>
+          <h3>Keep your place</h3>
+          <p>When you write a note, the browser remembers it on that same device so it is still there after a refresh.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section-stack" id="learning-loop">
+      <p class="eyebrow">How To Explore</p>
+      <h2>Look, guess, change one thing, then check again</h2>
+      <p class="panel-copy">
+        You do not need to understand every line all at once. A better approach is to explore the page the same way you would explore a new app:
+        notice a pattern, make a guess, try a small change, and see what happened.
+      </p>
+      <div class="flow-grid">
+        <article class="info-card">
+          <div class="step-badge">1</div>
+          <h3>Notice a clue</h3>
+          <p>Pick something simple first: a tab name, a button label, a color, or a heading you can already see on the page.</p>
+        </article>
+        <article class="info-card">
+          <div class="step-badge">2</div>
+          <h3>Search for it</h3>
+          <p>Use find-in-page to look for the same word in the file so you can see where that part of the page comes from.</p>
+          <div class="mode-extra">If you already know a little coding, good search words here include <span class="inline-code">renderSchedule</span>, <span class="inline-code">activateTab</span>, and <span class="inline-code">saveNote</span>.</div>
         </article>
         <article class="info-card">
           <div class="step-badge">3</div>
           <h3>Change one thing</h3>
-          <p>Edit one color, label, or message at a time so you know which change caused which result.</p>
+          <p>Edit one small thing at a time so you can tell exactly which change caused the result you see.</p>
         </article>
         <article class="info-card">
           <div class="step-badge">4</div>
-          <h3>Observe</h3>
-          <p>Refresh the browser, compare what changed, and then explain it back in your own words.</p>
+          <h3>Refresh and compare</h3>
+          <p>Reload the page, notice what changed, and try to explain it back in your own words before moving on.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Tip:</strong> learners build confidence faster when they can see cause and effect. The best first edits are usually visual or text-based.
+        <strong>Tip:</strong> the best beginner edits are usually visible ones like text, color, spacing, and button labels because the cause and effect are easy to spot.
       </div>
     </section>
 
     <section class="panel section-stack" id="mental-model">
-      <p class="eyebrow">Big picture first</p>
-      <h2>The mental model</h2>
+      <p class="eyebrow">Big Idea</p>
+      <h2>The site runs on four simple jobs</h2>
       <p class="panel-copy">
-        The live app works like a loop: data gets turned into HTML, buttons listen for taps, and notes are saved in the browser.
-        If you understand those four moves, most of the file stops feeling mysterious.
+        Under the hood, the site is doing four jobs over and over: keep the conference information somewhere, show it on screen,
+        react when someone taps something, and remember notes on the same device.
       </p>
       <div class="flow-grid">
         <article class="info-card">
           <div class="step-badge">1</div>
-          <h3>Data</h3>
-          <p>The app stores conference information in JavaScript arrays like <span class="inline-code">SCHEDULE</span> and <span class="inline-code">SPEAKERS</span>.</p>
+          <h3>Keep the information</h3>
+          <p>The conference sessions and speaker details are written down in the file so the page can use them later.</p>
+          <div class="mode-extra">In coding terms, those lists live in JavaScript arrays called <span class="inline-code">SCHEDULE</span> and <span class="inline-code">SPEAKERS</span>.</div>
         </article>
         <article class="info-card">
           <div class="step-badge">2</div>
-          <h3>Render</h3>
-          <p>Functions such as <span class="inline-code">renderSchedule()</span> loop through that data and build the visible cards on screen.</p>
+          <h3>Draw the page</h3>
+          <p>The site takes that written-down information and turns it into the cards and sections you can actually see.</p>
+          <div class="mode-extra">That step is often called rendering. In this project, helpers like <span class="inline-code">renderSchedule()</span> do that work.</div>
         </article>
         <article class="info-card">
           <div class="step-badge">3</div>
-          <h3>Interact</h3>
-          <p>Event listeners wait for taps on tabs, accordions, chips, and note buttons, then call the right helper function.</p>
+          <h3>React to taps</h3>
+          <p>When someone taps a tab, opens a session, or saves a note, the page notices and updates what is on screen.</p>
+          <div class="mode-extra">The coding phrase for this is event handling. The page listens for clicks, then runs a function.</div>
         </article>
         <article class="info-card">
           <div class="step-badge">4</div>
-          <h3>Remember</h3>
-          <p>Notes are stored with <span class="inline-code">localStorage</span>, which means session notes, speaker notes, and quick notes stay on the same device even after refresh.</p>
+          <h3>Remember notes</h3>
+          <p>The browser keeps your notes on that same phone or computer, so they are still there after a refresh.</p>
+          <div class="mode-extra">This project uses <span class="inline-code">localStorage</span>, which is the browser's built-in little storage shelf.</div>
         </article>
       </div>
     </section>
 
     <section class="panel section-stack" id="map">
-      <p class="eyebrow">Where to look</p>
-      <h2>Map of the repo</h2>
+      <p class="eyebrow">Main Files</p>
+      <h2>What matters most in this repo</h2>
       <p class="panel-copy">
-        This repository is intentionally small. That is a feature, not a bug. It makes the site easier to ship, easier to inspect,
-        and easier to teach from at a conference.
+        This project is small on purpose. That makes it easier to teach from, easier to edit quickly, and less overwhelming for first-time readers.
       </p>
       <div class="map-grid">
         <article class="info-card">
           <h3><span class="inline-code">index.html</span></h3>
-          <p>The live attendee app. It contains the HTML structure, all CSS styles, all JavaScript behavior, and the conference data.</p>
-          <div class="search-list">
+          <p>This is the live conference app. Most of the action is here: the page pieces, the visual styling, the tap behavior, and the conference information.</p>
+          <div class="search-list mode-extra">
             <span class="search-token">const SCHEDULE = [</span>
             <span class="search-token">function renderSchedule()</span>
             <span class="search-token">function renderSpeakers(filter = '')</span>
@@ -671,32 +799,36 @@
         </article>
         <article class="info-card">
           <h3><span class="inline-code">code-guide.html</span></h3>
-          <p>This explainer page. It is separate so learners can explore without making the attendee-facing schedule harder to use.</p>
+          <p>This is the explainer page you are reading now. It is separate so curious learners can explore without getting in the way of the live conference view.</p>
           <div class="plain-list">
             <p class="list-text">Uses the same visual language as the app.</p>
             <p class="list-text">Optimized for mobile reading and quick scrolling.</p>
-            <p class="list-text">Teaches from the real code, not a made-up demo.</p>
+            <p class="list-text">Explains the real site instead of a fake teaching example.</p>
           </div>
         </article>
         <article class="info-card">
           <h3>Docs</h3>
-          <p><span class="inline-code">README.md</span> explains the project story for humans, and <span class="inline-code">CLAUDE.md</span> explains architecture for future coding agents.</p>
+          <p><span class="inline-code">README.md</span> tells the human story of the project, and <span class="inline-code">CLAUDE.md</span> is extra guidance for future coding helpers.</p>
         </article>
       </div>
     </section>
 
     <section class="panel section-stack" id="html">
-      <p class="eyebrow">1. Structure</p>
-      <h2>HTML gives the app its rooms</h2>
+      <p class="eyebrow">1. Page Outline</p>
+      <h2>HTML is the page outline</h2>
       <p class="panel-copy">
-        Think of HTML as the blueprint of the page. It creates the header, the three tab panels, the export modal, and the toast message.
-        The JavaScript later fills some of those rooms with session cards and speaker cards.
+        HTML is the part that names the big pieces of the page: the top bar, the main area, the tabs, the pop-up, and the little status message.
+        It helps the browser know what belongs where.
       </p>
+      <div class="mode-extra">
+        If you already know a little coding, HTML is the structure layer. Tags such as <span class="inline-code">&lt;header&gt;</span>,
+        <span class="inline-code">&lt;main&gt;</span>, and <span class="inline-code">&lt;section&gt;</span> are often called semantic HTML.
+      </div>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Core layout</h3>
-            <p>Shortened from the real app structure in <span class="inline-code">index.html</span>.</p>
+            <h3>The main page shape</h3>
+            <p>This is a shortened version of the real layout in <span class="inline-code">index.html</span>.</p>
           </div>
           <pre><code>&lt;header class="app-header"&gt;...&lt;/header&gt;
 &lt;main&gt;
@@ -711,29 +843,29 @@
 &lt;div class="toast" id="toast"&gt;&lt;/div&gt;</code></pre>
         </article>
         <article class="info-card">
-          <h3>Why this matters</h3>
-          <p>The HTML sets up places the JavaScript can target later with <span class="inline-code">getElementById()</span> and class names.</p>
+          <h3>Why it matters</h3>
+          <p>These named pieces give the rest of the page something to work with later.</p>
           <div class="plain-list">
             <p class="list-text">The header stays visible while you scroll.</p>
-            <p class="list-text">Tabs switch which section has the <span class="inline-code">active</span> class.</p>
-            <p class="list-text">The modal and toast already exist, so the script only needs to show or hide them.</p>
+            <p class="list-text">The tabs point to different sections of the page.</p>
+            <p class="list-text">The pop-up and little message bubble already exist, so the page can simply show or hide them.</p>
           </div>
+          <div class="mode-extra">In coder language, JavaScript later looks up these spots by ID or class name and updates them.</div>
         </article>
       </div>
     </section>
 
     <section class="panel section-stack" id="css">
-      <p class="eyebrow">2. Look and feel</p>
-      <h2>CSS makes the site readable on a phone</h2>
+      <p class="eyebrow">2. Look And Feel</p>
+      <h2>CSS controls the look and feel</h2>
       <p class="panel-copy">
-        The CSS in this project does more than make things pretty. It creates large tap targets, clear contrast, sticky navigation,
-        smooth accordion motion, and a visual system that feels consistent across the whole app.
+        CSS decides how the site looks and feels. It picks the colors, spacing, fonts, button sizes, and the smooth open-close motion that makes the page feel polished on a phone.
       </p>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Design tokens</h3>
-            <p>These custom properties act like named paint buckets the rest of the stylesheet can reuse.</p>
+            <h3>Shared color names</h3>
+            <p>The page gives important colors names so they can be reused in many places.</p>
           </div>
           <pre><code>:root {
   --bg: #001329;
@@ -747,8 +879,8 @@
         </article>
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Accordion animation</h3>
-            <p>The expanding session rows work by animating <span class="inline-code">max-height</span>.</p>
+            <h3>Open-close motion</h3>
+            <p>This is part of what makes each session row smoothly expand instead of popping open suddenly.</p>
           </div>
           <pre><code>.session-body {
   max-height: 0;
@@ -760,31 +892,32 @@
       <div class="feature-grid">
         <article class="info-card">
           <h3>Mobile-first spacing</h3>
-          <p>Most spacing starts small and readable for phones, then expands on larger screens.</p>
+          <p>The layout starts with phones in mind, then opens up a bit more on larger screens.</p>
         </article>
         <article class="info-card">
           <h3>Safe tap targets</h3>
-          <p>Buttons and triggers are designed around roughly 44px minimum height so they are easy to tap at a busy event.</p>
+          <p>Buttons are large enough to tap comfortably when students are standing, walking, or moving between sessions.</p>
         </article>
         <article class="info-card">
           <h3>Reusable colors</h3>
-          <p>Changing one token updates many parts of the UI, which is much easier than hunting through dozens of hard-coded hex values.</p>
+          <p>Changing one shared color can update many parts of the page at once, which is much easier than editing every button one by one.</p>
+          <div class="mode-extra">Those shared named values are often called tokens or CSS custom properties.</div>
         </article>
       </div>
     </section>
 
     <section class="panel section-stack" id="js">
-      <p class="eyebrow">3. Behavior</p>
-      <h2>JavaScript turns data into a working app</h2>
+      <p class="eyebrow">3. What Happens On Tap</p>
+      <h2>JavaScript handles the actions</h2>
       <p class="panel-copy">
-        The JavaScript is the engine room. It stores conference data, renders lists, wires buttons to actions,
-        opens accordions, saves notes, and keeps the tab experience in sync.
+        JavaScript is the part that notices what a person did and responds. It opens a session, switches tabs, saves a note,
+        or shows a message after a button press.
       </p>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Render the schedule</h3>
-            <p>The app loops through the schedule data and builds one HTML string for all session cards.</p>
+            <h3>Make the session list</h3>
+            <p>The page builds the schedule from the saved conference information.</p>
           </div>
           <pre><code>function renderSchedule() {
   const html = SCHEDULE.map(session =&gt; `...`).join('');
@@ -794,8 +927,8 @@
         </article>
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Listen for taps</h3>
-            <p>After the cards exist, the script attaches event listeners to the new buttons.</p>
+            <h3>Notice a tap</h3>
+            <p>After the buttons exist, the page tells them what to do when someone presses them.</p>
           </div>
           <pre><code>root.querySelectorAll('.session-trigger').forEach(btn =&gt; {
   btn.addEventListener('click', () =&gt; toggleSession(btn.dataset.id));
@@ -804,7 +937,7 @@
         <article class="code-card">
           <div class="code-card-header">
             <h3>Switch tabs</h3>
-            <p>One helper function updates both the tab buttons and the visible panels.</p>
+            <p>One small helper keeps the top tabs and the visible section in sync.</p>
           </div>
           <pre><code>function activateTab(target) {
   document.querySelectorAll('.tab-btn').forEach(btn =&gt; {
@@ -815,8 +948,8 @@
         </article>
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Protect the HTML</h3>
-            <p>The <span class="inline-code">esc()</span> helper converts special characters before putting text into HTML strings.</p>
+            <h3>Keep text safe</h3>
+            <p>This helper makes sure user-facing text is treated like text, not like page instructions.</p>
           </div>
           <pre><code>function esc(str) {
   return str
@@ -828,7 +961,10 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Important idea:</strong> rendering and event wiring happen in that order. First the code puts new HTML on the page, then it teaches those new buttons what to do when tapped.
+        <strong>Important idea:</strong> the page usually creates something first, then adds behavior to it second. In plain English: make the buttons, then teach the buttons.
+      </div>
+      <div class="mode-extra">
+        If you have coded before, the main ideas here are rendering, event listeners, small helper functions, and keeping text escaped before it is inserted into HTML.
       </div>
     </section>
 
@@ -836,67 +972,52 @@
       <p class="eyebrow">4. Saved data</p>
       <h2>Why notes stay on this device</h2>
       <p class="panel-copy">
-        The app does not send notes to a server. Instead, it uses the browser's local storage. That makes the app simple and private for a conference setting,
-        but it also means the notes live only in the same browser on the same device. The current version has three note paths:
-        session notes, speaker-profile notes, and a quick note that is not attached anywhere.
+        The site keeps notes in the browser instead of sending them to an account or a server. That keeps the setup simple for a conference,
+        but it also means your notes stay with the same browser on the same device.
       </p>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Read saved notes</h3>
-            <p>The app reads one storage bucket, then uses note keys that describe both the note type and the thing it belongs to.</p>
+            <h3>One place for notes</h3>
+            <p>The page keeps all notes under one shared storage name.</p>
           </div>
           <pre><code>const NOTES_KEY = 'emw2026_notes';
-const NOTE_TYPES = {
-  SESSION: 'session',
-  SPEAKER: 'speaker',
-  GENERAL: 'general'
-};
 
-function noteKey(type, entityId) {
-  return `${type}:${entityId}`;
-}
-
-const sessionNote = notes[noteKey(NOTE_TYPES.SESSION, 'thu-04')];</code></pre>
+localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+const saved = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');</code></pre>
         </article>
         <article class="code-card">
           <div class="code-card-header">
-            <h3>Write saved notes</h3>
-            <p>When a user saves, the app preserves the original creation time and updates the latest save time from the device clock.</p>
+            <h3>Different kinds of notes</h3>
+            <p>The app can remember a note for a session, a speaker, or a general quick thought.</p>
           </div>
-          <pre><code>const now = Date.now();
-
-notes[key] = {
-  key,
-  type,
-  entityId,
-  text: trimmed,
-  createdAt: existing ? existing.createdAt : now,
-  updatedAt: now
-};</code></pre>
+          <pre><code>session:thu-04
+speaker:maya-rogers
+general:quick-note</code></pre>
         </article>
       </div>
       <div class="feature-grid">
         <article class="info-card">
-          <h3>Why JSON?</h3>
-          <p>localStorage only stores strings, so objects and arrays need to be converted with <span class="inline-code">JSON.stringify()</span>.</p>
+          <h3>Why this choice works</h3>
+          <p>Students can open the site and start typing right away. No sign-in is needed.</p>
         </article>
         <article class="info-card">
-          <h3>Why timestamps?</h3>
-          <p>Each note stores when it was created and updated so the Notes tab can show when something was captured on that device during the event.</p>
+          <h3>What it remembers</h3>
+          <p>The app can remember notes tied to a session, notes tied to a speaker, and one quick note for anything else.</p>
         </article>
         <article class="info-card">
-          <h3>What is the tradeoff?</h3>
-          <p>If you switch browsers or clear storage, the notes will not follow you. Simplicity and portability often trade off against each other.</p>
+          <h3>The tradeoff</h3>
+          <p>If you switch browsers or clear storage, the notes will not come with you. Simple tools often trade power for ease.</p>
+          <div class="mode-extra">In coder language, the data is stored as JSON text inside <span class="inline-code">localStorage</span>, and the app stamps notes with created and updated times.</div>
         </article>
       </div>
     </section>
 
-    <section class="panel section-stack" id="scratch">
-      <p class="eyebrow">Bridge from Scratch</p>
-      <h2>If you already know Scratch, start here</h2>
+    <section class="panel section-stack mode-only" data-audience="coder" id="scratch">
+      <p class="eyebrow">If You've Coded Before</p>
+      <h2>A few quick bridges to basic programming</h2>
       <p class="panel-copy">
-        This code is not as far from block coding as it first looks. Many ideas map over surprisingly well.
+        If you have done Scratch or basic programming before, these comparisons can help you connect what you already know to this page.
       </p>
       <div class="comparison">
         <div class="comparison-row">
@@ -930,7 +1051,7 @@ notes[key] = {
       <p class="eyebrow">Hands-on ideas</p>
       <h2>Safe experiments to try</h2>
       <p class="panel-copy">
-        These are small edits with a high chance of success. Try one at a time, refresh the page, and notice what changed.
+        These are low-risk edits with a high chance of success. Try one at a time, refresh the page, and notice what changed.
       </p>
       <div class="experiment-grid">
         <article class="experiment-card">
@@ -954,7 +1075,7 @@ notes[key] = {
           <h3>Edit a toast message</h3>
           <p>Find <span class="inline-code">showToast('Note saved ✓')</span> and change the words.</p>
           <div class="plain-list">
-            <p class="list-text">This helps you see where user feedback text lives in the script.</p>
+            <p class="list-text">This helps you see where the page stores short feedback messages.</p>
           </div>
         </article>
         <article class="experiment-card">
@@ -962,34 +1083,34 @@ notes[key] = {
           <h3>Add a new session detail</h3>
           <p>Edit one object inside <span class="inline-code">const SCHEDULE = [</span>, then refresh and inspect how it appears in the accordion card.</p>
           <div class="plain-list">
-            <p class="list-text">This shows how data and rendering are connected.</p>
+            <p class="list-text">This shows how written-down information turns into something visible on the page.</p>
           </div>
         </article>
       </div>
     </section>
 
     <section class="panel section-stack" id="questions">
-      <p class="eyebrow">What to ask yourself</p>
-      <h2>Good questions while reading code</h2>
+      <p class="eyebrow">Questions To Ask</p>
+      <h2>Good questions while reading the page</h2>
       <details open>
         <summary>Why store conference data in JavaScript instead of writing every card by hand?</summary>
-        <p class="faq-copy">Because the cards all share the same structure. When data is in arrays, one render function can create many cards, which cuts repetition and keeps edits more consistent.</p>
+        <p class="faq-copy">Because the cards follow the same pattern. Writing the information once and reusing the pattern is faster and keeps the page more consistent.</p>
       </details>
       <details>
         <summary>Why does the app build HTML strings instead of using a framework?</summary>
-        <p class="faq-copy">For this project, simplicity wins. A single-file app with no build step is easy to deploy on GitHub Pages, easy to open locally, and easy for learners to inspect without installing tools.</p>
+        <p class="faq-copy">Because simple is a feature here. One easy-to-open file is great for a conference site and easier for beginners to inspect.</p>
       </details>
       <details>
         <summary>Why is there an <span class="inline-code">esc()</span> function?</summary>
-        <p class="faq-copy">Because when text is inserted into HTML, special characters can accidentally break the page or create unsafe markup. Escaping turns those characters into plain text first.</p>
+        <p class="faq-copy">Because the page sometimes drops text into other page code. This helper makes sure that text stays plain text and does not accidentally break the page.</p>
       </details>
       <details>
         <summary>Why attach event listeners after rendering?</summary>
-        <p class="faq-copy">Buttons need to exist in the page before JavaScript can find them. The render step creates them, then the event step connects behavior to them.</p>
+        <p class="faq-copy">Because the buttons have to exist before the page can connect behavior to them. First create them, then teach them what to do.</p>
       </details>
       <details>
         <summary>What would be the next level up from here?</summary>
-        <p class="faq-copy">A next step might be separating data, styles, and behavior into different files, or moving to a framework once the project becomes too large for one main app file to stay comfortable.</p>
+        <p class="faq-copy">A natural next step would be to split the project into smaller files once one big file starts to feel crowded.</p>
       </details>
     </section>
 
@@ -999,19 +1120,19 @@ notes[key] = {
       <div class="feature-grid">
         <article class="info-card">
           <h3>No build step</h3>
-          <p>Anyone can open the site fast, and future editors can change one HTML file without a toolchain getting in the way.</p>
+          <p>Anyone can open the site quickly, and future editors can make changes without extra setup getting in the way.</p>
         </article>
         <article class="info-card">
           <h3>Fast to teach from</h3>
-          <p>Learners can inspect real HTML, CSS, and JavaScript in one place instead of jumping through many folders.</p>
+          <p>Learners can inspect the real page in one place instead of bouncing through a lot of folders and tools.</p>
         </article>
         <article class="info-card">
           <h3>Good on a phone</h3>
-          <p>The visual system prioritizes scrollability, contrast, and tap size because students will actually use it on mobile during the event.</p>
+          <p>The design focuses on scrolling, contrast, and easy taps because students will actually use it on their phones during the event.</p>
         </article>
         <article class="info-card">
           <h3>Private notes</h3>
-          <p>Local device storage is a practical choice when you want note taking without accounts, logins, or a backend.</p>
+          <p>Device-only note storage is practical when you want quick note taking without accounts, passwords, or a server.</p>
         </article>
       </div>
     </section>
@@ -1020,8 +1141,7 @@ notes[key] = {
       <p class="eyebrow">Keep exploring</p>
       <h2>Read the code with confidence</h2>
       <p class="footer-note">
-        This walkthrough is based on the real repository, with extra teaching support inspired by the student-helper prompt:
-        encourage prediction, connect ideas to prior knowledge, and make experimentation feel safe.
+        This guide is based on the real project, with the default path aimed at students who use websites all the time but may be reading code for the first time.
       </p>
       <div class="footer-actions">
         <a class="action-link primary" href="index.html">Open the live app</a>
@@ -1029,5 +1149,31 @@ notes[key] = {
       </div>
     </footer>
   </main>
+  <script>
+    const GUIDE_MODE_KEY = 'emw2026_codeguide_mode';
+    const modeButtons = document.querySelectorAll('.mode-btn');
+
+    function applyGuideMode(mode) {
+      const nextMode = mode === 'coder' ? 'coder' : 'beginner';
+      document.body.dataset.mode = nextMode;
+
+      modeButtons.forEach(btn => {
+        const isActive = btn.dataset.mode === nextMode;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    const savedMode = localStorage.getItem(GUIDE_MODE_KEY);
+    applyGuideMode(savedMode);
+
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nextMode = btn.dataset.mode;
+        localStorage.setItem(GUIDE_MODE_KEY, nextMode);
+        applyGuideMode(nextMode);
+      });
+    });
+  </script>
 </body>
 </html>
