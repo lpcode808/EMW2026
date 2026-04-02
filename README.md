@@ -125,6 +125,32 @@ Finally, the visual system was refined to make state and context easier to read:
 - The Notes tab now differentiates **Quick Notes**, **Session Notes**, and **Person Notes** with subtle accent colors rather than one shared teal style
 - Small styling adjustments were made in place, preserving the original dark-mode direction instead of switching visual themes midstream
 
+### 10. Conference Learner Guide
+
+Once the attendee app was working, the focus expanded from "students using the site" to "students learning from the site."
+
+The user asked for a linked HTML page explaining how the website works for conference attendees and learners who might poke around the repo:
+
+> *"run through the repo and make it so that there is a linked HTML page that explains the code of the website (mobile optimzied) so that students and learners who poke around can undrestand whats going on. use this attachemnt as a starting point but not the be all and end all. this will be viewed at a conference"*
+
+That led to a new companion page, [`code-guide.html`](./code-guide.html), linked directly from the live app. It teaches from the real project rather than a fake demo, covering:
+- How the page structure, styling, interactions, and notes flow work
+- Why the project was kept simple and single-file for the attendee-facing app
+- Safe "change one thing and refresh" experiments for curious learners
+- A mobile-friendly reading experience in the same visual language as the app
+
+Then the guide itself was refined for a truer beginner audience:
+
+> *"overall good, but start off at the top of the explainer page with making parallels to scrolling a common website for teens. say instagram or youtube. then also do another pass to make the langauage eaccessible to a beginnier... we could have a submode for high schoolers who have done basic programming"*
+
+That second pass changed the guide in a few important ways:
+- It now opens with familiar comparisons to scrolling Instagram, YouTube, or TikTok
+- The default tone assumes the reader uses websites often but may never have coded before
+- A small audience toggle switches between **New to coding** and **Done a little coding**
+- More technical notes are hidden by default and only revealed in the higher-context mode
+
+That refinement mattered because the explainer was no longer just repo documentation — it became part of the conference experience itself.
+
 ---
 
 ## App Features
@@ -137,7 +163,7 @@ Finally, the visual system was refined to make state and context easier to read:
 | **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, and a `g.ai` research button per speaker |
 | **My Notes tab** | Quick note composer, saved session/person notes, delete or jump back into context, with distinct visual treatment per note type |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
-| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and localStorage patterns behind the site |
+| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns behind the site, with a beginner-first mode and an optional "done a little coding" mode |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
 | **No install** | The attendee app still runs as a single HTML file in any mobile browser, with no app store or install required |
 
@@ -153,6 +179,8 @@ For anyone building something similar:
 - **Name the interaction model.** "Scroll, scroll, scroll. Tap once to reveal. Tap sub-area for more." gave a precise mental model that translated directly into the accordion structure.
 - **Add features as follow-ups.** Notes and speakers were added after the initial build in natural conversation, not as upfront requirements. The single-file architecture made this easy.
 - **Keep later refinements narrow.** Requests like "just the highlighted speaker line should jump to profiles" led to cleaner UX than trying to make every related text element interactive.
+- **State the audience as specifically as the feature.** "Assume they use websites but may never have coded before" was more useful than simply saying "make it educational."
+- **Use familiar product metaphors.** Referencing Instagram and YouTube scrolling behavior immediately grounded the explainer page in something students already understand.
 
 ---
 
