@@ -234,6 +234,7 @@
       color: var(--text-muted);
     }
 
+    .intent-panel,
     .audience-panel {
       position: relative;
       z-index: 1;
@@ -244,6 +245,7 @@
       border: 1px solid rgba(255, 247, 235, 0.08);
     }
 
+    .intent-title,
     .audience-title {
       font-family: var(--font-display);
       font-size: 0.98rem;
@@ -251,12 +253,14 @@
       color: var(--text);
     }
 
+    .intent-copy,
     .audience-copy {
       font-size: 0.82rem;
       line-height: 1.66;
       color: var(--text-muted);
     }
 
+    .intent-toggle,
     .audience-toggle {
       display: flex;
       flex-wrap: wrap;
@@ -264,6 +268,7 @@
       margin-top: 0.8rem;
     }
 
+    .intent-btn,
     .mode-btn {
       display: inline-flex;
       align-items: center;
@@ -281,12 +286,14 @@
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
 
+    .intent-btn.active,
     .mode-btn.active {
       background: var(--teal);
       color: var(--bg);
       border-color: transparent;
     }
 
+    .intent-note,
     .mode-note {
       margin-top: 0.65rem;
       font-size: 0.74rem;
@@ -411,6 +418,10 @@
       color: var(--lime);
     }
 
+    .intent-only {
+      display: none;
+    }
+
     .mode-extra {
       display: none;
       margin-top: 0.7rem;
@@ -423,11 +434,29 @@
       color: var(--text-muted);
     }
 
-    body[data-mode="coder"] .mode-extra {
+    body[data-intent="viewing"] .audience-panel,
+    body[data-intent="viewing"] .mode-extra,
+    body[data-intent="viewing"] .mode-only {
+      display: none;
+    }
+
+    body[data-intent="viewing"] .intent-only[data-intent="viewing"],
+    body[data-intent="tinkering"] .intent-only[data-intent="tinkering"] {
       display: block;
     }
 
-    body[data-mode="beginner"] .mode-only[data-audience="coder"] {
+    body[data-intent="viewing"] .chip.intent-only[data-intent="viewing"],
+    body[data-intent="viewing"] .action-link.intent-only[data-intent="viewing"],
+    body[data-intent="tinkering"] .chip.intent-only[data-intent="tinkering"],
+    body[data-intent="tinkering"] .action-link.intent-only[data-intent="tinkering"] {
+      display: inline-flex;
+    }
+
+    body[data-intent="tinkering"][data-mode="coder"] .mode-extra {
+      display: block;
+    }
+
+    body[data-intent="tinkering"][data-mode="beginner"] .mode-only[data-audience="coder"] {
       display: none;
     }
 
@@ -612,7 +641,7 @@
     }
   </style>
 </head>
-<body data-mode="beginner">
+<body data-intent="viewing" data-mode="beginner">
   <header class="topbar">
     <div class="topbar-group">
       <a class="topbar-link primary" href="index.html">Back to the live app</a>
@@ -626,17 +655,18 @@
       <p class="eyebrow">Start Here</p>
       <h1>If you can scroll Instagram or YouTube, you already get part of this site</h1>
       <p class="hero-copy">
-        This page is for people who use websites all the time but may be brand new to coding. The EMW site works in a familiar way:
-        you scroll a stack of cards, tap to open more, switch tabs at the top, and save notes on your own device.
+        This page can do two jobs. If you are at the conference just exploring, it can explain what you are looking at in plain language.
+        If you want to open the file later and poke at it, it can also guide you through safe beginner edits.
       </p>
       <div class="hero-actions">
         <a class="action-link primary" href="#start-here">See the simple version</a>
-        <a class="action-link secondary" href="#experiments">Try safe experiments</a>
+        <a class="action-link secondary intent-only" data-intent="viewing" href="#observe">What to notice</a>
+        <a class="action-link secondary intent-only" data-intent="tinkering" href="#experiments">Try safe experiments</a>
       </div>
       <div class="hero-stats" aria-label="App facts">
         <div class="stat-card">
           <span class="stat-value">2</span>
-          <span class="stat-label">Pages in the repo that matter most right now: the live app and this guide</span>
+          <span class="stat-label">Ways to use this guide: understand the site or try changing it</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">3</span>
@@ -651,31 +681,42 @@
           <span class="stat-label">Extra installs needed to open the site in a browser</span>
         </div>
       </div>
+      <div class="intent-panel" aria-label="Choose how you want to use this guide">
+        <div class="intent-title">How are you using this page?</div>
+        <p class="intent-copy">
+          Most conference visitors will want the explainer path. Switch to tinkering only if you want the guide to talk more like a build-along and point you toward safe edits.
+        </p>
+        <div class="intent-toggle" role="group" aria-label="Guide intent">
+          <button class="intent-btn active" type="button" data-intent="viewing" aria-pressed="true">Exploring the site</button>
+          <button class="intent-btn" type="button" data-intent="tinkering" aria-pressed="false">Trying the code</button>
+        </div>
+        <p class="intent-note">The default is the conference-friendly explainer view. Tinkering mode unlocks edit ideas and the coding-depth switch below.</p>
+      </div>
       <div class="audience-panel" aria-label="Choose your guide mode">
-        <div class="audience-title">Pick your guide mode</div>
+        <div class="audience-title">How much coding language should this use?</div>
         <p class="audience-copy">
-          The default version keeps the language plain and assumes you have used lots of websites but have not coded before.
-          Switch modes any time if you want a few more code words and comparisons.
+          Since you chose the tinkering path, you can decide how much coding vocabulary you want. The default still keeps things plain and beginner-friendly.
         </p>
         <div class="audience-toggle" role="group" aria-label="Audience mode">
           <button class="mode-btn active" type="button" data-mode="beginner" aria-pressed="true">New to coding</button>
           <button class="mode-btn" type="button" data-mode="coder" aria-pressed="false">Done a little coding</button>
         </div>
-        <p class="mode-note">Beginner mode is the default. The second mode reveals a few extra notes for high school students who already know basic programming.</p>
+        <p class="mode-note">This second switch only changes the amount of technical language. It does not change the overall structure of the guide.</p>
       </div>
     </section>
 
     <nav class="chip-nav" aria-label="Section links">
       <a class="chip" href="#start-here">Feels familiar</a>
       <a class="chip" href="#learning-loop">How to explore</a>
+      <a class="chip intent-only" data-intent="viewing" href="#observe">What to notice</a>
       <a class="chip" href="#mental-model">Big idea</a>
       <a class="chip" href="#map">Main files</a>
       <a class="chip" href="#html">Page outline</a>
       <a class="chip" href="#css">Look and feel</a>
       <a class="chip" href="#js">What happens on tap</a>
       <a class="chip" href="#storage">Saved notes</a>
-      <a class="chip mode-only" data-audience="coder" href="#scratch">If you've coded</a>
-      <a class="chip" href="#experiments">Experiments</a>
+      <a class="chip mode-only intent-only" data-audience="coder" data-intent="tinkering" href="#scratch">If you've coded</a>
+      <a class="chip intent-only" data-intent="tinkering" href="#experiments">Experiments</a>
       <a class="chip" href="#questions">Questions</a>
     </nav>
 
@@ -731,17 +772,55 @@
         </article>
         <article class="info-card">
           <div class="step-badge">3</div>
-          <h3>Change one thing</h3>
-          <p>Edit one small thing at a time so you can tell exactly which change caused the result you see.</p>
+          <h3>Make one guess</h3>
+          <p class="intent-only" data-intent="viewing">Guess why that part of the page exists or what job it is doing for the attendee.</p>
+          <p class="intent-only" data-intent="tinkering">Edit one small thing at a time so you can tell exactly which change caused the result you see.</p>
         </article>
         <article class="info-card">
           <div class="step-badge">4</div>
-          <h3>Refresh and compare</h3>
-          <p>Reload the page, notice what changed, and try to explain it back in your own words before moving on.</p>
+          <h3>Check yourself</h3>
+          <p class="intent-only" data-intent="viewing">Open the live app again and see whether you can spot the same pattern somewhere else on the page.</p>
+          <p class="intent-only" data-intent="tinkering">Reload the page, notice what changed, and try to explain it back in your own words before moving on.</p>
+        </article>
+      </div>
+      <div class="callout intent-only" data-intent="viewing">
+        <strong>Tip:</strong> even without editing, noticing repeated patterns and guessing why they were chosen is already real builder thinking.
+      </div>
+      <div class="callout intent-only" data-intent="tinkering">
+        <strong>Tip:</strong> the best beginner edits are usually visible ones like text, color, spacing, and button labels because the cause and effect are easy to spot.
+      </div>
+    </section>
+
+    <section class="panel section-stack intent-only" data-intent="viewing" id="observe">
+      <p class="eyebrow">While You're Browsing</p>
+      <h2>What to notice if you are not editing anything</h2>
+      <p class="panel-copy">
+        Even without changing the code, you can still read the app like a builder. The trick is to notice the repeated patterns and ask what job each part is doing.
+      </p>
+      <div class="flow-grid">
+        <article class="info-card">
+          <div class="step-badge">1</div>
+          <h3>The feed feeling</h3>
+          <p>The schedule works like a feed. It repeats one card pattern over and over, which makes the page easier to scan quickly.</p>
+        </article>
+        <article class="info-card">
+          <div class="step-badge">2</div>
+          <h3>The remote at the top</h3>
+          <p>The tab bar acts like a remote control. It changes your view without sending you to a totally different website.</p>
+        </article>
+        <article class="info-card">
+          <div class="step-badge">3</div>
+          <h3>The browser's memory shelf</h3>
+          <p>Your notes feel personal because the browser keeps them on this same device, a bit like a draft that stays in your own notebook.</p>
+        </article>
+        <article class="info-card">
+          <div class="step-badge">4</div>
+          <h3>The conference shortcut layer</h3>
+          <p>Buttons, chips, and jump links shorten the path to what you need, which matters when people are standing in hallways between sessions.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Tip:</strong> the best beginner edits are usually visible ones like text, color, spacing, and button labels because the cause and effect are easy to spot.
+        <strong>Good conference question:</strong> if you had to explain one part of the app to a friend in ten seconds, which part feels easiest to understand and why?
       </div>
     </section>
 
@@ -821,6 +900,9 @@
         HTML is the part that names the big pieces of the page: the top bar, the main area, the tabs, the pop-up, and the little status message.
         It helps the browser know what belongs where.
       </p>
+      <div class="callout intent-only" data-intent="viewing">
+        <strong>Analogy:</strong> HTML is like the labeled rooms and signs on a venue map. It tells you what each part of the place is supposed to be.
+      </div>
       <div class="mode-extra">
         If you already know a little coding, HTML is the structure layer. Tags such as <span class="inline-code">&lt;header&gt;</span>,
         <span class="inline-code">&lt;main&gt;</span>, and <span class="inline-code">&lt;section&gt;</span> are often called semantic HTML.
@@ -862,6 +944,9 @@
       <p class="panel-copy">
         CSS decides how the site looks and feels. It picks the colors, spacing, fonts, button sizes, and the smooth open-close motion that makes the page feel polished on a phone.
       </p>
+      <div class="callout intent-only" data-intent="viewing">
+        <strong>Analogy:</strong> CSS is the paint, lighting, spacing, and signage system. The building is the same building, but it feels very different depending on these choices.
+      </div>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
@@ -914,6 +999,9 @@
         JavaScript is the part that notices what a person did and responds. It opens a session, switches tabs, saves a note,
         or shows a message after a button press.
       </p>
+      <div class="callout intent-only" data-intent="viewing">
+        <strong>Analogy:</strong> JavaScript is like the stage manager or usher. It notices what just happened and helps the right next thing happen on time.
+      </div>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
@@ -976,6 +1064,9 @@
         The site keeps notes in the browser instead of sending them to an account or a server. That keeps the setup simple for a conference,
         but it also means your notes stay with the same browser on the same device.
       </p>
+      <div class="callout intent-only" data-intent="viewing">
+        <strong>Analogy:</strong> think of this like a small locker inside this browser. It is fast and convenient, but it is attached to this one place.
+      </div>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
@@ -1014,7 +1105,7 @@ general:quick-note</code></pre>
       </div>
     </section>
 
-    <section class="panel section-stack mode-only" data-audience="coder" id="scratch">
+    <section class="panel section-stack mode-only intent-only" data-audience="coder" data-intent="tinkering" id="scratch">
       <p class="eyebrow">If You've Coded Before</p>
       <h2>A few quick bridges to basic programming</h2>
       <p class="panel-copy">
@@ -1048,7 +1139,7 @@ general:quick-note</code></pre>
       </div>
     </section>
 
-    <section class="panel section-stack" id="experiments">
+    <section class="panel section-stack intent-only" data-intent="tinkering" id="experiments">
       <p class="eyebrow">Hands-on ideas</p>
       <h2>Safe experiments to try</h2>
       <p class="panel-copy">
@@ -1141,8 +1232,11 @@ general:quick-note</code></pre>
     <footer class="panel section-stack">
       <p class="eyebrow">Keep exploring</p>
       <h2>Read the code with confidence</h2>
-      <p class="footer-note">
-        This guide is based on the real project, with the default path aimed at students who use websites all the time but may be reading code for the first time.
+      <p class="footer-note intent-only" data-intent="viewing">
+        This guide now defaults to a conference-friendly explainer path for people who use websites all the time but may never have edited code before.
+      </p>
+      <p class="footer-note intent-only" data-intent="tinkering">
+        Tinkering mode keeps the same guide structure, then layers on safe experiments and a little more coding language only when you ask for it.
       </p>
       <div class="footer-actions">
         <a class="action-link primary" href="index.html">Open the live app</a>
@@ -1151,8 +1245,21 @@ general:quick-note</code></pre>
     </footer>
   </main>
   <script>
+    const GUIDE_INTENT_KEY = 'emw2026_codeguide_intent';
     const GUIDE_MODE_KEY = 'emw2026_codeguide_mode';
+    const intentButtons = document.querySelectorAll('.intent-btn');
     const modeButtons = document.querySelectorAll('.mode-btn');
+
+    function applyGuideIntent(intent) {
+      const nextIntent = intent === 'tinkering' ? 'tinkering' : 'viewing';
+      document.body.dataset.intent = nextIntent;
+
+      intentButtons.forEach(btn => {
+        const isActive = btn.dataset.intent === nextIntent;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
 
     function applyGuideMode(mode) {
       const nextMode = mode === 'coder' ? 'coder' : 'beginner';
@@ -1165,8 +1272,18 @@ general:quick-note</code></pre>
       });
     }
 
+    const savedIntent = localStorage.getItem(GUIDE_INTENT_KEY);
     const savedMode = localStorage.getItem(GUIDE_MODE_KEY);
+    applyGuideIntent(savedIntent);
     applyGuideMode(savedMode);
+
+    intentButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nextIntent = btn.dataset.intent;
+        localStorage.setItem(GUIDE_INTENT_KEY, nextIntent);
+        applyGuideIntent(nextIntent);
+      });
+    });
 
     modeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
