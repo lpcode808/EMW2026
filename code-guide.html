@@ -645,7 +645,7 @@
         <article class="info-card">
           <div class="step-badge">4</div>
           <h3>Remember</h3>
-          <p>Notes are stored with <span class="inline-code">localStorage</span>, which means they stay on the same device even after refresh.</p>
+          <p>Notes are stored with <span class="inline-code">localStorage</span>, which means session notes, speaker notes, and quick notes stay on the same device even after refresh.</p>
         </article>
       </div>
     </section>
@@ -702,7 +702,9 @@
 &lt;main&gt;
   &lt;section id="scheduleTab" class="tab-content active"&gt;&lt;/section&gt;
   &lt;section id="speakersTab" class="tab-content"&gt;&lt;/section&gt;
-  &lt;section id="notesTab" class="tab-content"&gt;&lt;/section&gt;
+  &lt;section id="notesTab" class="tab-content"&gt;
+    &lt;div id="notesComposer"&gt;&lt;/div&gt;
+  &lt;/section&gt;
 &lt;/main&gt;
 
 &lt;div class="modal-overlay hidden" id="exportModal"&gt;...&lt;/div&gt;
@@ -835,30 +837,43 @@
       <h2>Why notes stay on this device</h2>
       <p class="panel-copy">
         The app does not send notes to a server. Instead, it uses the browser's local storage. That makes the app simple and private for a conference setting,
-        but it also means the notes live only in the same browser on the same device.
+        but it also means the notes live only in the same browser on the same device. The current version has three note paths:
+        session notes, speaker-profile notes, and a quick note that is not attached anywhere.
       </p>
       <div class="code-grid">
         <article class="code-card">
           <div class="code-card-header">
             <h3>Read saved notes</h3>
-            <p>The app loads whatever was saved earlier under one key.</p>
+            <p>The app reads one storage bucket, then uses note keys that describe both the note type and the thing it belongs to.</p>
           </div>
           <pre><code>const NOTES_KEY = 'emw2026_notes';
+const NOTE_TYPES = {
+  SESSION: 'session',
+  SPEAKER: 'speaker',
+  GENERAL: 'general'
+};
 
-function getNotes() {
-  const raw = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
-  return raw;
-}</code></pre>
+function noteKey(type, entityId) {
+  return `${type}:${entityId}`;
+}
+
+const sessionNote = notes[noteKey(NOTE_TYPES.SESSION, 'thu-04')];</code></pre>
         </article>
         <article class="code-card">
           <div class="code-card-header">
             <h3>Write saved notes</h3>
-            <p>When a user saves, the app updates the note object and stores it back as JSON text.</p>
+            <p>When a user saves, the app preserves the original creation time and updates the latest save time from the device clock.</p>
           </div>
-          <pre><code>function persistNotes(notes) {
-  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
-  updateNoteCount();
-}</code></pre>
+          <pre><code>const now = Date.now();
+
+notes[key] = {
+  key,
+  type,
+  entityId,
+  text: trimmed,
+  createdAt: existing ? existing.createdAt : now,
+  updatedAt: now
+};</code></pre>
         </article>
       </div>
       <div class="feature-grid">
@@ -868,7 +883,7 @@ function getNotes() {
         </article>
         <article class="info-card">
           <h3>Why timestamps?</h3>
-          <p>Each note stores when it was created and updated so the Notes tab can show useful context back to the learner.</p>
+          <p>Each note stores when it was created and updated so the Notes tab can show when something was captured on that device during the event.</p>
         </article>
         <article class="info-card">
           <h3>What is the tradeoff?</h3>
