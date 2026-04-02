@@ -6,7 +6,7 @@
   <title>EMW 2026 — Student Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #001329;
@@ -194,6 +194,83 @@
       font-size: 0.75rem;
       color: var(--text-muted);
       font-weight: 500;
+    }
+
+    /* ── LEARN CALLOUT ── */
+    .learn-callout {
+      margin: 0 0.75rem 0.9rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(7, 168, 168, 0.18), rgba(0, 53, 113, 0.42)),
+        var(--surface);
+      border: 1px solid var(--border-active);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.16);
+    }
+
+    .learn-callout-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 0.55rem;
+      font-family: var(--font-display);
+    }
+
+    .learn-callout-title {
+      font-family: var(--font-display);
+      font-size: 1.02rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 0.45rem;
+    }
+
+    .learn-callout-copy {
+      font-size: 0.82rem;
+      line-height: 1.66;
+      color: rgba(255, 247, 235, 0.78);
+    }
+
+    .learn-callout-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 0.9rem;
+    }
+
+    .learn-callout-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0.68rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      transition: transform 0.15s, opacity 0.15s, border-color 0.15s;
+    }
+
+    .learn-callout-link:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .learn-callout-link.primary {
+      background: var(--teal);
+      color: var(--bg);
+    }
+
+    .learn-callout-link.secondary {
+      background: rgba(255, 247, 235, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
     }
 
     /* ── SESSION ITEM ── */
@@ -470,6 +547,13 @@
       padding-top: 0.5rem;
     }
 
+    .note-meta {
+      margin-top: 0.45rem;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: var(--text-dim);
+    }
+
     .note-textarea {
       width: 100%;
       background: var(--surface-input);
@@ -544,6 +628,22 @@
       color: var(--text);
     }
 
+    .notes-subtitle {
+      padding: 0 1.25rem 0.9rem;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .notes-subtitle strong {
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .notes-compose-card {
+      margin-bottom: 0.85rem;
+    }
+
     .export-btn {
       display: flex;
       align-items: center;
@@ -583,13 +683,33 @@
       border-radius: var(--radius);
     }
 
-    .note-card-time {
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      margin-bottom: 0.2rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
+    .note-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.35rem;
+    }
+
+    .note-card-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+      background: var(--teal-dim);
+      color: var(--teal);
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
+      font-family: var(--font-display);
+    }
+
+    .note-card-time {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      font-weight: 600;
     }
 
     .note-card-session {
@@ -600,6 +720,13 @@
       margin-bottom: 0.5rem;
     }
 
+    .note-card-context {
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 0.55rem;
+    }
+
     .note-card-text {
       font-size: 0.85rem;
       line-height: 1.68;
@@ -607,22 +734,44 @@
       white-space: pre-wrap;
     }
 
+    .note-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .note-card-open,
     .note-card-delete {
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      margin-top: 0.75rem;
       padding: 0.35rem 0.7rem;
       background: none;
       border: 1px solid var(--border);
       border-radius: 6px;
-      color: var(--text-dim);
       font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s, color 0.2s, border-color 0.2s;
       font-family: var(--font-body);
       min-height: 36px;
+      margin-top: 0;
+    }
+
+    .note-card-open {
+      color: var(--text-muted);
+    }
+
+    .note-card-open:hover {
+      background: rgba(7, 168, 168, 0.12);
+      color: var(--teal);
+      border-color: rgba(7, 168, 168, 0.25);
+    }
+
+    .note-card-delete {
+      color: var(--text-dim);
     }
     .note-card-delete:hover {
       background: rgba(200, 83, 29, 0.1);
@@ -962,9 +1111,23 @@
         <span class="date-label">Thursday, April 9</span>
         <span class="date-sub">Sheraton Waikiki · Honolulu, Hawaiʻi</span>
       </div>
+      <section class="learn-callout" aria-label="Learn how this site works">
+        <p class="learn-callout-label">Code Guide</p>
+        <h2 class="learn-callout-title">Curious how this app works?</h2>
+        <p class="learn-callout-copy">
+          Open a mobile-friendly walkthrough of the real HTML, CSS, JavaScript, and localStorage patterns behind this site.
+          It is built for students, teachers, and conference guests who want to learn by poking around.
+        </p>
+        <div class="learn-callout-links">
+          <a class="learn-callout-link primary" href="code-guide.html">Open the code walkthrough</a>
+          <a class="learn-callout-link secondary" href="code-guide.html#experiments">Try safe experiments</a>
+        </div>
+      </section>
       <div id="scheduleList"></div>
       <footer class="app-footer">
         <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener">emwhawaii.com</a>
+        &nbsp;·&nbsp;
+        <a href="code-guide.html">Code Guide</a>
         &nbsp;·&nbsp; Presented by Blue Startups
       </footer>
     </section>
@@ -982,6 +1145,8 @@
         <span class="notes-title">My Notes</span>
         <button class="export-btn" id="exportBtn">Export ↓</button>
       </div>
+      <p class="notes-subtitle">Use <strong>Quick Note</strong> for thoughts that are not tied to a session or speaker.</p>
+      <div id="notesComposer"></div>
       <div id="notesList"></div>
     </section>
   </main>
@@ -1302,10 +1467,103 @@
   //  NOTES — localStorage
   // ──────────────────────────────────────────────────────────
   const NOTES_KEY = 'emw2026_notes';
+  const NOTE_TYPES = {
+    SESSION: 'session',
+    SPEAKER: 'speaker',
+    GENERAL: 'general'
+  };
+  const GENERAL_NOTE_ID = 'quick-note';
+
+  function slugify(value = '') {
+    return value
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function noteKey(type, entityId = GENERAL_NOTE_ID) {
+    return `${type}:${entityId}`;
+  }
+
+  function getSessionById(id) {
+    return SCHEDULE.find(session => session.id === id);
+  }
+
+  function normalizeTimestamp(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    const parsed = Date.parse(value || '');
+    return Number.isNaN(parsed) ? Date.now() : parsed;
+  }
+
+  function normalizeNoteRecord(key, value) {
+    if (!value || typeof value !== 'object') return null;
+
+    const text = typeof value.text === 'string' ? value.text.trim() : '';
+    if (!text) return null;
+
+    if (value.type) {
+      const entityId = value.entityId || key.split(':').slice(1).join(':') || GENERAL_NOTE_ID;
+      const createdAt = normalizeTimestamp(value.createdAt || value.savedAt);
+      const updatedAt = normalizeTimestamp(value.updatedAt || value.createdAt || value.savedAt || createdAt);
+      return {
+        key,
+        type: value.type,
+        entityId,
+        text,
+        createdAt,
+        updatedAt
+      };
+    }
+
+    const sessionId = value.id || key;
+    const createdAt = normalizeTimestamp(value.savedAt);
+    return {
+      key: noteKey(NOTE_TYPES.SESSION, sessionId),
+      type: NOTE_TYPES.SESSION,
+      entityId: sessionId,
+      text,
+      createdAt,
+      updatedAt: createdAt
+    };
+  }
 
   function getNotes() {
-    try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); }
-    catch { return {}; }
+    try {
+      const raw = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+      if (!raw || typeof raw !== 'object') return {};
+
+      let changed = false;
+      const normalized = {};
+
+      Object.entries(raw).forEach(([key, value]) => {
+        const record = normalizeNoteRecord(key, value);
+        if (!record) {
+          changed = true;
+          return;
+        }
+        if (
+          key !== record.key ||
+          value.type !== record.type ||
+          value.entityId !== record.entityId ||
+          value.text !== record.text ||
+          value.createdAt !== record.createdAt ||
+          value.updatedAt !== record.updatedAt
+        ) {
+          changed = true;
+        }
+        normalized[record.key] = record;
+      });
+
+      if (changed) {
+        localStorage.setItem(NOTES_KEY, JSON.stringify(normalized));
+      }
+
+      return normalized;
+    } catch {
+      return {};
+    }
   }
 
   function persistNotes(notes) {
@@ -1313,30 +1571,57 @@
     updateNoteCount();
   }
 
-  function saveNote(sessionId, text) {
-    const notes = getNotes();
-    const session = SCHEDULE.find(s => s.id === sessionId);
-    if (text.trim()) {
-      notes[sessionId] = {
-        id: sessionId,
-        sessionTitle: session ? session.title : '',
-        sessionTime: session ? session.time : '',
-        text: text.trim(),
-        savedAt: new Date().toISOString()
-      };
-    } else {
-      delete notes[sessionId];
-    }
-    persistNotes(notes);
-    syncNoteIndicators();
+  function getNote(type, entityId = GENERAL_NOTE_ID) {
+    return getNotes()[noteKey(type, entityId)] || null;
   }
 
-  function deleteNote(sessionId) {
+  function saveNote(type, entityId, text) {
     const notes = getNotes();
-    delete notes[sessionId];
+    const key = noteKey(type, entityId || GENERAL_NOTE_ID);
+    const trimmed = text.trim();
+    const existing = notes[key];
+
+    if (!trimmed) {
+      if (existing) {
+        delete notes[key];
+        persistNotes(notes);
+        return { status: 'deleted', note: null };
+      }
+      return { status: 'unchanged', note: null };
+    }
+
+    if (existing && existing.text === trimmed) {
+      return { status: 'unchanged', note: existing };
+    }
+
+    const now = Date.now();
+    const next = {
+      key,
+      type,
+      entityId: entityId || GENERAL_NOTE_ID,
+      text: trimmed,
+      createdAt: existing ? normalizeTimestamp(existing.createdAt) : now,
+      updatedAt: now
+    };
+
+    notes[key] = next;
     persistNotes(notes);
+    return {
+      status: existing ? 'updated' : 'created',
+      note: next
+    };
+  }
+
+  function deleteNote(noteId) {
+    const notes = getNotes();
+    if (!notes[noteId]) return false;
+    delete notes[noteId];
+    persistNotes(notes);
+    syncNoteEditorValues();
     syncNoteIndicators();
+    syncNoteMeta();
     renderNotesTab();
+    return true;
   }
 
   function updateNoteCount() {
@@ -1345,15 +1630,73 @@
     el.textContent = count > 0 ? count : '';
   }
 
+  function noteLabel(type, hasNote) {
+    if (type === NOTE_TYPES.SPEAKER) {
+      return hasNote ? 'Edit Person Note' : 'Add Person Note';
+    }
+    return hasNote ? 'Edit Note' : 'Add Note';
+  }
+
   function syncNoteIndicators() {
     const notes = getNotes();
     document.querySelectorAll('.note-toggle').forEach(btn => {
-      const id = btn.dataset.sessionId;
-      const hasNote = !!notes[id];
+      const type = btn.dataset.noteType;
+      const id = btn.dataset.noteId;
+      const hasNote = !!notes[noteKey(type, id)];
       btn.classList.toggle('has-note', hasNote);
       const labelSpan = btn.querySelector('.note-label');
-      if (labelSpan) labelSpan.textContent = hasNote ? 'Edit Note' : 'Add Note';
+      if (labelSpan) labelSpan.textContent = noteLabel(type, hasNote);
     });
+  }
+
+  function formatNoteTimestamp(timestamp) {
+    return new Intl.DateTimeFormat(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(new Date(timestamp));
+  }
+
+  function formatNoteTime(timestamp) {
+    return new Intl.DateTimeFormat(undefined, {
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(new Date(timestamp));
+  }
+
+  function noteMetaMessage(note) {
+    if (!note) {
+      return 'Uses this device’s local time when you save.';
+    }
+    const created = `Noted ${formatNoteTimestamp(note.createdAt)} on this device`;
+    if (note.updatedAt && note.updatedAt !== note.createdAt) {
+      return `${created} · updated ${formatNoteTime(note.updatedAt)}`;
+    }
+    return created;
+  }
+
+  function syncNoteMeta() {
+    document.querySelectorAll('[data-note-meta-type]').forEach(el => {
+      const note = getNote(el.dataset.noteMetaType, el.dataset.noteMetaId);
+      el.textContent = noteMetaMessage(note);
+    });
+  }
+
+  function syncNoteEditorValues() {
+    document.querySelectorAll('.note-textarea').forEach(textarea => {
+      const note = getNote(textarea.dataset.noteType, textarea.dataset.noteId);
+      const nextValue = note ? note.text : '';
+      if (textarea.value !== nextValue) {
+        textarea.value = nextValue;
+      }
+    });
+  }
+
+  function noteTypeLabel(type) {
+    if (type === NOTE_TYPES.SESSION) return 'Session Note';
+    if (type === NOTE_TYPES.SPEAKER) return 'Person Note';
+    return 'Quick Note';
   }
 
   // ──────────────────────────────────────────────────────────
@@ -1387,8 +1730,10 @@
   function renderSchedule() {
     const notes = getNotes();
     const html = SCHEDULE.map(s => {
-      const hasNote = !!notes[s.id];
+      const note = notes[noteKey(NOTE_TYPES.SESSION, s.id)];
+      const hasNote = !!note;
       const hasSubs = s.subItems && s.subItems.length > 0;
+      const notePanelId = `notebody-session-${s.id}`;
 
       const metaParts = [];
       if (s.speaker && s.type !== 'meal' && s.type !== 'break' && s.type !== 'background') {
@@ -1439,20 +1784,22 @@
                     <div class="summary-text">${esc(s.studentSummary)}</div>
                   </div>
                 ` : ''}
-                <button class="note-toggle ${hasNote ? 'has-note' : ''}" data-session-id="${s.id}" aria-expanded="false">
+                <button class="note-toggle ${hasNote ? 'has-note' : ''}" data-note-type="${NOTE_TYPES.SESSION}" data-note-id="${s.id}" aria-expanded="false" aria-controls="${notePanelId}">
                   <span aria-hidden="true">📝</span>
-                  <span class="note-label">${hasNote ? 'Edit Note' : 'Add Note'}</span>
+                  <span class="note-label">${noteLabel(NOTE_TYPES.SESSION, hasNote)}</span>
                   <span class="note-dot" aria-hidden="true"></span>
                 </button>
-                <div class="note-body" id="notebody-${s.id}">
+                <div class="note-body" id="${notePanelId}">
                   <div class="note-inner">
                     <textarea
                       class="note-textarea"
-                      data-session-id="${s.id}"
+                      data-note-type="${NOTE_TYPES.SESSION}"
+                      data-note-id="${s.id}"
                       placeholder="What stood out? Questions? Connections to make..."
                       aria-label="Note for ${esc(s.title)}"
-                    >${hasNote ? esc(notes[s.id].text) : ''}</textarea>
-                    <button class="note-save-btn" data-session-id="${s.id}">Save Note ✓</button>
+                    >${note ? esc(note.text) : ''}</textarea>
+                    <p class="note-meta" data-note-meta-type="${NOTE_TYPES.SESSION}" data-note-meta-id="${s.id}">${esc(noteMetaMessage(note))}</p>
+                    <button class="note-save-btn" data-note-type="${NOTE_TYPES.SESSION}" data-note-id="${s.id}">Save Note ✓</button>
                   </div>
                 </div>
                 <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener" class="ext-link">
@@ -1470,35 +1817,65 @@
     updateNoteCount();
   }
 
+  function saveNoteFromTextarea(textarea) {
+    const result = saveNote(textarea.dataset.noteType, textarea.dataset.noteId, textarea.value);
+    syncNoteEditorValues();
+    syncNoteIndicators();
+    syncNoteMeta();
+    return result;
+  }
+
+  function saveNoteFromButton(button) {
+    const textarea = document.querySelector(
+      `.note-textarea[data-note-type="${button.dataset.noteType}"][data-note-id="${button.dataset.noteId}"]`
+    );
+    if (!textarea) return { status: 'unchanged', note: null };
+    return saveNoteFromTextarea(textarea);
+  }
+
+  function noteToast(type, status) {
+    if (status === 'deleted') return 'Note cleared';
+    if (status === 'created' || status === 'updated') {
+      if (type === NOTE_TYPES.SPEAKER) return 'Person note saved ✓';
+      if (type === NOTE_TYPES.GENERAL) return 'Quick note saved ✓';
+      return 'Note saved ✓';
+    }
+    return '';
+  }
+
+  function bindNoteEditors(root) {
+    root.querySelectorAll('.note-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleNotePanel(btn));
+    });
+
+    root.querySelectorAll('.note-save-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const result = saveNoteFromButton(btn);
+        const message = noteToast(btn.dataset.noteType, result.status);
+        if (message) showToast(message);
+        keepAccordionExpanded(btn);
+      });
+    });
+
+    root.querySelectorAll('.note-textarea').forEach(textarea => {
+      textarea.addEventListener('blur', () => {
+        saveNoteFromTextarea(textarea);
+      });
+    });
+  }
+
   function attachScheduleEvents() {
-    document.querySelectorAll('.session-trigger').forEach(btn => {
+    const root = document.getElementById('scheduleList');
+
+    root.querySelectorAll('.session-trigger').forEach(btn => {
       btn.addEventListener('click', () => toggleSession(btn.dataset.id));
     });
 
-    document.querySelectorAll('.summary-toggle').forEach(btn => {
+    root.querySelectorAll('.summary-toggle').forEach(btn => {
       btn.addEventListener('click', () => toggleSummary(btn.dataset.id));
     });
 
-    document.querySelectorAll('.note-toggle').forEach(btn => {
-      btn.addEventListener('click', () => toggleNote(btn.dataset.sessionId));
-    });
-
-    document.querySelectorAll('.note-save-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.sessionId;
-        const ta = document.querySelector(`.note-textarea[data-session-id="${id}"]`);
-        if (!ta) return;
-        saveNote(id, ta.value);
-        showToast('Note saved ✓');
-        expandParent(id);
-      });
-    });
-
-    document.querySelectorAll('.note-textarea').forEach(ta => {
-      ta.addEventListener('blur', () => {
-        saveNote(ta.dataset.sessionId, ta.value);
-      });
-    });
+    bindNoteEditors(root);
   }
 
   // ── TOGGLE HELPERS ──
@@ -1537,12 +1914,12 @@
       btn.classList.add('open');
       setTimeout(() => { body.style.maxHeight = '9999px'; }, 370);
     }
-    expandParent(id);
+    keepAccordionExpanded(body);
   }
 
-  function toggleNote(id) {
-    const body = document.getElementById(`notebody-${id}`);
-    const btn = document.querySelector(`.note-toggle[data-session-id="${id}"]`);
+  function toggleNotePanel(btn) {
+    const body = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!body) return;
     const isOpen = btn.getAttribute('aria-expanded') === 'true';
 
     if (isOpen) {
@@ -1558,11 +1935,11 @@
         if (ta) ta.focus();
       }, 200);
     }
-    expandParent(id);
+    keepAccordionExpanded(body);
   }
 
-  function expandParent(id) {
-    const parentBody = document.getElementById(`body-${id}`);
+  function keepAccordionExpanded(child) {
+    const parentBody = child.closest('.session-body, .speaker-body');
     if (parentBody && parentBody.style.maxHeight !== '0px') {
       parentBody.style.maxHeight = '9999px';
     }
@@ -1571,37 +1948,117 @@
   // ──────────────────────────────────────────────────────────
   //  RENDER NOTES TAB
   // ──────────────────────────────────────────────────────────
+  function getSpeakerById(id) {
+    return SPEAKERS.find(speaker => speaker.id === id);
+  }
+
+  function getNoteTitle(note) {
+    if (note.type === NOTE_TYPES.SESSION) {
+      const session = getSessionById(note.entityId);
+      return session ? session.title : 'Session note';
+    }
+    if (note.type === NOTE_TYPES.SPEAKER) {
+      const speaker = getSpeakerById(note.entityId);
+      return speaker ? speaker.name : 'Speaker note';
+    }
+    return 'Quick Note';
+  }
+
+  function getNoteContext(note) {
+    if (note.type === NOTE_TYPES.SESSION) {
+      const session = getSessionById(note.entityId);
+      return session && session.time ? `${session.time} session` : 'Session note';
+    }
+    if (note.type === NOTE_TYPES.SPEAKER) {
+      const speaker = getSpeakerById(note.entityId);
+      return speaker ? `${speaker.role} · ${speaker.company}` : 'Person note';
+    }
+    return 'Not tied to a session or speaker';
+  }
+
+  function getLinkedNotes(notes) {
+    return Object.values(notes)
+      .filter(note => note.type !== NOTE_TYPES.GENERAL)
+      .sort((a, b) => b.createdAt - a.createdAt);
+  }
+
   function renderNotesTab() {
     const notes = getNotes();
-    const noteList = Object.values(notes);
+    const generalNote = notes[noteKey(NOTE_TYPES.GENERAL, GENERAL_NOTE_ID)] || null;
+    const noteList = getLinkedNotes(notes);
+    const composer = document.getElementById('notesComposer');
     const container = document.getElementById('notesList');
+
+    composer.innerHTML = `
+      <div class="note-card notes-compose-card">
+        <div class="note-card-meta">
+          <span class="note-card-badge">${noteTypeLabel(NOTE_TYPES.GENERAL)}</span>
+          <span class="note-card-time">${esc(getNoteContext({ type: NOTE_TYPES.GENERAL }))}</span>
+        </div>
+        <div class="note-card-session">Quick Note</div>
+        <div class="note-card-context">Capture a thought without attaching it to a session or person.</div>
+        <textarea
+          class="note-textarea"
+          data-note-type="${NOTE_TYPES.GENERAL}"
+          data-note-id="${GENERAL_NOTE_ID}"
+          placeholder="Jot something down without linking it anywhere..."
+          aria-label="Quick note"
+        >${generalNote ? esc(generalNote.text) : ''}</textarea>
+        <p class="note-meta" data-note-meta-type="${NOTE_TYPES.GENERAL}" data-note-meta-id="${GENERAL_NOTE_ID}">${esc(noteMetaMessage(generalNote))}</p>
+        <div class="note-card-actions">
+          ${generalNote ? `<button class="note-card-delete" id="clearQuickNote">Clear Quick Note</button>` : ''}
+          <button class="note-save-btn" data-note-type="${NOTE_TYPES.GENERAL}" data-note-id="${GENERAL_NOTE_ID}">Save Quick Note ✓</button>
+        </div>
+      </div>
+    `;
+
+    bindNoteEditors(composer);
+    syncNoteMeta();
+
+    const clearQuickNote = document.getElementById('clearQuickNote');
+    if (clearQuickNote) {
+      clearQuickNote.addEventListener('click', () => {
+        if (deleteNote(noteKey(NOTE_TYPES.GENERAL, GENERAL_NOTE_ID))) {
+          showToast('Quick note cleared');
+        }
+      });
+    }
 
     if (noteList.length === 0) {
       container.innerHTML = `
         <div class="notes-empty">
           <span class="notes-empty-icon">📝</span>
-          <p>No notes yet.<br>Tap <strong>Add Note</strong> on any session to get started.</p>
+          <p>No session or speaker notes yet.<br>Tap <strong>Add Note</strong> on a session, or save a note from a speaker profile.</p>
         </div>
       `;
       return;
     }
 
-    const order = SCHEDULE.map(s => s.id);
-    noteList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
-
-    container.innerHTML = noteList.map(n => `
-      <div class="note-card" id="notecard-${n.id}">
-        <div class="note-card-time">${esc(n.sessionTime)}</div>
-        <div class="note-card-session">${esc(n.sessionTitle)}</div>
-        <div class="note-card-text">${esc(n.text)}</div>
-        <button class="note-card-delete" data-id="${n.id}" aria-label="Delete note for ${esc(n.sessionTitle)}">✕ Delete</button>
+    container.innerHTML = noteList.map(note => `
+      <div class="note-card" id="notecard-${slugify(note.key)}">
+        <div class="note-card-meta">
+          <span class="note-card-badge">${esc(noteTypeLabel(note.type))}</span>
+          <span class="note-card-time">${esc(noteMetaMessage(note))}</span>
+        </div>
+        <div class="note-card-session">${esc(getNoteTitle(note))}</div>
+        <div class="note-card-context">${esc(getNoteContext(note))}</div>
+        <div class="note-card-text">${esc(note.text)}</div>
+        <div class="note-card-actions">
+          <button class="note-card-open" data-note-key="${note.key}">${note.type === NOTE_TYPES.SESSION ? 'Open Session' : 'View Speaker'}</button>
+          <button class="note-card-delete" data-note-key="${note.key}" aria-label="Delete note for ${esc(getNoteTitle(note))}">✕ Delete</button>
+        </div>
       </div>
     `).join('');
 
+    container.querySelectorAll('.note-card-open').forEach(btn => {
+      btn.addEventListener('click', () => openNoteContext(btn.dataset.noteKey));
+    });
+
     container.querySelectorAll('.note-card-delete').forEach(btn => {
       btn.addEventListener('click', () => {
-        deleteNote(btn.dataset.id);
-        showToast('Note deleted');
+        if (deleteNote(btn.dataset.noteKey)) {
+          showToast('Note deleted');
+        }
       });
     });
   }
@@ -1611,11 +2068,8 @@
   // ──────────────────────────────────────────────────────────
   function buildExportText() {
     const notes = getNotes();
-    const noteList = Object.values(notes);
+    const noteList = Object.values(notes).sort((a, b) => a.createdAt - b.createdAt);
     if (noteList.length === 0) return 'No notes saved yet.';
-
-    const order = SCHEDULE.map(s => s.id);
-    noteList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
     const lines = [
       'EAST MEETS WEST 2026 — MY NOTES',
@@ -1623,7 +2077,9 @@
       '─'.repeat(42),
       '',
       ...noteList.flatMap(n => [
-        `${n.sessionTime}  ${n.sessionTitle}`,
+        noteTypeLabel(n.type).toUpperCase(),
+        getNoteTitle(n),
+        `${getNoteContext(n)} · ${noteMetaMessage(n)}`,
         n.text,
         ''
       ])
@@ -1646,19 +2102,23 @@
   // ──────────────────────────────────────────────────────────
   //  TAB SWITCHING
   // ──────────────────────────────────────────────────────────
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.toggle('active', b === btn);
-        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
-      });
-      document.querySelectorAll('.tab-content').forEach(p => {
-        p.classList.toggle('active', p.id === target + 'Tab');
-      });
-      if (target === 'notes') renderNotesTab();
-      if (target === 'speakers') renderSpeakers(document.getElementById('speakerSearch').value);
+  function activateTab(target) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      const isActive = btn.dataset.tab === target;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
+
+    document.querySelectorAll('.tab-content').forEach(panel => {
+      panel.classList.toggle('active', panel.id === target + 'Tab');
+    });
+
+    if (target === 'notes') renderNotesTab();
+    if (target === 'speakers') renderSpeakers(document.getElementById('speakerSearch').value);
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.tab));
   });
 
   // ──────────────────────────────────────────────────────────
@@ -1738,23 +2198,88 @@
     { name: "Tey Bannerman",      role: "Human-Centred AI Advisor",          company: "McKinsey & Company",                   sessions: ["thu-16"] },
     { name: "Tim Draper",         role: "Founder",                           company: "Draper Associates",                    sessions: ["thu-09"] },
     { name: "Trung Lam",          role: "Executive Director",                company: "Hawaii Technology Development Corp.",  sessions: ["thu-07"] },
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  ]
+    .map(speaker => ({ ...speaker, id: slugify(speaker.name) }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   function initials(name) {
     return name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
   }
 
   function sessionTitle(id) {
-    const s = SCHEDULE.find(s => s.id === id);
+    const s = getSessionById(id);
     return s ? s.title : id;
   }
 
   function sessionTime(id) {
-    const s = SCHEDULE.find(s => s.id === id);
+    const s = getSessionById(id);
     return s ? s.time : '';
   }
 
+  function openSessionContext(sessionId, { focusNote = false } = {}) {
+    activateTab('schedule');
+
+    setTimeout(() => {
+      const item = document.getElementById('item-' + sessionId);
+      if (!item) return;
+
+      const trigger = item.querySelector('.session-trigger');
+      if (trigger && trigger.getAttribute('aria-expanded') !== 'true') {
+        toggleSession(sessionId);
+      }
+
+      if (focusNote) {
+        const noteBtn = item.querySelector(`.note-toggle[data-note-type="${NOTE_TYPES.SESSION}"][data-note-id="${sessionId}"]`);
+        if (noteBtn && noteBtn.getAttribute('aria-expanded') !== 'true') {
+          toggleNotePanel(noteBtn);
+        }
+      }
+
+      item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 80);
+  }
+
+  function openSpeakerContext(speakerId, { focusNote = false } = {}) {
+    const search = document.getElementById('speakerSearch');
+    if (search) search.value = '';
+    activateTab('speakers');
+
+    setTimeout(() => {
+      const item = document.getElementById('spk-' + speakerId);
+      if (!item) return;
+
+      const trigger = item.querySelector('.speaker-trigger');
+      if (trigger && trigger.getAttribute('aria-expanded') !== 'true') {
+        trigger.click();
+      }
+
+      if (focusNote) {
+        const noteBtn = item.querySelector(`.note-toggle[data-note-type="${NOTE_TYPES.SPEAKER}"][data-note-id="${speakerId}"]`);
+        if (noteBtn && noteBtn.getAttribute('aria-expanded') !== 'true') {
+          toggleNotePanel(noteBtn);
+        }
+      }
+
+      item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 80);
+  }
+
+  function openNoteContext(noteId) {
+    const note = getNotes()[noteId];
+    if (!note) return;
+
+    if (note.type === NOTE_TYPES.SESSION) {
+      openSessionContext(note.entityId, { focusNote: true });
+      return;
+    }
+
+    if (note.type === NOTE_TYPES.SPEAKER) {
+      openSpeakerContext(note.entityId, { focusNote: true });
+    }
+  }
+
   function renderSpeakers(filter = '') {
+    const notes = getNotes();
     const q = filter.toLowerCase().trim();
     const list = q
       ? SPEAKERS.filter(s => s.name.toLowerCase().includes(q) || s.company.toLowerCase().includes(q) || s.role.toLowerCase().includes(q))
@@ -1769,7 +2294,10 @@
     }
 
     document.getElementById('speakersList').innerHTML = list.map(sp => {
-      const sid = 'spk-' + sp.name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+      const note = notes[noteKey(NOTE_TYPES.SPEAKER, sp.id)];
+      const hasNote = !!note;
+      const sid = 'spk-' + sp.id;
+      const notePanelId = `notebody-speaker-${sp.id}`;
       const chips = sp.sessions.map(id => `
         <span class="speaker-session-chip" data-session-id="${id}" role="button" tabindex="0">
           <span class="speaker-session-time">${esc(sessionTime(id))}</span>
@@ -1791,11 +2319,35 @@
               <div class="speaker-company">🏢 ${esc(sp.company)}</div>
               <p class="speaker-sessions-label">Sessions on Thursday</p>
               <div>${chips}</div>
+              <div class="session-actions">
+                <button class="note-toggle ${hasNote ? 'has-note' : ''}" data-note-type="${NOTE_TYPES.SPEAKER}" data-note-id="${sp.id}" aria-expanded="false" aria-controls="${notePanelId}">
+                  <span aria-hidden="true">🤝</span>
+                  <span class="note-label">${noteLabel(NOTE_TYPES.SPEAKER, hasNote)}</span>
+                  <span class="note-dot" aria-hidden="true"></span>
+                </button>
+                <div class="note-body" id="${notePanelId}">
+                  <div class="note-inner">
+                    <textarea
+                      class="note-textarea"
+                      data-note-type="${NOTE_TYPES.SPEAKER}"
+                      data-note-id="${sp.id}"
+                      placeholder="Where did you meet? What did they say? Any follow-up?"
+                      aria-label="Note about ${esc(sp.name)}"
+                    >${note ? esc(note.text) : ''}</textarea>
+                    <p class="note-meta" data-note-meta-type="${NOTE_TYPES.SPEAKER}" data-note-meta-id="${sp.id}">${esc(noteMetaMessage(note))}</p>
+                    <button class="note-save-btn" data-note-type="${NOTE_TYPES.SPEAKER}" data-note-id="${sp.id}">Save Person Note ✓</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       `;
     }).join('');
+
+    bindNoteEditors(document.getElementById('speakersList'));
+    syncNoteIndicators();
+    syncNoteMeta();
 
     // Accordion
     document.querySelectorAll('.speaker-trigger').forEach(btn => {
@@ -1820,26 +2372,7 @@
     // Session chips → jump to schedule
     document.querySelectorAll('.speaker-session-chip').forEach(chip => {
       const jump = () => {
-        const sessionId = chip.dataset.sessionId;
-        // Switch to schedule tab
-        document.querySelectorAll('.tab-btn').forEach(b => {
-          const isSchedule = b.dataset.tab === 'schedule';
-          b.classList.toggle('active', isSchedule);
-          b.setAttribute('aria-selected', isSchedule ? 'true' : 'false');
-        });
-        document.querySelectorAll('.tab-content').forEach(p => {
-          p.classList.toggle('active', p.id === 'scheduleTab');
-        });
-        // Open the session accordion then scroll to it
-        setTimeout(() => {
-          const item = document.getElementById('item-' + sessionId);
-          if (!item) return;
-          const trigger = item.querySelector('.session-trigger');
-          if (trigger && trigger.getAttribute('aria-expanded') !== 'true') {
-            toggleSession(sessionId);
-          }
-          item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 80);
+        openSessionContext(chip.dataset.sessionId);
       };
       chip.addEventListener('click', jump);
       chip.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') jump(); });

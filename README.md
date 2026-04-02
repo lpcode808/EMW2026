@@ -2,6 +2,8 @@
 
 **Live app → [https://lpcode808.github.io/EMW2026](https://lpcode808.github.io/EMW2026)**
 
+**Code guide → [https://lpcode808.github.io/EMW2026/code-guide.html](https://lpcode808.github.io/EMW2026/code-guide.html)**
+
 A mobile-first companion app for students attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki, Honolulu). Scroll the schedule, tap sessions for details and student-friendly summaries, take notes, and export them at the end of the day.
 
 ---
@@ -100,12 +102,13 @@ User requested `CLAUDE.md` (for future AI agents) and this `README.md` (for huma
 |---|---|
 | **Schedule tab** | 23 sessions, tap-to-expand accordion rows |
 | **Student Summaries** | AI-written plain-language descriptions per session, toggle inside expanded row |
-| **Notes** | Inline textarea per session, auto-saves to `localStorage` on blur |
+| **Notes** | Session notes carry a real device-local timestamp, plus quick-note and speaker-profile note flows |
 | **Speakers tab** | 28 Thursday presenters, searchable, tapping a session chip jumps to Schedule |
-| **My Notes tab** | All saved notes in schedule order, delete individual notes |
+| **My Notes tab** | Quick note composer, saved session/person notes, delete or jump back into context |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
+| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and localStorage patterns behind the site |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
-| **No install** | Single HTML file, works in any mobile browser, no app store |
+| **No install** | The attendee app still runs as a single HTML file in any mobile browser, with no app store or install required |
 
 ---
 
@@ -133,9 +136,11 @@ Presented by **Blue Startups** · Title sponsor: **Pegasus Tech Ventures**
 
 See [`CLAUDE.md`](./CLAUDE.md) for architecture details, data schemas, JS function reference, and a list of suggested improvements for future development.
 
+The live attendee app still lives in `index.html`. The repo now also includes `code-guide.html`, a companion page meant for conference learners and curious students who want to understand how the site works without digging through the entire file cold.
+
 ```bash
 # Deploy after any edit:
-git add index.html
+git add .
 git commit -m "describe your change"
 git push
 # Live at https://lpcode808.github.io/EMW2026 within ~60 seconds

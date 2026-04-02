@@ -1,12 +1,17 @@
 # CLAUDE.md — EMW2026 Student Conference Guide
 
-Single-file mobile-first web app for students attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki). Deployed to GitHub Pages.
+Single-file mobile-first web app for students attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki), now paired with a learner-friendly explainer page. Deployed to GitHub Pages.
 
 ## Live URL
 `https://lpcode808.github.io/EMW2026`
 
+## Code Guide URL
+`https://lpcode808.github.io/EMW2026/code-guide.html`
+
 ## Architecture
-**One file: `index.html`** — all CSS, JS, and data are embedded. No build step, no dependencies, no backend.
+**Primary attendee app: `index.html`** — all CSS, JS, and data are embedded. No build step, no dependencies, no backend.
+
+**Companion explainer: `code-guide.html`** — a mobile-friendly teaching page that links from the live app and explains the real code structure for students and conference learners.
 
 - Data lives in two JS `const` arrays at the top of the `<script>` block: `SCHEDULE` and `SPEAKERS`
 - Notes persist in `localStorage` key `emw2026_notes`
@@ -27,9 +32,9 @@ Dark mode adaptation of HSG-Branding (`~/Coding/HSG-Branding/`). CSS custom prop
 Accordion animation uses `max-height` transitions with `cubic-bezier(0.16, 1, 0.3, 1)`. Tap targets are minimum 44px throughout.
 
 ## Three Tabs
-1. **Schedule** — 23 sessions, accordion rows. Each expands to: meta (speaker/location/time), description, Student Summary sub-toggle, Add Note inline, external link.
-2. **Speakers** — 28 Thursday presenters, alphabetical, searchable. Tap → shows company + session chips. Tapping a session chip jumps to Schedule tab and opens that accordion.
-3. **Notes** — lists all saved notes in schedule order. Export button opens a modal with plain-text formatted copy, clipboard button.
+1. **Schedule** — 23 sessions, accordion rows. Each expands to: meta (speaker/location/time), description, Student Summary sub-toggle, session note inline, external link.
+2. **Speakers** — 28 Thursday presenters, alphabetical, searchable. Tap → shows company + session chips + a person-note field. Tapping a session chip jumps to Schedule tab and opens that accordion.
+3. **Notes** — quick-note composer for unlinked notes, saved session/person notes, export modal, clipboard button.
 
 ## Data Structure
 
@@ -74,10 +79,35 @@ Meal/break/background items render at 60% opacity — intentionally de-emphasize
 | `renderNotesTab()` | Renders saved notes sorted by schedule order |
 | `toggleSession(id)` | Opens/closes a session accordion |
 | `toggleSummary(id)` | Opens/closes the Student Summary sub-accordion |
-| `toggleNote(id)` | Opens/closes the note textarea |
-| `saveNote(id, text)` | Persists to localStorage, syncs UI indicators |
+| `toggleNotePanel(btn)` | Opens/closes a session or person note textarea |
+| `saveNote(type, id, text)` | Persists typed notes, preserving original creation timestamp |
 | `buildExportText()` | Formats all notes as plain text for clipboard export |
+| `openSessionContext(id, opts)` | Switches to Schedule and optionally opens the note editor |
+| `openSpeakerContext(id, opts)` | Switches to Speakers and optionally opens the person note editor |
 | `showToast(msg)` | Shows 2-second bottom toast notification |
+
+## Notes Model
+
+Notes are stored as typed objects keyed by context:
+
+- `session:<sessionId>` for inline session notes
+- `speaker:<speakerId>` for notes attached to a speaker profile
+- `general:quick-note` for the unlinked quick note in the Notes tab
+
+Each note stores:
+
+```js
+{
+  key: "session:thu-04",
+  type: "session" | "speaker" | "general",
+  entityId: "thu-04",
+  text: "...",
+  createdAt: 1775020500000,
+  updatedAt: 1775020500000
+}
+```
+
+`createdAt` is the real device-local capture time source for the note UI/export (formatted on the client with `Intl.DateTimeFormat`). Existing legacy session notes are migrated automatically on load.
 
 ## Things to improve / add
 - **Student summaries**: All sessions have placeholder summaries written by the agent. Teacher should review and rewrite with class context before April 9.
