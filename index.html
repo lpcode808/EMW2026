@@ -49,6 +49,20 @@
       overflow-x: hidden;
     }
 
+    button,
+    a,
+    [role="button"] {
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
     /* ── HEADER ── */
     .app-header {
       position: sticky;
@@ -91,8 +105,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-sm);
       background: var(--teal-dim);
       color: var(--teal);
@@ -248,7 +262,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
+      min-height: 44px;
       padding: 0.68rem 0.95rem;
       border-radius: 999px;
       font-size: 0.76rem;
@@ -452,25 +466,54 @@
     }
 
     /* ── SUB-ITEMS ── */
-    .sub-items-label {
+    .sub-items-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.58rem 0.8rem;
+      background: rgba(255, 247, 235, 0.05);
+      border: 1px solid rgba(255, 247, 235, 0.08);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.77rem;
+      font-weight: 600;
+      width: 100%;
+      text-align: left;
+      min-height: 44px;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .sub-items-toggle:hover {
+      background: rgba(255, 247, 235, 0.08);
+      color: var(--text);
+      border-color: rgba(255, 247, 235, 0.12);
+    }
+
+    .sub-items-toggle .sub-chevron {
+      margin-left: auto;
       font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       color: var(--text-dim);
-      margin: 0.25rem 0 0.5rem;
+    }
+    .sub-items-toggle.open .sub-chevron { transform: rotate(180deg); }
+
+    .sub-items-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .sub-items-list {
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
-      margin-bottom: 0.75rem;
+      margin: 0.5rem 0 0.75rem;
     }
 
     .sub-item {
-      padding: 0.55rem 0.75rem;
-      background: rgba(0, 0, 0, 0.25);
+      padding: 0.5rem 0.68rem;
+      background: rgba(0, 0, 0, 0.22);
       border-radius: var(--radius-sm);
       border-left: 2px solid var(--teal);
     }
@@ -540,6 +583,92 @@
       color: rgba(255, 247, 235, 0.85);
       border: 1px solid rgba(175, 205, 83, 0.15);
       border-top: none;
+    }
+
+    /* ── RESEARCH NOTES ── */
+    .research-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--orange-dim);
+      border: 1px solid rgba(200, 83, 29, 0.22);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: #f0b283;
+      font-family: var(--font-body);
+      font-size: 0.79rem;
+      font-weight: 600;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+      min-height: 44px;
+    }
+    .research-toggle:hover { background: rgba(200, 83, 29, 0.18); }
+
+    .research-toggle .r-chevron {
+      margin-left: auto;
+      font-size: 0.68rem;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: rgba(240, 178, 131, 0.72);
+    }
+    .research-toggle.open .r-chevron { transform: rotate(180deg); }
+
+    .research-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .research-panel {
+      padding: 0.72rem 0.75rem;
+      background: rgba(200, 83, 29, 0.05);
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      border: 1px solid rgba(200, 83, 29, 0.16);
+      border-top: none;
+    }
+
+    .research-copy {
+      margin: 0;
+      color: rgba(255, 247, 235, 0.82);
+      font-size: 0.84rem;
+      line-height: 1.68;
+    }
+
+    .research-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+    }
+
+    .research-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 44px;
+      padding: 0.48rem 0.7rem;
+      background: rgba(255, 247, 235, 0.04);
+      border: 1px solid rgba(255, 247, 235, 0.08);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.73rem;
+      font-weight: 600;
+      line-height: 1.3;
+      transition: border-color 0.18s, background 0.18s, color 0.18s;
+    }
+
+    .research-link:hover {
+      background: rgba(200, 83, 29, 0.12);
+      border-color: rgba(200, 83, 29, 0.28);
+      color: #fff4ea;
+    }
+
+    .research-link span:last-child {
+      flex-shrink: 0;
+      color: rgba(240, 178, 131, 0.72);
     }
 
     /* ── NOTE SECTION ── */
@@ -824,7 +953,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      padding: 0.35rem 0.7rem;
+      padding: 0.5rem 0.8rem;
       background: none;
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -833,7 +962,7 @@
       cursor: pointer;
       transition: background 0.2s, color 0.2s, border-color 0.2s;
       font-family: var(--font-body);
-      min-height: 36px;
+      min-height: 44px;
       margin-top: 0;
     }
 
@@ -901,8 +1030,8 @@
     .modal-close {
       background: rgba(255, 247, 235, 0.08);
       border: none;
-      width: 34px;
-      height: 34px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       color: var(--text-muted);
       font-size: 0.85rem;
@@ -1137,10 +1266,11 @@
     }
 
     .speaker-session-chip {
+      appearance: none;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      padding: 0.28rem 0.65rem;
+      padding: 0.5rem 0.75rem;
       background: rgba(255, 247, 235, 0.06);
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -1150,6 +1280,8 @@
       margin: 0 0.35rem 0.35rem 0;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
+      min-height: 44px;
+      font-family: var(--font-body);
     }
     .speaker-session-chip:hover { background: rgba(7, 168, 168, 0.12); color: var(--teal); }
 
@@ -1337,8 +1469,8 @@
       type: "panel",
       speaker: "Trung Lam · Helena Janulis",
       location: "Main Stage",
-      description: "A panel on how Hawaiʻi is positioning itself as a center for the space economy and ocean-based industries. Trung Lam is Executive Director of the Hawaii Technology Development Corporation (HTDC); Helena Janulis is Director of Operations at Investable Oceans.",
-      studentSummary: "Hawaiʻi isn't just beaches and tourism — it's becoming a hub for space launches and ocean tech. The state's location near the equator is great for rocket launches, and being surrounded by the Pacific Ocean makes it ideal for ocean-monitoring and underwater robotics. This session explains the economic strategy behind it.",
+      description: "A panel on why Hawaiʻi could grow new jobs and companies in space and ocean industries.",
+      studentSummary: "This talk is about how Hawaiʻi can build businesses from space and the ocean. Listen for how local strengths like location, science, and ocean access could turn into jobs and startups.",
       subItems: []
     },
     {
@@ -1349,8 +1481,8 @@
       type: "fireside",
       speaker: "Henk Rogers · Alex Fielding",
       location: "Main Stage",
-      description: "A fireside conversation on the growing commercial space economy. Henk Rogers is the entrepreneur who licensed Tetris globally and founded the Blue Planet Alliance, a clean energy nonprofit. Alex Fielding is CEO of Privateer, a company that maps and tracks space debris orbiting Earth.",
-      studentSummary: "Henk Rogers is the guy who brought Tetris to the world in the 1980s — and now he's working on clean energy and space. Alex Fielding's company Privateer tracks thousands of pieces of junk (old satellites, rocket parts) flying around Earth at 17,000 mph. Space debris is a real problem: if we don't fix it, we could lose the ability to use space at all. This talk covers the next frontier of the space economy.",
+      description: "A fireside chat on the space economy, space debris, and the systems needed to keep orbit usable.",
+      studentSummary: "Space is not only rockets. It also includes tracking objects, avoiding crashes, and cleaning up debris. This session shows the less flashy but very important side of the space industry.",
       subItems: []
     },
     {
@@ -1361,8 +1493,8 @@
       type: "fireside",
       speaker: "Tim Draper",
       location: "Main Stage",
-      description: "A conversation with venture capitalist Tim Draper, founder of Draper Associates — one of the most influential VC firms in Silicon Valley. Known for early bets on Tesla, SpaceX, Skype, Baidu, and Bitcoin before any of them were household names.",
-      studentSummary: "Tim Draper is legendary in the startup world. He invested in Tesla, SpaceX, and Bitcoin when almost nobody believed in them. He's also known for bold, unconventional ideas — like proposing that California be split into separate states, and moving to El Salvador when it adopted Bitcoin. This is a rare chance to hear how a top investor actually thinks about spotting the future before it arrives.",
+      description: "A conversation with investor Tim Draper, known for backing companies like Tesla, SpaceX, Skype, and Bitcoin early.",
+      studentSummary: "Tim Draper is known for backing risky ideas early. Listen for how he decides which trends are real, which founders stand out, and what makes a big bet worth taking.",
       subItems: []
     },
     {
@@ -1373,8 +1505,8 @@
       type: "mindfulness",
       speaker: "Brent Freeman",
       location: "Main Stage",
-      description: "A guided mindfulness and breathwork session with Brent Freeman, Founder & CEO of Alchemy of Joy. Designed to give attendees a mental reset before the next set of sessions.",
-      studentSummary: "Brent Freeman teaches mindfulness practices used by top executives and founders to reduce stress and stay sharp. This short session is basically a mental reset: breathing exercises and a moment to be fully present. Even if this sounds unfamiliar, give it a try — it's short, and actually works.",
+      description: "A guided mindfulness and breathing session with Brent Freeman. Built to help attendees reset and refocus.",
+      studentSummary: "This is a short reset session. Even a few minutes of breathing and attention practice can help you focus better after a lot of information.",
       subItems: []
     },
     {
@@ -1385,8 +1517,8 @@
       type: "panel",
       speaker: "Holly Liu · Dan Dan Li · Jeannie Yang · Abigail Wen",
       location: "Main Stage",
-      description: "A panel on how artificial intelligence is reshaping entertainment, storytelling, and creative industries. Featuring Holly Liu (Co-founder, VENN gaming network), Dan Dan Li (Founder, Popshop Live), Jeannie Yang (Ex-SVP Product & CPO, Smule), and Abigail Wen (NYT bestselling author and filmmaker).",
-      studentSummary: "AI is changing how movies, music, games, books, and social media get made. This panel brings together a gaming network co-founder, a live-shopping platform founder, an app music executive, and a bestselling author/filmmaker to debate what AI means for creative work. Will AI replace creators, or become their most powerful tool? And what happens to human originality?",
+      description: "A panel on how AI is changing entertainment and creative work across games, music, video, and storytelling.",
+      studentSummary: "AI can help make music, games, video, and stories faster. This panel asks the big question: does that help creators, replace them, or change what audiences want?",
       subItems: []
     },
     {
@@ -1397,8 +1529,8 @@
       type: "panel",
       speaker: "Paʻa Sibbett · Angela Laprete · Brian Keaulana",
       location: "Main Stage",
-      description: "A discussion with the creative team behind 'Chief of War,' a major Apple TV+ series depicting Hawaiʻi's history from a Native Hawaiian perspective. Featuring writer/creator Paʻa Sibbett and producers Angela Laprete and Brian Keaulana from ICAN.",
-      studentSummary: "Chief of War is an Apple TV+ series that tells Hawaiʻi's pre-contact and colonial history from a Native Hawaiian point of view — the first time this story has been told at this scale for mainstream TV. The creators talk about the responsibility of representing indigenous culture accurately, the years it took to get Hollywood to fund it, and what it means for Hawaiian identity and pride.",
+      description: "A discussion with the Chief of War creative team about telling Hawaiʻi's history on screen from a Native Hawaiian point of view.",
+      studentSummary: "This session is about telling Hawaiian history from a Native Hawaiian point of view. It is not only about one show, but about who gets to shape culture and history on screen.",
       subItems: []
     },
     {
@@ -1421,8 +1553,8 @@
       type: "networking",
       speaker: "Keyvan Peymani · Summer Kim · Tom Toy · Bill Bryant + more",
       location: "Designated Area",
-      description: "Startup founders meet venture capitalists for scheduled one-on-one pitch conversations. VC firms represented include Animoca Brands, StratMinds VC, SCV × SBI, Threshold Ventures, SuccessVP, OM.VC, Kamehameha Schools, Moment Ventures, Geodesic Capital, Builders VC, Quest Venture Partners, Hawaii Angels, Tenacity Venture Capital, and Mana Up.",
-      studentSummary: "This is where startup founders get face time with investors who could fund their companies. Venture capitalists (VCs) give money to early-stage startups in exchange for a small percentage of the company. The founders have usually prepared an 'elevator pitch' — a 2-minute summary of their idea, why it matters, and how they'll make money. If you're curious about how startups actually get funded, this is happening in real time nearby.",
+      description: "Startup founders meet investors for short one-on-one conversations about their companies and next steps.",
+      studentSummary: "Founders get a few minutes to explain their startup to investors. This is a great chance to watch how people pitch fast, clearly, and under pressure.",
       subItems: [
         { title: "Animoca Brands", speaker: "Web3 & gaming investments" },
         { title: "StratMinds VC", speaker: "Summer Kim — deep tech & research" },
@@ -1442,8 +1574,8 @@
       type: "keynote",
       speaker: "Chris Yeh",
       location: "Main Stage",
-      description: "A keynote by Chris Yeh, founding partner of Blitzscaling Ventures and co-author (with LinkedIn co-founder Reid Hoffman) of the book 'Blitzscaling.' Presents updated thinking on how companies scale from startup to global giant at extraordinary speed.",
-      studentSummary: "Blitzscaling is the strategy Uber, Airbnb, and LinkedIn used to grow so fast they dominated their markets before anyone could catch up — even if it meant losing money for years. Chris Yeh co-wrote the book on it. This keynote updates the playbook for today: what's changed, what still works, and what new companies need to understand about growing fast in the AI era.",
+      description: "A keynote by Chris Yeh on when fast growth helps a startup win and when it becomes too risky.",
+      studentSummary: "Blitzscaling means growing very fast to win a market before others catch up. This talk asks when that strategy still works and when it can backfire.",
       subItems: []
     },
     {
@@ -1454,8 +1586,8 @@
       type: "keynote",
       speaker: "Tey Bannerman",
       location: "Main Stage",
-      description: "A keynote by Tey Bannerman, a human-centred AI advisor at McKinsey & Company, on how people and organizations can navigate AI-driven change while staying grounded in what makes us uniquely human.",
-      studentSummary: "As AI takes over more tasks, the big question is: what are humans actually for? Tey Bannerman works at McKinsey helping some of the world's biggest companies figure this out. The talk is about which skills, mindsets, and habits will be most valuable in an AI world — and why being deeply human (empathy, judgment, creativity, ethics) is actually a competitive advantage, not a weakness.",
+      description: "A keynote by Tey Bannerman on how people can stay useful and grounded as AI changes work.",
+      studentSummary: "As AI does more tasks, the question becomes: what are humans still best at? This talk is about judgment, creativity, empathy, and other skills that machines struggle to copy.",
       subItems: []
     },
     {
@@ -1466,8 +1598,8 @@
       type: "mindfulness",
       speaker: "Brent Freeman",
       location: "Main Stage",
-      description: "A brief mindfulness break with Brent Freeman of Alchemy of Joy — a second reset before the afternoon's final sessions.",
-      studentSummary: "Another short mindfulness break with Brent Freeman. After a full day of information, this is a chance to recharge before the big finish: the startup pitch competition.",
+      description: "A brief mindfulness break with Brent Freeman before the final sessions.",
+      studentSummary: "Another quick reset. The goal is simple: slow down, breathe, and get your brain ready for the last part of the day.",
       subItems: []
     },
     {
@@ -1478,8 +1610,8 @@
       type: "presentation",
       speaker: "John Lim",
       location: "Main Stage",
-      description: "Introduction to Pegasus Tech Ventures — the title sponsor of East Meets West 2026 — by Chief Strategy Officer John Lim. Pegasus runs the global Startup World Cup competition.",
-      studentSummary: "Pegasus Tech Ventures is the main funder of this conference. They're also the organization behind the Startup World Cup — a global pitch competition with regional rounds on every continent, with the final in San Francisco. John Lim explains what Pegasus does and sets up the regional pitch competition that's about to happen.",
+      description: "An introduction to Pegasus Tech Ventures and the Startup World Cup by John Lim.",
+      studentSummary: "Pegasus helps fund this conference and runs the global pitch competition connected to it. This short talk explains why that matters before the Hawaiʻi regional begins.",
       subItems: []
     },
     {
@@ -1490,8 +1622,8 @@
       type: "pitch",
       speaker: "Judges: Rayfe Gaspar-Asaoka · Summer Kim · Bill Bryant",
       location: "Main Stage",
-      description: "The Startup World Cup Hawaiʻi Regional — a live pitch competition where Hawaiʻi-based startups compete for a chance to represent the state at the Startup World Cup global finals in San Francisco.",
-      studentSummary: "This is the most exciting part of the day — basically Shark Tank, live. Hawaiʻi startups get 5 minutes to pitch their companies to a panel of venture capitalists. The winner advances to the global Startup World Cup finals. Pay close attention to how each founder explains: what problem they're solving, why anyone would pay for it, and why their team can pull it off. These are real companies, this is real money, and careers change on this stage.",
+      description: "A live pitch competition where Hawaiʻi startups present to judges for a chance to reach the Startup World Cup finals.",
+      studentSummary: "This is the most competitive part of the day. Watch how each founder explains the problem, the business, and why their team can actually make it work.",
       subItems: []
     },
     {
@@ -1502,8 +1634,8 @@
       type: "panel",
       speaker: "Miki Hardisty · Rich Robinson · Bill Reichert",
       location: "Main Stage",
-      description: "A closing panel on Hawaiʻi's strategic role connecting Silicon Valley, Asia-Pacific markets, and Pacific Islander culture. Featuring Miki Hardisty (Co-founder & CEO, ʻŌlelo Intelligence — a Hawaiian language AI company), Rich Robinson (Entrepreneur-in-Residence, Animoca Brands), and Bill Reichert (General Partner, Pegasus Tech Ventures).",
-      studentSummary: "Hawaiʻi sits literally in the middle of the Pacific — between the US mainland and Asia. This panel explores why that geographic and cultural position makes Hawaiʻi important for global tech and investment. It also asks: how do Pacific Islander values (community, sustainability, aloha) shape — rather than just serve — global tech? Miki Hardisty's company ʻŌlelo Intelligence is building AI that works in the Hawaiian language, which almost no major AI supports today.",
+      description: "A closing panel on how Hawaiʻi connects technology, investment, and Pacific culture across the U.S. and Asia-Pacific.",
+      studentSummary: "This panel asks how Hawaiʻi can connect tech, money, and culture at the same time. It also looks at whether local language and values can shape technology instead of just reacting to it.",
       subItems: []
     },
     {
@@ -1543,6 +1675,152 @@
       subItems: []
     }
   ];
+
+  const SESSION_RESEARCH = {
+    "thu-07": {
+      notes: [
+        "Blue economy means making jobs from the ocean without damaging the ocean.",
+        "Listen for how Hawaiʻi turns location, science, and boats into real industries."
+      ],
+      links: [
+        { label: "HTDC aerospace", url: "https://www.htdc.org/programs/aerospace/" },
+        { label: "Trung Lam at HTDC", url: "https://www.htdc.org/trung-lam-named-executive-director-of-hawaii-technology-development-corporation/" },
+        { label: "Investable Oceans", url: "https://www.investableoceans.com/pages/our-team" }
+      ]
+    },
+    "thu-08": {
+      notes: [
+        "Space is not just rockets. It also needs maps, traffic rules, and cleanup.",
+        "A big question here: how do we keep orbit safe enough to keep using it?"
+      ],
+      links: [
+        { label: "Blue Planet Alliance", url: "https://blueplanetalliance.org/about-us" },
+        { label: "Henk Rogers pod", url: "https://blueplanetalliance.org/news/henk-rogers-interview-on-conservation-connection-podcast" },
+        { label: "Privateer company", url: "https://www.privateer.com/company" }
+      ]
+    },
+    "thu-09": {
+      notes: [
+        "Tim Draper is known for betting early on ideas most people ignored.",
+        "Listen for what he looks for in founders, markets, and risky big bets."
+      ],
+      links: [
+        { label: "Tim at Draper", url: "https://www.draper.vc/team" },
+        { label: "Draper history", url: "https://www.draper.vc/history" },
+        { label: "Tim Draper pod", url: "https://podcasts.apple.com/gb/podcast/15-tim-draper-to-predict-the-future-invent-it/id1512992918?i=1000495958190" }
+      ]
+    },
+    "thu-10": {
+      notes: [
+        "Mindfulness is a quick way to reset your attention, not just calm down.",
+        "This can help after back-to-back talks when your brain feels full."
+      ],
+      links: [
+        { label: "Brent Freeman", url: "https://brentfreeman.com/" },
+        { label: "About Brent", url: "https://brentfreeman.com/about-me" },
+        { label: "Brent meditations", url: "https://brentfreeman.com/meditations" }
+      ]
+    },
+    "thu-11": {
+      notes: [
+        "AI can help make games, music, video, and stories faster.",
+        "The tricky part is deciding what should stay human and who gets credit."
+      ],
+      links: [
+        { label: "Holly Liu pod", url: "https://www.tigereye.com/podcast/holly-liu-co-founder-kabam-the-art-of-the-pivot" },
+        { label: "Popshop Live", url: "https://popshoplive.com/" },
+        { label: "Abigail Hing Wen", url: "https://www.abigailhingwen.com/about/" }
+      ]
+    },
+    "thu-12": {
+      notes: [
+        "This talk is really about who gets to tell Hawaiian history on a big stage.",
+        "Watch for how the team talks about respect, language, and creative control."
+      ],
+      links: [
+        { label: "Chief of War first look", url: "https://www.apple.com/tv-pr/news/2025/03/apple-tv-unveils-first-look-at-star-executive-producer-and-writer-jason-momoa-in-the-epic-new-drama-chief-of-war-premiering-globally-friday-august-1-2025/" },
+        { label: "Paʻa on HPR", url: "https://www.hawaiipublicradio.org/the-conversation/2025-07-03/chief-of-war-co-creator-on-telling-hawaiian-stories-in-hollywood" },
+        { label: "ICAN Hawaii", url: "https://www.icanintl.org/about" }
+      ]
+    },
+    "thu-14": {
+      notes: [
+        "VC meetings are fast, so founders have to explain the problem and plan quickly.",
+        "Even if you never start a company, this is a great lesson in clear speaking."
+      ],
+      links: [
+        { label: "StratMinds", url: "https://www.stratminds.vc/team" },
+        { label: "Threshold", url: "https://threshold.vc/team" },
+        { label: "Hawaii Angels", url: "https://www.hawaiiangels.org/about" }
+      ]
+    },
+    "thu-15": {
+      notes: [
+        "Blitzscaling means growing very fast when speed matters more than efficiency.",
+        "The key question: when is growing fast smart, and when is it just reckless?"
+      ],
+      links: [
+        { label: "Blitzscaling", url: "https://www.blitzscaling.com/" },
+        { label: "Chris Yeh", url: "https://www.chrisyeh.com/" },
+        { label: "Blitzscaling VC", url: "https://www.blitzscalingvc.com/about" }
+      ]
+    },
+    "thu-16": {
+      notes: [
+        "If AI does more routine work, human value moves toward judgment and empathy.",
+        "A good question: what should students practice now that AI tools are everywhere?"
+      ],
+      links: [
+        { label: "Tey Bannerman", url: "https://teybannerman.com/" },
+        { label: "Why AI won't replace us", url: "https://teybannerman.com/ai/strategy/2025/11/05/why-ai-wont-replace-jobs.html" },
+        { label: "McKinsey video", url: "https://www.mckinsey.com/featured-insights/lifting-europes-ambition/videos-and-podcasts/how-generative-ai-can-drive-the-personalization-of-products-and-services" }
+      ]
+    },
+    "thu-17": {
+      notes: [
+        "This short break is meant to help you reset before the last big sessions.",
+        "Simple routines work best when you can actually use them under stress."
+      ],
+      links: [
+        { label: "Brent Freeman", url: "https://brentfreeman.com/" },
+        { label: "About Brent", url: "https://brentfreeman.com/about-me" },
+        { label: "Brent meditations", url: "https://brentfreeman.com/meditations" }
+      ]
+    },
+    "thu-18": {
+      notes: [
+        "Pegasus is showing how local startups can plug into a much bigger global network.",
+        "Listen for how events like this turn into funding chances and future introductions."
+      ],
+      links: [
+        { label: "Honolulu regional", url: "https://www.startupworldcup.io/honolulu-regional" },
+        { label: "Pegasus team", url: "https://www.pegasustechventures.com/our-team" },
+        { label: "SWC FAQ", url: "https://www.startupworldcup.io/faq" }
+      ]
+    },
+    "thu-19": {
+      notes: [
+        "Pitch contests reward clear thinking under pressure.",
+        "Watch which teams explain the problem, customer, and why-now story fastest."
+      ],
+      links: [
+        { label: "Honolulu regional", url: "https://www.startupworldcup.io/honolulu-regional" },
+        { label: "StratMinds", url: "https://www.stratminds.vc/team" },
+        { label: "Rayfe at Geodesic", url: "https://geodesiccap.com/insight/five-deeptech-and-national-security-themes-defining-2026/" }
+      ]
+    },
+    "thu-20": {
+      notes: [
+        "This panel asks how Hawaiʻi can connect tech money with Pacific culture and values.",
+        "It also raises a big AI question: who gets to build tools for local languages?"
+      ],
+      links: [
+        { label: "Olelo AI", url: "https://www.olelo-ai.com/about-us" },
+        { label: "Rich at Animoca", url: "https://www.podcasts.animocabrands.com/founder-insights-ep26" },
+        { label: "Bill at Pegasus", url: "https://www.pegasustechventures.com/our-team" }
+      ]
+    }
+  };
 
   // ──────────────────────────────────────────────────────────
   //  NOTES — localStorage
@@ -1833,6 +2111,35 @@
     return `<span class="meta-item"><span class="meta-icon">👤</span><span class="meta-speaker-list">${tokenHtml}</span></span>`;
   }
 
+  function getSessionResearch(id) {
+    return SESSION_RESEARCH[id] || null;
+  }
+
+  function renderResearchSection(id, research) {
+    if (!research) return '';
+    const researchPanelId = `research-${id}`;
+    const copyText = Array.isArray(research.notes) ? research.notes.join(' ') : (research.notes || '');
+    const linksHtml = research.links.map(link => `
+      <a class="research-link" href="${escapeAttr(link.url)}" target="_blank" rel="noopener">
+        <span>${esc(link.label)}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    `).join('');
+
+    return `
+      <button class="research-toggle" data-id="${id}" aria-expanded="false" aria-controls="${researchPanelId}">
+        <span aria-hidden="true">🔎</span> Quick Context + Links
+        <span class="r-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="research-body" id="${researchPanelId}">
+        <div class="research-panel">
+          <p class="research-copy">${esc(copyText)}</p>
+          <div class="research-links">${linksHtml}</div>
+        </div>
+      </div>
+    `;
+  }
+
   // ──────────────────────────────────────────────────────────
   //  RENDER SCHEDULE
   // ──────────────────────────────────────────────────────────
@@ -1868,6 +2175,7 @@
       const hasNote = !!note;
       const hasSubs = s.subItems && s.subItems.length > 0;
       const notePanelId = `notebody-session-${s.id}`;
+      const research = getSessionResearch(s.id);
 
       const metaParts = [];
       if (s.speaker && s.type !== 'meal' && s.type !== 'break' && s.type !== 'background') {
@@ -1881,14 +2189,19 @@
       }
 
       const subItemsHtml = hasSubs ? `
-        <p class="sub-items-label">Investors / Participants</p>
-        <div class="sub-items-list">
-          ${s.subItems.map(sub => `
-            <div class="sub-item">
-              <div class="sub-item-title">${esc(sub.title)}</div>
-              ${sub.speaker ? `<div class="sub-item-speaker">${esc(sub.speaker)}</div>` : ''}
-            </div>
-          `).join('')}
+        <button class="sub-items-toggle" data-id="${s.id}" aria-expanded="false" aria-controls="subitems-${s.id}">
+          <span aria-hidden="true">👥</span> Who's In The Room
+          <span class="sub-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="sub-items-body" id="subitems-${s.id}">
+          <div class="sub-items-list">
+            ${s.subItems.map(sub => `
+              <div class="sub-item">
+                <div class="sub-item-title">${esc(sub.title)}</div>
+                ${sub.speaker ? `<div class="sub-item-speaker">${esc(sub.speaker)}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
         </div>
       ` : '';
 
@@ -1918,6 +2231,7 @@
                     <div class="summary-text">${esc(s.studentSummary)}</div>
                   </div>
                 ` : ''}
+                ${renderResearchSection(s.id, research)}
                 <button class="note-toggle ${hasNote ? 'has-note' : ''}" data-note-type="${NOTE_TYPES.SESSION}" data-note-id="${s.id}" aria-expanded="false" aria-controls="${notePanelId}">
                   <span aria-hidden="true">📝</span>
                   <span class="note-label">${noteLabel(NOTE_TYPES.SESSION, hasNote)}</span>
@@ -1936,9 +2250,6 @@
                     <button class="note-save-btn" data-note-type="${NOTE_TYPES.SESSION}" data-note-id="${s.id}">Save Note ✓</button>
                   </div>
                 </div>
-                <a href="https://emwhawaii.com/2026" target="_blank" rel="noopener" class="ext-link">
-                  ↗ Official EMW 2026 Site
-                </a>
               </div>
             </div>
           </div>
@@ -2009,6 +2320,14 @@
       btn.addEventListener('click', () => toggleSummary(btn.dataset.id));
     });
 
+    root.querySelectorAll('.sub-items-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleSubItems(btn.dataset.id));
+    });
+
+    root.querySelectorAll('.research-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleResearch(btn.dataset.id));
+    });
+
     root.querySelectorAll('.meta-speaker-link').forEach(btn => {
       btn.addEventListener('click', () => openSpeakerContext(btn.dataset.speakerId));
     });
@@ -2039,6 +2358,46 @@
   function toggleSummary(id) {
     const btn = document.querySelector(`.summary-toggle[data-id="${id}"]`);
     const body = document.getElementById(`summary-${id}`);
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+    if (isOpen) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+      btn.setAttribute('aria-expanded', 'false');
+      btn.classList.remove('open');
+    } else {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      btn.setAttribute('aria-expanded', 'true');
+      btn.classList.add('open');
+      setTimeout(() => { body.style.maxHeight = '9999px'; }, 370);
+    }
+    keepAccordionExpanded(body);
+  }
+
+  function toggleResearch(id) {
+    const btn = document.querySelector(`.research-toggle[data-id="${id}"]`);
+    const body = document.getElementById(`research-${id}`);
+    if (!btn || !body) return;
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+    if (isOpen) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+      btn.setAttribute('aria-expanded', 'false');
+      btn.classList.remove('open');
+    } else {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      btn.setAttribute('aria-expanded', 'true');
+      btn.classList.add('open');
+      setTimeout(() => { body.style.maxHeight = '9999px'; }, 370);
+    }
+    keepAccordionExpanded(body);
+  }
+
+  function toggleSubItems(id) {
+    const btn = document.querySelector(`.sub-items-toggle[data-id="${id}"]`);
+    const body = document.getElementById(`subitems-${id}`);
+    if (!btn || !body) return;
     const isOpen = btn.getAttribute('aria-expanded') === 'true';
 
     if (isOpen) {
@@ -2445,10 +2804,10 @@
       const sid = 'spk-' + sp.id;
       const notePanelId = `notebody-speaker-${sp.id}`;
       const chips = sp.sessions.map(id => `
-        <span class="speaker-session-chip" data-session-id="${id}" role="button" tabindex="0">
+        <button class="speaker-session-chip" type="button" data-session-id="${id}">
           <span class="speaker-session-time">${esc(sessionTime(id))}</span>
           ${esc(sessionTitle(id))}
-        </span>
+        </button>
       `).join('');
       return `
         <div class="speaker-item" id="${sid}">
@@ -2526,11 +2885,9 @@
 
     // Session chips → jump to schedule
     document.querySelectorAll('.speaker-session-chip').forEach(chip => {
-      const jump = () => {
+      chip.addEventListener('click', () => {
         openSessionContext(chip.dataset.sessionId);
-      };
-      chip.addEventListener('click', jump);
-      chip.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') jump(); });
+      });
     });
   }
 
