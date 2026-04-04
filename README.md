@@ -198,6 +198,32 @@ See [`CLAUDE.md`](./CLAUDE.md) for architecture details, data schemas, JS functi
 
 The live attendee app still lives in `index.html`. The repo now also includes `code-guide.html`, a companion page meant for conference learners and curious students who want to understand how the site works without digging through the entire file cold.
 
+### Mobile Smoke Test
+
+A lightweight browser-level smoke test now lives at [`scripts/chrome-mobile-smoke.mjs`](./scripts/chrome-mobile-smoke.mjs). It checks the most important student flows in a phone-sized viewport:
+
+- Schedule accordion opens
+- Student summary expands
+- Session notes save to `localStorage`
+- Speaker search + session jump work
+- Quick note + export modal work
+- Key mobile tap targets stay at or above 44px
+
+Run it against a local server plus headless Chrome remote debugging:
+
+```bash
+python3 -m http.server 8765
+'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' \
+  --headless \
+  --disable-gpu \
+  --no-first-run \
+  --no-default-browser-check \
+  --remote-debugging-port=9222 \
+  --user-data-dir=/tmp/emw-chrome-profile \
+  http://127.0.0.1:8765/index.html
+node scripts/chrome-mobile-smoke.mjs
+```
+
 ```bash
 # Deploy after any edit:
 git add .
