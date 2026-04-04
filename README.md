@@ -151,6 +151,55 @@ That second pass changed the guide in a few important ways:
 
 That refinement mattered because the explainer was no longer just repo documentation — it became part of the conference experience itself.
 
+### 11. Manual Polish Pass (User-Driven)
+
+With the core app complete, the teacher made a few direct edits without Claude — working in the repo like any other developer would after an AI-assisted build.
+
+A conference-inspired **favicon** was added: a minimal SVG using the app's teal and orange to make the browser tab and home screen shortcut feel intentional. Both `index.html` and `code-guide.html` got the `<link rel="icon">` reference.
+
+The code guide got a second intent toggle alongside the audience mode. The first toggle already let readers switch between "New to coding" and "Done a little coding." The new one asks **why** you're reading: just browsing the site's structure, or actually trying to tinker with the code. This separated the reading experience from the hands-on experiments, so curious students who don't want to touch anything can skim without the tinkering prompts cluttering their view.
+
+Then all 23 student summaries were reviewed on a real phone, with weaker ones rewritten by hand and some sessions getting light **context links** — external resources relevant to what the speaker would be discussing. This was judgment work that needed a teacher's eye rather than a prompt.
+
+A Chrome DevTools Protocol smoke test script (`scripts/chrome-mobile-smoke.mjs`) was also written to verify the app behaves correctly in a mobile viewport — checking that tabs switch, sessions expand, the search input works, and no console errors fire. This gave a repeatable sanity check before sharing the link with students.
+
+### 12. Pre-Launch Claude Session
+
+A dedicated pre-launch session with Claude addressed the last few things that were still missing a few days before the conference.
+
+The most visible was a **live session indicator**. The app had no sense of time — it just listed all 23 sessions equally. Now the currently-running session gets a pulsing **NOW** badge in teal, and the next upcoming one gets an **Up Next** badge in lime. The indicator updates every minute via `setInterval`, comparing session times against the device clock in HST.
+
+There was also a data bug: session `thu-14` had its speaker field set to `"Bill Bryant + more"`, which meant the app couldn't match "Bill Bryant" to his actual speaker profile and render his name as a tappable link. The fix replaced that with the proper `·`-separated format including Rayfe Gaspar-Asaoka, who was already in the speakers list for that session.
+
+Two small but meaningful UI details rounded out the session:
+- A `<meta name="theme-color">` tag was added so the mobile browser chrome (the address bar and status bar area) matches the app's navy background instead of staying white
+- The header's external conference link was relabeled from a bare `↗` arrow to **EMW ↗**, giving students a recognizable destination cue before they tap
+
+### 13. Multi-Sticky Quick Notes
+
+The original Quick Note in the Notes tab was a single persistent textarea. If a student typed something, then came back later to add a new thought, they'd overwrite what they already wrote. That's the wrong behavior for a day of back-to-back sessions.
+
+The replacement: each tap of **Add Note** creates a new sticky with its own timestamp and its own edit/delete controls. The composer resets to blank after saving, ready for the next thought. Existing stickies stack below and remain editable in place. Legacy `general:quick-note` entries from the old model migrate automatically via the existing note normalization on load.
+
+The underlying data model didn't need to change — notes were already stored as independent objects keyed by type and entity ID. What changed was the UI: instead of loading the one `general:quick-note` value back into the textarea, the composer now only writes forward, and the accumulated stickies are rendered as a separate list.
+
+### 14. Content Review Pass + Speaker Bio Planning
+
+As the conference date approached, a session focused entirely on content quality rather than new features.
+
+Claude reviewed all 23 sessions and flagged summaries with problems:
+- `thu-02` (Women's Breakfast): the summary implied the session was optional or low-value — rewritten to explain why dedicated networking spaces matter in a historically male-dominated field
+- `thu-14` (VC 1-on-1 Meetings): the word "watch" implied students would observe meetings — rewritten to clarify these are private sessions between founders and investors, not an open panel
+
+A handful of sessions also got `SESSION_RESEARCH` annotations with learn-more links — context for teachers preparing students on what `thu-04`, `thu-05`, and `thu-06` are actually about before they walk in the door.
+
+The larger output of that session was [`SPEAKER_BIOS_PLAN.md`](./SPEAKER_BIOS_PLAN.md): a full implementation proposal for adding short bios and 2–3 curated links to every speaker card. The file includes:
+- The data structure change needed in `SPEAKERS` (two new fields: `bio` and `links`)
+- The CSS class and render logic change needed in `renderSpeakers()`
+- AI-drafted bio paragraphs for all 27 Thursday speakers — written as starting points, explicitly flagged for teacher review before they go live
+
+The bios themselves weren't merged into `index.html` yet. That was a deliberate call: AI-drafted speaker bios benefit from a human review pass before students read them at a real conference. The plan document is the handoff artifact — the teacher can review, edit, and then implement when ready.
+
 ---
 
 ## App Features
@@ -158,12 +207,14 @@ That refinement mattered because the explainer was no longer just repo documenta
 | Feature | Details |
 |---|---|
 | **Schedule tab** | 23 sessions, tap-to-expand accordion rows, with speaker-name jumps from expanded session details into the Speakers tab |
-| **Student Summaries** | AI-written plain-language descriptions per session, toggle inside expanded row |
-| **Notes** | Session notes carry a real device-local timestamp, plus quick-note and speaker-profile note flows |
+| **NOW / Up Next** | Live session indicator: pulsing teal NOW badge on the currently-running session, lime Up Next badge on the next one — updates every minute |
+| **Student Summaries** | Reviewed and rewritten plain-language descriptions per session, toggle inside expanded row |
+| **Notes** | Session notes carry a real device-local timestamp, plus multi-sticky quick notes and per-speaker person notes |
 | **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, and a `g.ai` research button per speaker |
-| **My Notes tab** | Quick note composer, saved session/person notes, delete or jump back into context, with distinct visual treatment per note type |
+| **My Notes tab** | Quick note composer (each save creates a new sticky), saved session/person notes, delete or jump back into context, with distinct visual treatment per note type |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
-| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns behind the site, with a beginner-first mode and an optional "done a little coding" mode |
+| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns, with a beginner-first mode, an optional "done a little coding" mode, and a viewing/tinkering intent toggle |
+| **Favicon** | Conference-inspired SVG favicon using the app's teal/orange palette |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
 | **No install** | The attendee app still runs as a single HTML file in any mobile browser, with no app store or install required |
 
@@ -181,6 +232,9 @@ For anyone building something similar:
 - **Keep later refinements narrow.** Requests like "just the highlighted speaker line should jump to profiles" led to cleaner UX than trying to make every related text element interactive.
 - **State the audience as specifically as the feature.** "Assume they use websites but may never have coded before" was more useful than simply saying "make it educational."
 - **Use familiar product metaphors.** Referencing Instagram and YouTube scrolling behavior immediately grounded the explainer page in something students already understand.
+- **Separate the draft from the merge.** For content that needs human review before students read it (speaker bios, session summaries), ask Claude to produce a plan document first rather than writing directly into the live file. The plan becomes the review artifact.
+- **Direct edits and AI sessions can coexist.** After the initial build, the teacher made several commits directly — favicon, summary rewrites, tinkering mode on the guide. The AI sessions and manual edits interleaved naturally. The repo doesn't care who authored what.
+- **Ask for the live-clock feature once the data is stable.** The NOW indicator only made sense after the session times were confirmed correct. Timing-dependent features are safer to add late.
 
 ---
 
