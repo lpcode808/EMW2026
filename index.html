@@ -7,6 +7,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta name="theme-color" content="#001329">
   <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
     :root {
@@ -333,6 +334,10 @@
       padding-top: 0.25rem;
       min-width: 54px;
       letter-spacing: 0.03em;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
     }
 
     .session-main { flex: 1; min-width: 0; }
@@ -1297,6 +1302,51 @@
       color: var(--text-dim);
       font-size: 0.88rem;
     }
+
+    /* ── YOU ARE HERE ── */
+    .session-item.status-current {
+      border-color: rgba(7, 168, 168, 0.6);
+      box-shadow: 0 0 0 1px rgba(7, 168, 168, 0.2), 0 4px 20px rgba(7, 168, 168, 0.1);
+    }
+
+    .session-item.status-upcoming {
+      border-color: rgba(175, 205, 83, 0.35);
+    }
+
+    .status-now-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.12rem 0.4rem;
+      background: var(--teal);
+      color: var(--bg);
+      border-radius: 3px;
+      font-size: 0.55rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-family: var(--font-display);
+      animation: pulse-now 2s ease-in-out infinite;
+    }
+
+    .status-upcoming-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.12rem 0.4rem;
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid rgba(175, 205, 83, 0.3);
+      border-radius: 3px;
+      font-size: 0.55rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: var(--font-display);
+    }
+
+    @keyframes pulse-now {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
   </style>
 </head>
 <body>
@@ -1551,7 +1601,7 @@
       timeEnd: "2:15 PM",
       title: "VC 1-on-1 Meetings",
       type: "networking",
-      speaker: "Keyvan Peymani · Summer Kim · Tom Toy · Bill Bryant + more",
+      speaker: "Keyvan Peymani · Summer Kim · Rayfe Gaspar-Asaoka · Bill Bryant",
       location: "Designated Area",
       description: "Startup founders meet investors for short one-on-one conversations about their companies and next steps.",
       studentSummary: "Founders get a few minutes to explain their startup to investors. This is a great chance to watch how people pitch fast, clearly, and under pressure.",
@@ -2897,9 +2947,70 @@
   });
 
   // ──────────────────────────────────────────────────────────
+  //  YOU ARE HERE — highlights current / next session on event day
+  // ──────────────────────────────────────────────────────────
+
+  function parseSessionMs(timeStr) {
+    // Parse "9:15 AM" / "4:30 PM" into UTC ms for Thursday Apr 9, 2026 HST.
+    // HST = UTC − 10, so add 10 h to the local hour to get UTC.
+    const match = timeStr.match(/^(\d+):(\d+)\s+(AM|PM)$/i);
+    if (!match) return null;
+    let h = parseInt(match[1], 10);
+    const m = parseInt(match[2], 10);
+    const ampm = match[3].toUpperCase();
+    if (ampm === 'PM' && h !== 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    return Date.UTC(2026, 3, 9, h + 10, m); // April = month index 3
+  }
+
+  function updateYouAreHere() {
+    const now = Date.now();
+    const currentIds = [];
+    let nextId = null;
+
+    for (const s of SCHEDULE) {
+      if (s.type === 'background') continue;
+      const start = parseSessionMs(s.time);
+      const end = s.timeEnd ? parseSessionMs(s.timeEnd) : null;
+      if (!start) continue;
+
+      if (end && now >= start && now < end) {
+        currentIds.push(s.id);
+      } else if (start > now && !nextId) {
+        nextId = s.id;
+      }
+    }
+
+    // Clear existing indicators
+    document.querySelectorAll('.session-item').forEach(el => {
+      el.classList.remove('status-current', 'status-upcoming');
+      el.querySelectorAll('.status-now-badge, .status-upcoming-badge').forEach(b => b.remove());
+    });
+
+    if (currentIds.length > 0) {
+      currentIds.forEach(id => {
+        const item = document.getElementById('item-' + id);
+        if (!item) return;
+        item.classList.add('status-current');
+        const timeEl = item.querySelector('.session-time');
+        if (timeEl) timeEl.insertAdjacentHTML('beforeend', '<span class="status-now-badge">Now</span>');
+      });
+    } else if (nextId) {
+      const item = document.getElementById('item-' + nextId);
+      if (item) {
+        item.classList.add('status-upcoming');
+        const timeEl = item.querySelector('.session-time');
+        if (timeEl) timeEl.insertAdjacentHTML('beforeend', '<span class="status-upcoming-badge">Up Next</span>');
+      }
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────
   //  INIT
   // ──────────────────────────────────────────────────────────
   renderSchedule();
+  updateYouAreHere();
+  setInterval(updateYouAreHere, 60000);
   </script>
 </body>
 </html>
