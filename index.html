@@ -768,6 +768,23 @@
     }
     .note-save-btn:hover { opacity: 0.9; }
     .note-save-btn:active { transform: scale(0.97); }
+    .note-add-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0 18px;
+      font: 600 0.85rem/1 'Manrope', sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: opacity 0.15s, transform 0.12s;
+      min-height: 44px;
+    }
+    .note-add-btn:hover { opacity: 0.9; }
+    .note-add-btn:active { transform: scale(0.97); }
 
     /* ── EXT LINK ── */
     .ext-link {
@@ -1412,7 +1429,7 @@
         <span class="notes-title">My Notes</span>
         <button class="export-btn" id="exportBtn">Export ↓</button>
       </div>
-      <p class="notes-subtitle">Use <strong>Quick Note</strong> for thoughts that are not tied to a session or speaker.</p>
+      <p class="notes-subtitle">Use <strong>Quick Notes</strong> to jot down scraps, to-dos, or anything not tied to a session or speaker.</p>
       <div id="notesComposer"></div>
       <div id="notesList"></div>
     </section>
@@ -2527,6 +2544,12 @@
     return 'Not tied to a session or speaker';
   }
 
+  function getQuickNotes(notes) {
+    return Object.values(notes)
+      .filter(note => note.type === NOTE_TYPES.GENERAL)
+      .sort((a, b) => b.createdAt - a.createdAt);
+  }
+
   function getLinkedNotes(notes) {
     return Object.values(notes)
       .filter(note => note.type !== NOTE_TYPES.GENERAL)
@@ -2535,47 +2558,78 @@
 
   function renderNotesTab() {
     const notes = getNotes();
-    const generalNote = notes[noteKey(NOTE_TYPES.GENERAL, GENERAL_NOTE_ID)] || null;
-    const noteList = getLinkedNotes(notes);
+    const quickNotes = getQuickNotes(notes);
+    const linkedNotes = getLinkedNotes(notes);
     const composer = document.getElementById('notesComposer');
     const container = document.getElementById('notesList');
 
+    // Composer: always-blank textarea to create a new sticky note
     composer.innerHTML = `
       <div class="note-card ${noteTypeClass(NOTE_TYPES.GENERAL)} notes-compose-card">
         <div class="note-card-meta">
-          <span class="note-card-badge">${noteTypeLabel(NOTE_TYPES.GENERAL)}</span>
-          <span class="note-card-time">${esc(getNoteContext({ type: NOTE_TYPES.GENERAL }))}</span>
+          <span class="note-card-badge">Quick Note</span>
+          <span class="note-card-time">Not tied to a session or speaker</span>
         </div>
-        <div class="note-card-session">Quick Note</div>
-        <div class="note-card-context">Capture a thought without attaching it to a session or person.</div>
+        <div class="note-card-session">New Quick Note</div>
         <textarea
-          class="note-textarea"
-          data-note-type="${NOTE_TYPES.GENERAL}"
-          data-note-id="${GENERAL_NOTE_ID}"
+          class="note-textarea note-compose-textarea"
+          id="quickNoteCompose"
           placeholder="Jot something down without linking it anywhere..."
-          aria-label="Quick note"
-        >${generalNote ? esc(generalNote.text) : ''}</textarea>
-        <p class="note-meta" data-note-meta-type="${NOTE_TYPES.GENERAL}" data-note-meta-id="${GENERAL_NOTE_ID}">${esc(noteMetaMessage(generalNote))}</p>
+          aria-label="New quick note"
+        ></textarea>
         <div class="note-card-actions">
-          ${generalNote ? `<button class="note-card-delete" id="clearQuickNote">Clear Quick Note</button>` : ''}
-          <button class="note-save-btn" data-note-type="${NOTE_TYPES.GENERAL}" data-note-id="${GENERAL_NOTE_ID}">Save Quick Note ✓</button>
+          <button class="note-add-btn" id="addQuickNote">Add Note ✓</button>
         </div>
       </div>
+      ${quickNotes.map(note => `
+        <div class="note-card ${noteTypeClass(NOTE_TYPES.GENERAL)}" id="notecard-${slugify(note.key)}">
+          <div class="note-card-meta">
+            <span class="note-card-badge">Quick Note</span>
+            <span class="note-card-time">${esc(noteMetaMessage(note))}</span>
+          </div>
+          <textarea
+            class="note-textarea"
+            data-note-type="${NOTE_TYPES.GENERAL}"
+            data-note-id="${esc(note.entityId)}"
+            aria-label="Quick note"
+          >${esc(note.text)}</textarea>
+          <p class="note-meta" data-note-meta-type="${NOTE_TYPES.GENERAL}" data-note-meta-id="${esc(note.entityId)}">${esc(noteMetaMessage(note))}</p>
+          <div class="note-card-actions">
+            <button class="note-card-delete" data-note-key="${note.key}" aria-label="Delete quick note">✕ Delete</button>
+            <button class="note-save-btn" data-note-type="${NOTE_TYPES.GENERAL}" data-note-id="${esc(note.entityId)}">Save ✓</button>
+          </div>
+        </div>
+      `).join('')}
     `;
 
+    // Bind save-on-blur and save buttons for existing quick note stickies
     bindNoteEditors(composer);
     syncNoteMeta();
 
-    const clearQuickNote = document.getElementById('clearQuickNote');
-    if (clearQuickNote) {
-      clearQuickNote.addEventListener('click', () => {
-        if (deleteNote(noteKey(NOTE_TYPES.GENERAL, GENERAL_NOTE_ID))) {
-          showToast('Quick note cleared');
+    // "Add Note" creates a new sticky and clears the composer
+    document.getElementById('addQuickNote').addEventListener('click', () => {
+      const textarea = document.getElementById('quickNoteCompose');
+      const text = textarea.value.trim();
+      if (!text) {
+        showToast('Type something first');
+        return;
+      }
+      const newId = `quick-note-${Date.now()}`;
+      saveNote(NOTE_TYPES.GENERAL, newId, text);
+      showToast('Quick note added ✓');
+      renderNotesTab();
+    });
+
+    // Delete buttons on quick note stickies
+    composer.querySelectorAll('.note-card-delete').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (deleteNote(btn.dataset.noteKey)) {
+          showToast('Note deleted');
         }
       });
-    }
+    });
 
-    if (noteList.length === 0) {
+    if (linkedNotes.length === 0) {
       container.innerHTML = `
         <div class="notes-empty">
           <span class="notes-empty-icon">📝</span>
@@ -2585,7 +2639,7 @@
       return;
     }
 
-    container.innerHTML = noteList.map(note => `
+    container.innerHTML = linkedNotes.map(note => `
       <div class="note-card ${noteTypeClass(note.type)}" id="notecard-${slugify(note.key)}">
         <div class="note-card-meta">
           <span class="note-card-badge">${esc(noteTypeLabel(note.type))}</span>
