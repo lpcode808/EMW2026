@@ -247,12 +247,17 @@ async function main() {
 
       document.querySelector('.tab-btn[data-tab="notes"]').click();
       await sleep(180);
-      const quickTextarea = document.querySelector('.note-textarea[data-note-type="general"][data-note-id="quick-note"]');
-      assert(quickTextarea, "Missing quick note textarea");
-      quickTextarea.value = "Quick note from smoke script";
-      document.querySelector('.note-save-btn[data-note-type="general"][data-note-id="quick-note"]').click();
-      await sleep(120);
+      touchTargets.push(minTouchTarget("#clearNotesBtn"));
+      const quickCompose = document.getElementById("quickNoteCompose");
+      assert(quickCompose, "Missing quick note composer");
+      quickCompose.value = "Quick note from smoke script";
+      document.getElementById("addQuickNote").click();
+      await sleep(160);
       assert(document.getElementById("noteCount").textContent.trim() === "2", "Header note count did not include quick note", document.getElementById("noteCount").textContent);
+
+      const quickSticky = [...document.querySelectorAll('#notesComposer .note-textarea[data-note-type="general"]')]
+        .find(el => el.value.includes("Quick note from smoke script"));
+      assert(quickSticky, "New quick sticky note did not render after save");
 
       const noteCards = [...document.querySelectorAll("#notesList .note-card-session")].map(el => el.textContent.trim());
       assert(noteCards.includes("Welcome to East Meets West"), "Linked session note did not appear in notes tab", noteCards.join(", "));
@@ -260,6 +265,10 @@ async function main() {
       document.getElementById("exportBtn").click();
       await sleep(80);
       touchTargets.push(minTouchTarget(".modal-close"));
+      touchTargets.push(minTouchTarget("#shareBtn"));
+      touchTargets.push(minTouchTarget("#copyBtn"));
+      assert(document.getElementById("shareBtn"), "Missing share-to-notes button");
+      assert(document.getElementById("copyBtn"), "Missing copy button");
       const exportText = document.getElementById("exportTextarea").value;
       assert(exportText.includes("Test note from smoke script"), "Export text missing session note");
       assert(exportText.includes("Quick note from smoke script"), "Export text missing quick note");
@@ -268,9 +277,36 @@ async function main() {
       await sleep(80);
       assert(document.getElementById("exportModal").classList.contains("hidden"), "Export modal did not close");
 
+      document.getElementById("clearNotesBtn").click();
+      await sleep(80);
+      assert(!document.getElementById("clearNotesModal").classList.contains("hidden"), "Clear notes modal did not open");
+
+      const clearInput = document.getElementById("clearNotesInput");
+      const confirmClearBtn = document.getElementById("confirmClearNotesBtn");
+      assert(confirmClearBtn.disabled, "Delete-all confirm should start disabled");
+
+      clearInput.value = "Delete All";
+      clearInput.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(40);
+      assert(confirmClearBtn.disabled, "Delete-all confirm should stay disabled for the wrong phrase");
+
+      clearInput.value = "delete all";
+      clearInput.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(40);
+      assert(!confirmClearBtn.disabled, "Delete-all confirm did not enable for the exact phrase");
+
+      confirmClearBtn.click();
+      await sleep(160);
+      const notesAfterClear = JSON.parse(localStorage.getItem("emw2026_notes") || "{}");
+      assert(Object.keys(notesAfterClear).length === 0, "Delete all notes did not clear localStorage");
+      assert(document.getElementById("noteCount").textContent.trim() === "", "Header note count did not clear", document.getElementById("noteCount").textContent);
+      assert(document.getElementById("clearNotesBtn").disabled, "Clear-all button should disable once notes are cleared");
+      assert(document.getElementById("clearNotesModal").classList.contains("hidden"), "Clear notes modal did not close");
+
       return {
         sessionCount: sessionItems.length,
-        noteCount: document.getElementById("noteCount").textContent.trim(),
+        noteCountAfterSave: "2",
+        noteCountAfterClear: document.getElementById("noteCount").textContent.trim(),
         speakersCount: document.getElementById("speakersCount").textContent.trim(),
         noteCards,
         touchTargets,

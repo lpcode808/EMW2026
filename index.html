@@ -810,6 +810,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 0.75rem;
       padding: 1.25rem 1.25rem 0.75rem;
     }
 
@@ -836,13 +837,20 @@
       margin-bottom: 0.85rem;
     }
 
-    .export-btn {
+    .notes-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .export-btn,
+    .clear-notes-btn {
       display: flex;
       align-items: center;
       gap: 0.35rem;
       padding: 0.5rem 1rem;
-      background: var(--teal);
-      color: var(--bg);
       border: none;
       border-radius: var(--radius-sm);
       font-family: var(--font-display);
@@ -853,7 +861,24 @@
       transition: opacity 0.2s;
       min-height: 44px;
     }
+    .export-btn {
+      background: var(--teal);
+      color: var(--bg);
+    }
     .export-btn:hover { opacity: 0.9; }
+
+    .clear-notes-btn {
+      background: rgba(200, 83, 29, 0.12);
+      color: var(--orange);
+      border: 1px solid rgba(200, 83, 29, 0.28);
+    }
+    .clear-notes-btn:hover:not(:disabled) {
+      background: rgba(200, 83, 29, 0.18);
+    }
+    .clear-notes-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
 
     .notes-empty {
       text-align: center;
@@ -1092,12 +1117,118 @@
       outline: none;
     }
 
-    .modal-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+    .modal-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
 
+    .modal-hint strong,
+    .confirm-copy strong,
+    .confirm-label strong {
+      color: var(--text);
+    }
+
+    .share-btn,
     .copy-btn {
       width: 100%;
       padding: 0.8rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s, background 0.3s, border-color 0.2s, color 0.2s;
+      min-height: 50px;
+    }
+
+    .share-btn {
       background: var(--teal);
+      color: var(--bg);
+    }
+    .share-btn:hover:not(:disabled) { opacity: 0.9; }
+
+    .copy-btn {
+      background: rgba(255, 247, 235, 0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .copy-btn:hover:not(:disabled) {
+      background: rgba(255, 247, 235, 0.1);
+      border-color: var(--border-active);
+    }
+    .copy-btn.copied {
+      background: var(--lime);
+      color: var(--bg);
+      border-color: transparent;
+    }
+
+    .share-btn:disabled,
+    .copy-btn:disabled,
+    .danger-confirm-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .confirm-copy {
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .confirm-label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+      text-transform: uppercase;
+    }
+
+    .confirm-label code {
+      color: var(--text);
+      font-size: 0.84rem;
+      text-transform: none;
+    }
+
+    .confirm-input {
+      width: 100%;
+      background: var(--surface-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 0.85rem 0.95rem;
+      outline: none;
+    }
+    .confirm-input:focus {
+      border-color: rgba(200, 83, 29, 0.42);
+      box-shadow: 0 0 0 3px rgba(200, 83, 29, 0.12);
+    }
+
+    .confirm-note,
+    .confirm-status {
+      font-size: 0.76rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+      margin-top: 0.65rem;
+    }
+
+    .confirm-status.ready {
+      color: var(--lime);
+    }
+
+    .danger-confirm-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--orange);
       color: var(--bg);
       border: none;
       border-radius: var(--radius-sm);
@@ -1109,8 +1240,7 @@
       transition: opacity 0.2s, background 0.3s;
       min-height: 50px;
     }
-    .copy-btn:hover { opacity: 0.9; }
-    .copy-btn.copied { background: var(--lime); color: var(--bg); }
+    .danger-confirm-btn:hover:not(:disabled) { opacity: 0.9; }
 
     /* ── TOAST ── */
     .toast {
@@ -1427,7 +1557,10 @@
     <section id="notesTab" class="tab-content" role="tabpanel">
       <div class="notes-header">
         <span class="notes-title">My Notes</span>
-        <button class="export-btn" id="exportBtn">Export ↓</button>
+        <div class="notes-actions">
+          <button class="clear-notes-btn" id="clearNotesBtn" type="button" aria-haspopup="dialog">🗑 Clear All</button>
+          <button class="export-btn" id="exportBtn" type="button" aria-haspopup="dialog">Export ↓</button>
+        </div>
       </div>
       <p class="notes-subtitle">Use <strong>Quick Notes</strong> to jot down scraps, to-dos, or anything not tied to a session or speaker.</p>
       <div id="notesComposer"></div>
@@ -1443,11 +1576,41 @@
         <button class="modal-close" id="closeModal" aria-label="Close">✕</button>
       </div>
       <div class="modal-body">
-        <p class="modal-hint">Select all and copy, or use the button below.</p>
+        <p class="modal-hint" id="exportHint">On iPhone, tap <strong>Send to Notes…</strong> to open the share sheet, then choose <strong>Notes</strong> or <strong>New Quick Note</strong>. If you prefer, copy and paste manually.</p>
         <textarea class="export-textarea" id="exportTextarea" readonly aria-label="Your notes formatted for export"></textarea>
       </div>
       <div class="modal-footer">
+        <button class="share-btn" id="shareBtn" type="button">Send to Notes…</button>
         <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear notes modal -->
+  <div class="modal-overlay hidden" id="clearNotesModal" role="dialog" aria-modal="true" aria-labelledby="clearNotesTitle">
+    <div class="modal-sheet">
+      <div class="modal-top">
+        <span class="modal-top-title" id="clearNotesTitle">Delete All Notes</span>
+        <button class="modal-close" id="closeClearModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-copy" id="clearNotesCopy">Are you sure you want to delete all notes?</p>
+        <label class="confirm-label" for="clearNotesInput">Type <code>delete all</code> exactly to confirm.</label>
+        <input
+          class="confirm-input"
+          id="clearNotesInput"
+          type="text"
+          placeholder="delete all"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+        >
+        <p class="confirm-note" id="clearNotesNote">This removes notes from this browser on this device only.</p>
+        <p class="confirm-status" id="clearNotesStatus">Type the phrase exactly to enable the delete button.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="danger-confirm-btn" id="confirmClearNotesBtn" type="button" disabled>Delete All Notes</button>
       </div>
     </div>
   </div>
@@ -1930,6 +2093,8 @@
   //  NOTES — localStorage
   // ──────────────────────────────────────────────────────────
   const NOTES_KEY = 'emw2026_notes';
+  const DELETE_ALL_CONFIRMATION = 'delete all';
+  const EXPORT_SHARE_TITLE = 'East Meets West 2026 Notes';
   const NOTE_TYPES = {
     SESSION: 'session',
     SPEAKER: 'speaker',
@@ -2034,6 +2199,10 @@
     updateNoteCount();
   }
 
+  function getNoteCount() {
+    return Object.keys(getNotes()).length;
+  }
+
   function getNote(type, entityId = GENERAL_NOTE_ID) {
     return getNotes()[noteKey(type, entityId)] || null;
   }
@@ -2087,10 +2256,28 @@
     return true;
   }
 
+  function clearAllNotes() {
+    if (getNoteCount() === 0) return false;
+    localStorage.removeItem(NOTES_KEY);
+    updateNoteCount();
+    syncNoteEditorValues();
+    syncNoteIndicators();
+    syncNoteMeta();
+    renderNotesTab();
+    return true;
+  }
+
+  function updateNotesActionState() {
+    const clearBtn = document.getElementById('clearNotesBtn');
+    if (!clearBtn) return;
+    clearBtn.disabled = getNoteCount() === 0;
+  }
+
   function updateNoteCount() {
-    const count = Object.keys(getNotes()).length;
+    const count = getNoteCount();
     const el = document.getElementById('noteCount');
     el.textContent = count > 0 ? count : '';
+    updateNotesActionState();
   }
 
   function noteLabel(type, hasNote) {
@@ -2759,48 +2946,192 @@
     btn.addEventListener('click', () => activateTab(btn.dataset.tab));
   });
 
+  function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add('hidden');
+  }
+
   // ──────────────────────────────────────────────────────────
   //  EXPORT MODAL
   // ──────────────────────────────────────────────────────────
+  function updateExportModalState() {
+    const shareBtn = document.getElementById('shareBtn');
+    const exportHint = document.getElementById('exportHint');
+    const supportsShare = typeof navigator.share === 'function';
+    shareBtn.disabled = !supportsShare;
+    shareBtn.textContent = supportsShare ? 'Send to Notes…' : 'Send to Notes unavailable here';
+    exportHint.innerHTML = supportsShare
+      ? 'On iPhone, tap <strong>Send to Notes…</strong> to open the share sheet, then choose <strong>Notes</strong> or <strong>New Quick Note</strong>. If you prefer, copy and paste manually.'
+      : 'This browser cannot open the native iPhone share sheet from here, so use <strong>Copy to Clipboard</strong> and paste into Notes manually.';
+  }
+
+  function selectExportTextarea() {
+    const ta = document.getElementById('exportTextarea');
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+  }
+
+  function flashCopyButton() {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied! ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy to Clipboard';
+      btn.classList.remove('copied');
+    }, 2500);
+  }
+
+  function copyExportText() {
+    const ta = document.getElementById('exportTextarea');
+    const text = ta.value;
+
+    if (navigator.clipboard) {
+      return navigator.clipboard.writeText(text).catch(() => {
+        selectExportTextarea();
+        if (!document.execCommand('copy')) {
+          throw new Error('Clipboard copy failed');
+        }
+      });
+    }
+
+    selectExportTextarea();
+    if (!document.execCommand('copy')) {
+      return Promise.reject(new Error('Clipboard copy failed'));
+    }
+    return Promise.resolve();
+  }
+
   document.getElementById('exportBtn').addEventListener('click', () => {
     document.getElementById('exportTextarea').value = buildExportText();
-    document.getElementById('exportModal').classList.remove('hidden');
+    updateExportModalState();
+    openModal('exportModal');
   });
 
   document.getElementById('closeModal').addEventListener('click', () => {
-    document.getElementById('exportModal').classList.add('hidden');
+    closeModal('exportModal');
   });
 
   document.getElementById('exportModal').addEventListener('click', e => {
     if (e.target === document.getElementById('exportModal')) {
-      document.getElementById('exportModal').classList.add('hidden');
+      closeModal('exportModal');
     }
   });
 
-  document.getElementById('copyBtn').addEventListener('click', () => {
-    const ta = document.getElementById('exportTextarea');
-    const btn = document.getElementById('copyBtn');
-    const text = ta.value;
+  document.getElementById('shareBtn').addEventListener('click', async () => {
+    const text = document.getElementById('exportTextarea').value;
+    if (text === 'No notes saved yet.') {
+      showToast('No notes to export yet');
+      return;
+    }
 
-    const finish = () => {
-      btn.textContent = 'Copied! ✓';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy to Clipboard';
-        btn.classList.remove('copied');
-      }, 2500);
-    };
+    if (typeof navigator.share !== 'function') {
+      try {
+        await copyExportText();
+        flashCopyButton();
+        showToast('Copied to clipboard');
+      } catch {
+        showToast('Could not copy notes');
+      }
+      return;
+    }
 
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(finish).catch(() => {
-        ta.select();
-        document.execCommand('copy');
-        finish();
+    try {
+      await navigator.share({
+        title: EXPORT_SHARE_TITLE,
+        text
       });
-    } else {
-      ta.select();
-      document.execCommand('copy');
-      finish();
+      closeModal('exportModal');
+    } catch (error) {
+      if (error && error.name === 'AbortError') return;
+      try {
+        await copyExportText();
+        flashCopyButton();
+        showToast('Share unavailable — copied instead');
+      } catch {
+        showToast('Could not share or copy notes');
+      }
+    }
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    try {
+      await copyExportText();
+      flashCopyButton();
+      showToast('Copied to clipboard');
+    } catch {
+      showToast('Could not copy notes');
+    }
+  });
+
+  // ──────────────────────────────────────────────────────────
+  //  DELETE ALL NOTES MODAL
+  // ──────────────────────────────────────────────────────────
+  function updateClearNotesConfirmState() {
+    const input = document.getElementById('clearNotesInput');
+    const status = document.getElementById('clearNotesStatus');
+    const confirmBtn = document.getElementById('confirmClearNotesBtn');
+    const isMatch = input.value === DELETE_ALL_CONFIRMATION;
+
+    confirmBtn.disabled = !isMatch;
+    status.textContent = isMatch
+      ? 'Phrase matched. Delete will clear every saved note on this device.'
+      : 'Type the phrase exactly to enable the delete button.';
+    status.classList.toggle('ready', isMatch);
+  }
+
+  function resetClearNotesModal() {
+    document.getElementById('clearNotesInput').value = '';
+    updateClearNotesConfirmState();
+  }
+
+  function openClearNotesModal() {
+    const count = getNoteCount();
+    if (count === 0) {
+      showToast('No notes to clear');
+      return;
+    }
+
+    document.getElementById('clearNotesCopy').textContent = 'Are you sure you want to delete all notes?';
+    document.getElementById('clearNotesNote').textContent =
+      `This will remove ${count} saved ${count === 1 ? 'note' : 'notes'} from this browser on this device only.`;
+    resetClearNotesModal();
+    openModal('clearNotesModal');
+    setTimeout(() => document.getElementById('clearNotesInput').focus(), 40);
+  }
+
+  function closeClearNotesModal() {
+    closeModal('clearNotesModal');
+    resetClearNotesModal();
+  }
+
+  document.getElementById('clearNotesBtn').addEventListener('click', openClearNotesModal);
+  document.getElementById('closeClearModal').addEventListener('click', closeClearNotesModal);
+  document.getElementById('clearNotesModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('clearNotesModal')) {
+      closeClearNotesModal();
+    }
+  });
+
+  document.getElementById('clearNotesInput').addEventListener('input', updateClearNotesConfirmState);
+  document.getElementById('clearNotesInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('clearNotesInput').value === DELETE_ALL_CONFIRMATION) {
+      e.preventDefault();
+      document.getElementById('confirmClearNotesBtn').click();
+    }
+  });
+
+  document.getElementById('confirmClearNotesBtn').addEventListener('click', () => {
+    if (document.getElementById('clearNotesInput').value !== DELETE_ALL_CONFIRMATION) return;
+    if (clearAllNotes()) {
+      closeClearNotesModal();
+      closeModal('exportModal');
+      showToast('All notes deleted');
     }
   });
 
@@ -2827,7 +3158,7 @@
     { name: "Jeannie Yang",       role: "Ex-SVP Product & CPO",              company: "Smule",                                sessions: ["thu-11"] },
     { name: "John Lim",           role: "Chief Strategy Officer",            company: "Pegasus Tech Ventures",                sessions: ["thu-18"] },
     { name: "Keyvan Peymani",     role: "VC Facilitator",                    company: "VC 1-on-1 Meetings",                   sessions: ["thu-14"] },
-    { name: "Maya Rogers",        role: "President & CEO",                   company: "Tetris",                               sessions: ["thu-04", "thu-20", "thu-22"] },
+    { name: "Maya Rogers",        role: "President & CEO",                   company: "Tetris",                               sessions: ["thu-04", "thu-22"] },
     { name: "Miki Hardisty",      role: "Co-founder & CEO",                  company: "ʻŌlelo Intelligence",                  sessions: ["thu-20"] },
     { name: "Paʻa Sibbett",       role: "Writer & Creator",                  company: "Chief of War (Apple TV+)",             sessions: ["thu-12"] },
     { name: "Rayfe Gaspar-Asaoka",role: "Partner",                           company: "Geodesic Capital",                     sessions: ["thu-14", "thu-19"] },
