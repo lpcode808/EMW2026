@@ -4219,6 +4219,11 @@
   startLearnCalloutAutoCollapse();
   updateYouAreHere();
   setInterval(updateYouAreHere, 60000);
+
+  // Register service worker for offline support at the venue
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
   </script>
 </body>
 </html>
