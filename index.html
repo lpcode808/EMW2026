@@ -1213,6 +1213,15 @@
       box-shadow: 0 0 0 3px rgba(200, 83, 29, 0.12);
     }
 
+    /* iOS Safari zooms focused fields when font-size is under 16px. */
+    @supports (-webkit-touch-callout: none) {
+      input,
+      textarea,
+      select {
+        font-size: 16px;
+      }
+    }
+
     .confirm-note,
     .confirm-status {
       font-size: 0.76rem;
