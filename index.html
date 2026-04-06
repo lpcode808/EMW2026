@@ -1314,6 +1314,78 @@
     .speakers-search:focus { border-color: var(--teal); }
     .speakers-search::placeholder { color: var(--text-dim); }
 
+    .speakers-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0 0.75rem 0.2rem;
+      flex-wrap: wrap;
+    }
+
+    .speaker-toolbar-btn,
+    .speaker-clear-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 44px;
+      padding: 0.58rem 0.95rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, opacity 0.2s, border-color 0.2s;
+    }
+
+    .speaker-toolbar-btn {
+      background: rgba(175, 205, 83, 0.08);
+      border: 1px solid rgba(175, 205, 83, 0.28);
+      color: var(--lime);
+    }
+
+    .speaker-toolbar-btn[aria-pressed="true"] {
+      background: rgba(175, 205, 83, 0.2);
+      color: #f5ffd0;
+      border-color: rgba(175, 205, 83, 0.45);
+    }
+
+    .speaker-toolbar-btn:disabled,
+    .speaker-clear-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .speaker-clear-btn {
+      background: rgba(200, 83, 29, 0.12);
+      border: 1px solid rgba(200, 83, 29, 0.28);
+      color: var(--orange);
+    }
+
+    .speaker-toolbar-btn:hover:not(:disabled),
+    .speaker-clear-btn:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    .speakers-star-state {
+      margin: 0 0.75rem 0.2rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: var(--radius);
+      border: 1px solid rgba(7, 168, 168, 0.16);
+      background:
+        linear-gradient(180deg, rgba(7, 168, 168, 0.08), rgba(0, 32, 64, 0.92)),
+        var(--surface);
+      color: var(--text-muted);
+      font-size: 0.79rem;
+      line-height: 1.55;
+    }
+
+    .speakers-star-state strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
     .speakers-count {
       font-size: 0.68rem;
       color: var(--text-dim);
@@ -1339,7 +1411,7 @@
     }
 
     .speaker-item.swipe-starred {
-      transform: translateX(6px);
+      transform: translateX(-6px);
       box-shadow: 0 0 0 1px rgba(175, 205, 83, 0.2), 0 10px 24px rgba(175, 205, 83, 0.1);
     }
 
@@ -1617,6 +1689,11 @@
       <div class="speakers-search-wrap">
         <input class="speakers-search" type="search" id="speakerSearch" placeholder="Search speakers…" aria-label="Search speakers">
       </div>
+      <div class="speakers-toolbar">
+        <button class="speaker-toolbar-btn" id="showStarredFirstBtn" type="button" aria-pressed="false" disabled>⭐ Show Starred Up Top</button>
+        <button class="speaker-clear-btn" id="clearSpeakerStarsBtn" type="button" aria-haspopup="dialog" disabled>Clear Stars</button>
+      </div>
+      <p class="speakers-star-state" id="speakersStarState"></p>
       <p class="speakers-count" id="speakersCount"></p>
       <div id="speakersList"></div>
     </section>
@@ -1678,6 +1755,35 @@
       </div>
       <div class="modal-footer">
         <button class="danger-confirm-btn" id="confirmClearNotesBtn" type="button" disabled>Delete All Notes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear speaker stars modal -->
+  <div class="modal-overlay hidden" id="clearSpeakerStarsModal" role="dialog" aria-modal="true" aria-labelledby="clearSpeakerStarsTitle">
+    <div class="modal-sheet">
+      <div class="modal-top">
+        <span class="modal-top-title" id="clearSpeakerStarsTitle">Clear Starred Speakers</span>
+        <button class="modal-close" id="closeClearSpeakerStarsModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-copy" id="clearSpeakerStarsCopy">Are you sure you want to clear all starred speakers?</p>
+        <label class="confirm-label" for="clearSpeakerStarsInput">Type <code>clear stars</code> exactly to confirm.</label>
+        <input
+          class="confirm-input"
+          id="clearSpeakerStarsInput"
+          type="text"
+          placeholder="clear stars"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+        >
+        <p class="confirm-note" id="clearSpeakerStarsNote">This only changes the saved stars in this browser on this device.</p>
+        <p class="confirm-status" id="clearSpeakerStarsStatus">Type the phrase exactly to enable the clear button.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="danger-confirm-btn" id="confirmClearSpeakerStarsBtn" type="button" disabled>Clear Starred Speakers</button>
       </div>
     </div>
   </div>
@@ -2162,6 +2268,7 @@
   const NOTES_KEY = 'emw2026_notes';
   const STARRED_SPEAKERS_KEY = 'emw2026_starred_speakers';
   const DELETE_ALL_CONFIRMATION = 'delete all';
+  const CLEAR_STARS_CONFIRMATION = 'clear stars';
   const EXPORT_SHARE_TITLE = 'East Meets West 2026 Notes';
   const NOTE_TYPES = {
     SESSION: 'session',
@@ -2284,6 +2391,13 @@
 
   function persistStarredSpeakers(starredSet) {
     localStorage.setItem(STARRED_SPEAKERS_KEY, JSON.stringify([...starredSet]));
+  }
+
+  function clearAllSpeakerStars() {
+    const starred = getStarredSpeakers();
+    if (starred.size === 0) return false;
+    localStorage.removeItem(STARRED_SPEAKERS_KEY);
+    return true;
   }
 
   function toggleSpeakerStar(speakerId) {
@@ -3276,6 +3390,7 @@
   ]
     .map(speaker => ({ ...speaker, id: slugify(speaker.name) }))
     .sort((a, b) => a.name.localeCompare(b.name));
+  let speakersShowStarredFirst = false;
 
   function initials(name) {
     return name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
@@ -3297,6 +3412,40 @@
 
   function speakerSearchUrl(speaker) {
     return `https://g.ai/?q=${encodeURIComponent(speakerSearchQuery(speaker))}`;
+  }
+
+  function getSpeakerSearchValue() {
+    const input = document.getElementById('speakerSearch');
+    return input ? input.value : '';
+  }
+
+  function updateSpeakerStarControls(starredCount) {
+    if (starredCount === 0) {
+      speakersShowStarredFirst = false;
+    }
+
+    const showBtn = document.getElementById('showStarredFirstBtn');
+    const clearBtn = document.getElementById('clearSpeakerStarsBtn');
+    const stateEl = document.getElementById('speakersStarState');
+
+    showBtn.disabled = starredCount === 0;
+    showBtn.setAttribute('aria-pressed', speakersShowStarredFirst ? 'true' : 'false');
+    showBtn.textContent = starredCount === 0
+      ? '⭐ Show Starred Up Top'
+      : speakersShowStarredFirst
+        ? '↕ Back to A–Z'
+        : `⭐ Show ${starredCount} Starred Up Top`;
+
+    clearBtn.disabled = starredCount === 0;
+
+    if (starredCount === 0) {
+      stateEl.innerHTML = '<strong>No starred speakers yet.</strong> Swipe left on a speaker row to star on mobile, or open a speaker card and tap the star button on desktop.';
+      return;
+    }
+
+    stateEl.innerHTML = speakersShowStarredFirst
+      ? `<strong>${starredCount} starred speaker${starredCount !== 1 ? 's are' : ' is'} pinned to the top.</strong> Tap A–Z anytime to go back to the full alphabetical flow.`
+      : `<strong>${starredCount} speaker${starredCount !== 1 ? 's are' : ' is'} starred.</strong> Tap the button above to pull them to the top, then clear them here when you are done.`;
   }
 
   function openSessionContext(sessionId, { focusNote = false } = {}) {
@@ -3365,12 +3514,20 @@
     const notes = getNotes();
     const starred = getStarredSpeakers();
     const q = filter.toLowerCase().trim();
-    const list = q
+    const filteredList = q
       ? SPEAKERS.filter(s => s.name.toLowerCase().includes(q) || s.company.toLowerCase().includes(q) || s.role.toLowerCase().includes(q))
       : SPEAKERS;
+    updateSpeakerStarControls(starred.size);
+    const list = speakersShowStarredFirst
+      ? [...filteredList].sort((a, b) => {
+          const starDelta = Number(starred.has(b.id)) - Number(starred.has(a.id));
+          if (starDelta) return starDelta;
+          return a.name.localeCompare(b.name);
+        })
+      : filteredList;
 
     const countEl = document.getElementById('speakersCount');
-    countEl.textContent = `${list.length} speaker${list.length !== 1 ? 's' : ''} · ${starred.size} starred · Thursday Apr 9`;
+    countEl.textContent = `${filteredList.length} speaker${filteredList.length !== 1 ? 's' : ''} · ${starred.size} starred · Thursday Apr 9`;
 
     if (list.length === 0) {
       document.getElementById('speakersList').innerHTML = `<div class="speakers-empty">No speakers match "${esc(filter)}"</div>`;
@@ -3406,7 +3563,7 @@
             <div class="speaker-body-inner">
               <div class="speaker-company">🏢 ${esc(sp.company)}</div>
               <p class="speaker-sessions-label">Sessions on Thursday</p>
-              <p class="speaker-gesture-hint">Swipe the speaker row right to toggle star quickly.</p>
+              <p class="speaker-gesture-hint">Swipe left on mobile to toggle a star quickly. On desktop, use the button below.</p>
               <div>${chips}</div>
               <div class="session-actions">
                 <button class="speaker-star-toggle" type="button" data-speaker-star-id="${sp.id}">
@@ -3483,47 +3640,126 @@
         const speakerId = btn.dataset.speakerStarId;
         const isStarred = toggleSpeakerStar(speakerId);
         showToast(isStarred ? 'Speaker starred' : 'Speaker unstarred');
-        renderSpeakers(document.getElementById('speakerSearch').value);
+        renderSpeakers(getSpeakerSearchValue());
       });
     });
 
     document.querySelectorAll('.speaker-trigger').forEach(trigger => {
       let touchStartX = 0;
       let touchStartY = 0;
-      let swiped = false;
+      let touchStartAt = 0;
+      let ignoreNextClick = false;
 
       trigger.addEventListener('touchstart', event => {
         const touch = event.changedTouches[0];
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
-        swiped = false;
+        touchStartAt = Date.now();
+        ignoreNextClick = false;
       }, { passive: true });
 
-      trigger.addEventListener('touchmove', event => {
-        if (swiped) return;
+      trigger.addEventListener('touchend', event => {
         const touch = event.changedTouches[0];
         const dx = touch.clientX - touchStartX;
         const dy = touch.clientY - touchStartY;
-        if (Math.abs(dx) > 54 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-          swiped = true;
+        const duration = Date.now() - touchStartAt;
+        if (dx < -54 && Math.abs(dy) < 42 && Math.abs(dx) > Math.abs(dy) * 1.25 && duration < 700) {
+          ignoreNextClick = true;
           event.preventDefault();
           const speakerId = trigger.dataset.spk.replace('spk-', '');
           const isStarred = toggleSpeakerStar(speakerId);
           const item = document.getElementById(trigger.dataset.spk);
           if (item) {
             item.classList.add('swipe-starred');
-            setTimeout(() => item.classList.remove('swipe-starred'), 180);
+            setTimeout(() => renderSpeakers(getSpeakerSearchValue()), 170);
+          } else {
+            renderSpeakers(getSpeakerSearchValue());
           }
           showToast(isStarred ? 'Speaker starred' : 'Speaker unstarred');
-          renderSpeakers(document.getElementById('speakerSearch').value);
         }
       }, { passive: false });
+
+      trigger.addEventListener('click', event => {
+        if (!ignoreNextClick) return;
+        ignoreNextClick = false;
+        event.stopImmediatePropagation();
+        event.preventDefault();
+      }, { capture: true });
     });
   }
 
   // Search
   document.getElementById('speakerSearch').addEventListener('input', e => {
     renderSpeakers(e.target.value);
+  });
+  document.getElementById('showStarredFirstBtn').addEventListener('click', () => {
+    if (getStarredSpeakers().size === 0) return;
+    speakersShowStarredFirst = !speakersShowStarredFirst;
+    renderSpeakers(getSpeakerSearchValue());
+  });
+
+  function updateClearSpeakerStarsConfirmState() {
+    const input = document.getElementById('clearSpeakerStarsInput');
+    const status = document.getElementById('clearSpeakerStarsStatus');
+    const confirmBtn = document.getElementById('confirmClearSpeakerStarsBtn');
+    const isMatch = input.value === CLEAR_STARS_CONFIRMATION;
+
+    confirmBtn.disabled = !isMatch;
+    status.textContent = isMatch
+      ? 'Phrase matched. Clear will remove every starred speaker on this device.'
+      : 'Type the phrase exactly to enable the clear button.';
+    status.classList.toggle('ready', isMatch);
+  }
+
+  function resetClearSpeakerStarsModal() {
+    document.getElementById('clearSpeakerStarsInput').value = '';
+    updateClearSpeakerStarsConfirmState();
+  }
+
+  function openClearSpeakerStarsModal() {
+    const starredCount = getStarredSpeakers().size;
+    if (starredCount === 0) {
+      showToast('No starred speakers to clear');
+      return;
+    }
+
+    document.getElementById('clearSpeakerStarsCopy').textContent = 'Are you sure you want to clear all starred speakers?';
+    document.getElementById('clearSpeakerStarsNote').textContent =
+      `This will remove ${starredCount} starred speaker${starredCount !== 1 ? 's' : ''} from this browser on this device only.`;
+    resetClearSpeakerStarsModal();
+    openModal('clearSpeakerStarsModal');
+    setTimeout(() => document.getElementById('clearSpeakerStarsInput').focus(), 40);
+  }
+
+  function closeClearSpeakerStarsModal() {
+    closeModal('clearSpeakerStarsModal');
+    resetClearSpeakerStarsModal();
+  }
+
+  document.getElementById('clearSpeakerStarsBtn').addEventListener('click', openClearSpeakerStarsModal);
+  document.getElementById('closeClearSpeakerStarsModal').addEventListener('click', closeClearSpeakerStarsModal);
+  document.getElementById('clearSpeakerStarsModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('clearSpeakerStarsModal')) {
+      closeClearSpeakerStarsModal();
+    }
+  });
+
+  document.getElementById('clearSpeakerStarsInput').addEventListener('input', updateClearSpeakerStarsConfirmState);
+  document.getElementById('clearSpeakerStarsInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('clearSpeakerStarsInput').value === CLEAR_STARS_CONFIRMATION) {
+      e.preventDefault();
+      document.getElementById('confirmClearSpeakerStarsBtn').click();
+    }
+  });
+
+  document.getElementById('confirmClearSpeakerStarsBtn').addEventListener('click', () => {
+    if (document.getElementById('clearSpeakerStarsInput').value !== CLEAR_STARS_CONFIRMATION) return;
+    if (clearAllSpeakerStars()) {
+      speakersShowStarredFirst = false;
+      closeClearSpeakerStarsModal();
+      showToast('Starred speakers cleared');
+      renderSpeakers(getSpeakerSearchValue());
+    }
   });
 
   // ──────────────────────────────────────────────────────────
