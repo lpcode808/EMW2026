@@ -255,6 +255,9 @@ async function main() {
       await sleep(160);
       assert(document.getElementById("noteCount").textContent.trim() === "2", "Header note count did not include quick note", document.getElementById("noteCount").textContent);
 
+      const quickNoteKeys = Object.keys(JSON.parse(localStorage.getItem("emw2026_notes") || "{}"));
+      assert(!quickNoteKeys.some(key => key.startsWith("undefined:")), "Quick note composer created malformed notes", quickNoteKeys.join(", "));
+
       const quickSticky = [...document.querySelectorAll('#notesComposer .note-textarea[data-note-type="general"]')]
         .find(el => el.value.includes("Quick note from smoke script"));
       assert(quickSticky, "New quick sticky note did not render after save");
