@@ -226,6 +226,78 @@
         var(--surface);
       border: 1px solid var(--border-active);
       box-shadow: 0 18px 38px rgba(0, 0, 0, 0.16);
+      transition: padding 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .learn-callout.collapsed {
+      padding: 0.72rem 0.9rem;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    }
+
+    .learn-callout-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .learn-callout-inline-link {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+    }
+
+    .learn-callout-inline-link:hover .learn-callout-title {
+      color: #ffffff;
+    }
+
+    .learn-callout-toggle {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255, 247, 235, 0.08);
+      border-radius: 999px;
+      background: rgba(255, 247, 235, 0.04);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .learn-callout-toggle:hover {
+      background: rgba(255, 247, 235, 0.08);
+      color: var(--text);
+      border-color: rgba(255, 247, 235, 0.14);
+    }
+
+    .learn-callout-toggle-icon {
+      font-size: 0.74rem;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .learn-callout.collapsed .learn-callout-toggle-icon {
+      transform: rotate(0deg);
+    }
+
+    .learn-callout:not(.collapsed) .learn-callout-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .learn-callout-body {
+      max-height: 320px;
+      overflow: hidden;
+      opacity: 1;
+      transition: max-height 0.28s ease, opacity 0.2s ease, margin-top 0.2s ease;
+    }
+
+    .learn-callout.collapsed .learn-callout-body {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
     }
 
     .learn-callout-label {
@@ -248,6 +320,7 @@
       letter-spacing: -0.02em;
       color: var(--text);
       margin-bottom: 0.45rem;
+      transition: color 0.18s ease;
     }
 
     .learn-callout-copy {
@@ -293,6 +366,27 @@
       color: var(--text-muted);
     }
 
+    .learn-callout.collapsed .learn-callout-inline-link {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.55rem;
+      white-space: nowrap;
+    }
+
+    .learn-callout.collapsed .learn-callout-label {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .learn-callout.collapsed .learn-callout-title {
+      margin-bottom: 0;
+      font-size: 0.86rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: rgba(255, 247, 235, 0.92);
+    }
+
     /* ── SESSION ITEM ── */
     .session-item {
       margin: 0 0.75rem 0.5rem;
@@ -310,7 +404,37 @@
     .session-item.type-meal,
     .session-item.type-break,
     .session-item.type-background {
-      opacity: 0.6;
+      background: rgba(0, 32, 64, 0.78);
+      border-color: rgba(255, 247, 235, 0.05);
+    }
+
+    .session-item.type-meal .session-time,
+    .session-item.type-break .session-time,
+    .session-item.type-background .session-time,
+    .session-item.type-meal .session-speaker,
+    .session-item.type-break .session-speaker,
+    .session-item.type-background .session-speaker,
+    .session-item.type-meal .session-chevron,
+    .session-item.type-break .session-chevron,
+    .session-item.type-background .session-chevron,
+    .session-item.type-meal .meta-item,
+    .session-item.type-break .meta-item,
+    .session-item.type-background .meta-item {
+      color: rgba(255, 247, 235, 0.58);
+    }
+
+    .session-item.type-meal .session-title,
+    .session-item.type-break .session-title,
+    .session-item.type-background .session-title {
+      color: rgba(255, 247, 235, 0.82);
+    }
+
+    .session-item.type-meal .session-body-inner,
+    .session-item.type-break .session-body-inner,
+    .session-item.type-background .session-body-inner {
+      background:
+        linear-gradient(180deg, rgba(5, 33, 58, 0.76), rgba(2, 24, 43, 0.94)),
+        rgba(2, 32, 64, 0.88);
     }
 
     /* ── SESSION TRIGGER ── */
@@ -470,7 +594,7 @@
     .session-description {
       font-size: 0.84rem;
       line-height: 1.68;
-      color: rgba(255, 247, 235, 0.75);
+      color: var(--text);
       margin-bottom: 0.75rem;
     }
 
@@ -1664,16 +1788,32 @@
         <span class="date-label">Thursday, April 9</span>
         <span class="date-sub">Sheraton Waikiki · Honolulu, Hawaiʻi</span>
       </div>
-      <section class="learn-callout" aria-label="Learn how this site works">
-        <p class="learn-callout-label">Code Guide</p>
-        <h2 class="learn-callout-title">Curious how this app works?</h2>
-        <p class="learn-callout-copy">
-          Open a mobile-friendly walkthrough of the real HTML, CSS, JavaScript, and localStorage patterns behind this site.
-          It is built for students, teachers, and conference guests who want to learn by poking around.
-        </p>
-        <div class="learn-callout-links">
-          <a class="learn-callout-link primary" href="code-guide.html">Open the code walkthrough</a>
-          <a class="learn-callout-link secondary" href="code-guide.html#experiments">Try safe experiments</a>
+      <section class="learn-callout" id="learnCallout" aria-label="Learn how this site works">
+        <div class="learn-callout-row">
+          <a class="learn-callout-inline-link" href="code-guide.html">
+            <span class="learn-callout-label">Code Guide</span>
+            <h2 class="learn-callout-title">Curious how this app works?</h2>
+          </a>
+          <button
+            class="learn-callout-toggle"
+            id="learnCalloutToggle"
+            type="button"
+            aria-expanded="true"
+            aria-controls="learnCalloutBody"
+            aria-label="Collapse code guide panel"
+          >
+            <span class="learn-callout-toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="learn-callout-body" id="learnCalloutBody">
+          <p class="learn-callout-copy">
+            Open a mobile-friendly walkthrough of the real HTML, CSS, JavaScript, and localStorage patterns behind this site.
+            It is built for students, teachers, and conference guests who want to learn by poking around.
+          </p>
+          <div class="learn-callout-links">
+            <a class="learn-callout-link primary" href="code-guide.html">Open the code walkthrough</a>
+            <a class="learn-callout-link secondary" href="https://github.com/lpcode808/EMW2026/blob/main/README.md" target="_blank" rel="noopener">Open the repo README</a>
+          </div>
         </div>
       </section>
       <div id="scheduleList"></div>
@@ -3822,9 +3962,55 @@
   }
 
   // ──────────────────────────────────────────────────────────
+  //  CODE GUIDE CALLOUT
+  // ──────────────────────────────────────────────────────────
+  const LEARN_CALLOUT_AUTO_COLLAPSE_MS = 10000;
+  const learnCallout = document.getElementById('learnCallout');
+  const learnCalloutToggle = document.getElementById('learnCalloutToggle');
+  let learnCalloutAutoTimer = null;
+  let learnCalloutTouched = false;
+
+  function setLearnCalloutCollapsed(collapsed) {
+    if (!learnCallout || !learnCalloutToggle) return;
+    learnCallout.classList.toggle('collapsed', collapsed);
+    learnCalloutToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    learnCalloutToggle.setAttribute('aria-label', collapsed ? 'Expand code guide panel' : 'Collapse code guide panel');
+  }
+
+  function stopLearnCalloutAutoCollapse() {
+    if (learnCalloutAutoTimer) {
+      clearTimeout(learnCalloutAutoTimer);
+      learnCalloutAutoTimer = null;
+    }
+  }
+
+  function markLearnCalloutTouched() {
+    learnCalloutTouched = true;
+    stopLearnCalloutAutoCollapse();
+  }
+
+  function startLearnCalloutAutoCollapse() {
+    stopLearnCalloutAutoCollapse();
+    learnCalloutAutoTimer = setTimeout(() => {
+      if (!learnCalloutTouched) setLearnCalloutCollapsed(true);
+    }, LEARN_CALLOUT_AUTO_COLLAPSE_MS);
+  }
+
+  if (learnCallout && learnCalloutToggle) {
+    learnCallout.addEventListener('focusin', markLearnCalloutTouched);
+    learnCallout.addEventListener('pointerdown', markLearnCalloutTouched);
+    learnCalloutToggle.addEventListener('click', () => {
+      markLearnCalloutTouched();
+      setLearnCalloutCollapsed(!learnCallout.classList.contains('collapsed'));
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────
   //  INIT
   // ──────────────────────────────────────────────────────────
   renderSchedule();
+  setLearnCalloutCollapsed(false);
+  startLearnCalloutAutoCollapse();
   updateYouAreHere();
   setInterval(updateYouAreHere, 60000);
   </script>
