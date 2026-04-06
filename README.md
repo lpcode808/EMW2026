@@ -200,6 +200,45 @@ The larger output of that session was [`SPEAKER_BIOS_PLAN.md`](./SPEAKER_BIOS_PL
 
 The bios themselves weren't merged into `index.html` yet. That was a deliberate call: AI-drafted speaker bios benefit from a human review pass before students read them at a real conference. The plan document is the handoff artifact — the teacher can review, edit, and then implement when ready.
 
+### 15. Last-Minute Readability + Notes Search Pass
+
+One final polish session focused on the parts students would feel most directly while using the app during the event itself.
+
+The first target was the **Code Guide** promo at the top of the Schedule tab. On first load, it was visually useful but a little too tall relative to the actual conference content. The solution kept the teaching value without letting it dominate the page:
+- The Schedule tab code-guide panel now auto-collapses after about 10 seconds into a one-line reminder
+- Students can still reopen it at any time with a small toggle
+- The secondary action now points to the repo's **README.md** on GitHub instead of "Try safe experiments," which better matches the likely conference use case
+
+That same thinking carried into readability inside the schedule cards. Some non-core schedule items (like meals, breaks, and background events) were intentionally lighter-weight visually, but dimming the whole card made the description text harder to read than intended. The styling was rebalanced so those entries still feel secondary while keeping the actual body copy bright enough to read comfortably on a phone.
+
+The other addition was to the **My Notes** tab. By this point, notes had grown into three kinds of saved content: quick notes, session notes, and person notes. That made retrieval matter more than it did in the earliest versions, so the Notes tab gained a lightweight search input that filters saved notes client-side by:
+- Note text
+- Session title
+- Speaker name
+- Context text already shown in the note cards
+
+Importantly, the search feature did **not** add any new storage model or backend. It just filters the already-loaded `localStorage` note records in memory, which kept the implementation small and low-risk a few days before the conference.
+
+### 16. Speaker Stars + Swipe Follow-Through
+
+The next iteration came from a very conference-specific question: how do students quickly keep track of speakers they want to remember without opening every card and losing their place in the list?
+
+The first answer was a lightweight starring system in the **Speakers** tab:
+- Speaker rows can now be starred and unstarred, with the state saved in `localStorage`
+- On phones, a quick **swipe left** on a speaker row toggles the star without needing to open the card first
+- Expanded speaker cards still include a clear tap fallback button for desktop use or for anyone who prefers not to use gestures
+- New toolbar controls can pull starred speakers to the top of the list or clear them with an explicit confirmation step
+
+That first pass solved the feature need, but real interaction testing surfaced a subtle UX problem right away: after a successful swipe, the row could still register the follow-up tap/click and accidentally open or close the accordion. In other words, the gesture worked, but it didn't feel isolated from the existing tap behavior.
+
+So the follow-up fix was not a redesign. It was a cleanup pass based on how the feature actually felt in-hand:
+- Gesture detection moved to `touchend` instead of `touchmove`
+- A swipe only counts when it is fast enough, horizontal enough, and long enough to look intentional rather than like normal scrolling
+- The next click is ignored immediately after a successful swipe so starring a speaker does not also toggle that speaker card open or closed
+- The mobile smoke test was expanded to cover the starred-speaker controls so the quick-save flow keeps getting checked
+
+This is a good example of how later-stage UI work often happens in this repo: ship the smallest useful version, try it in the real interaction context, then tighten the behavior without overcomplicating the structure.
+
 ---
 
 ## App Features
@@ -210,10 +249,10 @@ The bios themselves weren't merged into `index.html` yet. That was a deliberate 
 | **NOW / Up Next** | Live session indicator: pulsing teal NOW badge on the currently-running session, lime Up Next badge on the next one — updates every minute |
 | **Student Summaries** | Reviewed and rewritten plain-language descriptions per session, toggle inside expanded row |
 | **Notes** | Session notes carry a real device-local timestamp, plus multi-sticky quick notes and per-speaker person notes |
-| **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, and a `g.ai` research button per speaker |
-| **My Notes tab** | Quick note composer (each save creates a new sticky), saved session/person notes, delete or jump back into context, with distinct visual treatment per note type |
+| **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, a `g.ai` research button per speaker, and saved speaker stars with swipe-to-star on mobile plus starred-up-top controls |
+| **My Notes tab** | Quick note composer (each save creates a new sticky), saved session/person notes, delete or jump back into context, distinct visual treatment per note type, and search across saved notes |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
-| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns, with a beginner-first mode, an optional "done a little coding" mode, and a viewing/tinkering intent toggle |
+| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns, with a beginner-first mode, an optional "done a little coding" mode, a viewing/tinkering intent toggle, and a Schedule-tab promo that now collapses down after first load |
 | **Favicon** | Conference-inspired SVG favicon using the app's teal/orange palette |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
 | **No install** | The attendee app still runs as a single HTML file in any mobile browser, with no app store or install required |
@@ -259,7 +298,7 @@ A lightweight browser-level smoke test now lives at [`scripts/chrome-mobile-smok
 - Schedule accordion opens
 - Student summary expands
 - Session notes save to `localStorage`
-- Speaker search + session jump work
+- Speaker search, starring, and starred-speaker controls work
 - Quick note + export modal work
 - Key mobile tap targets stay at or above 44px
 
