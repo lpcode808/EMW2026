@@ -230,7 +230,7 @@
     }
 
     .learn-callout.collapsed {
-      padding: 0.72rem 0.9rem;
+      padding: 0.52rem 0.8rem;
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
     }
 
@@ -373,6 +373,10 @@
       white-space: nowrap;
     }
 
+    .learn-callout.collapsed .learn-callout-row {
+      align-items: center;
+    }
+
     .learn-callout.collapsed .learn-callout-label {
       margin-bottom: 0;
       flex-shrink: 0;
@@ -385,6 +389,26 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       color: rgba(255, 247, 235, 0.92);
+    }
+
+    .learn-callout.collapsed .learn-callout-toggle {
+      width: auto;
+      height: auto;
+      padding: 0.1rem 0.18rem;
+      border: none;
+      background: transparent;
+      border-radius: 0;
+      align-self: center;
+    }
+
+    .learn-callout.collapsed .learn-callout-toggle:hover {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .learn-callout.collapsed .learn-callout-toggle-icon {
+      font-size: 0.72rem;
+      line-height: 1;
     }
 
     /* ── SESSION ITEM ── */
@@ -4129,9 +4153,10 @@
   // ──────────────────────────────────────────────────────────
   //  CODE GUIDE CALLOUT
   // ──────────────────────────────────────────────────────────
-  const LEARN_CALLOUT_AUTO_COLLAPSE_MS = 10000;
+  const LEARN_CALLOUT_AUTO_COLLAPSE_MS = 5000;
   const learnCallout = document.getElementById('learnCallout');
   const learnCalloutToggle = document.getElementById('learnCalloutToggle');
+  const learnCalloutInlineLink = learnCallout?.querySelector('.learn-callout-inline-link');
   let learnCalloutAutoTimer = null;
   let learnCalloutTouched = false;
 
@@ -4164,6 +4189,14 @@
   if (learnCallout && learnCalloutToggle) {
     learnCallout.addEventListener('focusin', markLearnCalloutTouched);
     learnCallout.addEventListener('pointerdown', markLearnCalloutTouched);
+    if (learnCalloutInlineLink) {
+      learnCalloutInlineLink.addEventListener('click', (event) => {
+        if (!learnCallout.classList.contains('collapsed')) return;
+        event.preventDefault();
+        markLearnCalloutTouched();
+        setLearnCalloutCollapsed(false);
+      });
+    }
     learnCalloutToggle.addEventListener('click', () => {
       markLearnCalloutTouched();
       setLearnCalloutCollapsed(!learnCallout.classList.contains('collapsed'));
