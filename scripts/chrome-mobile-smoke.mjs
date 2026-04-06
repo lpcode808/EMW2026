@@ -223,6 +223,15 @@ async function main() {
       await sleep(180);
       const speakerSearch = document.getElementById("speakerSearch");
       assert(speakerSearch, "Missing speaker search input");
+      const showStarredFirstBtn = document.getElementById("showStarredFirstBtn");
+      const clearSpeakerStarsBtn = document.getElementById("clearSpeakerStarsBtn");
+      const speakersStarState = document.getElementById("speakersStarState");
+      assert(showStarredFirstBtn?.disabled, "Show-starred button should start disabled");
+      assert(clearSpeakerStarsBtn?.disabled, "Clear-stars button should start disabled");
+      assert(speakersStarState?.textContent.includes("Swipe left"), "Empty starred state should explain how to star speakers", speakersStarState?.textContent || "");
+      touchTargets.push(minTouchTarget("#showStarredFirstBtn"));
+      touchTargets.push(minTouchTarget("#clearSpeakerStarsBtn"));
+
       speakerSearch.value = "Tim Draper";
       speakerSearch.dispatchEvent(new Event("input", { bubbles: true }));
       await sleep(120);
@@ -233,6 +242,60 @@ async function main() {
       speakerTrigger.click();
       await sleep(80);
       assert(speakerTrigger.getAttribute("aria-expanded") === "true", "Speaker card did not expand");
+
+      const speakerStarToggle = document.querySelector('.speaker-star-toggle[data-speaker-star-id="tim-draper"]');
+      assert(speakerStarToggle, "Missing speaker star toggle");
+      speakerStarToggle.click();
+      await sleep(160);
+      const starredSpeakersAfterSave = JSON.parse(localStorage.getItem("emw2026_starred_speakers") || "[]");
+      assert(starredSpeakersAfterSave.includes("tim-draper"), "Speaker star did not persist", JSON.stringify(starredSpeakersAfterSave));
+      assert(!document.getElementById("showStarredFirstBtn").disabled, "Show-starred button should enable after starring");
+      assert(!document.getElementById("clearSpeakerStarsBtn").disabled, "Clear-stars button should enable after starring");
+
+      speakerSearch.value = "";
+      speakerSearch.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(120);
+      document.getElementById("showStarredFirstBtn").click();
+      await sleep(120);
+      assert(document.getElementById("showStarredFirstBtn").getAttribute("aria-pressed") === "true", "Show-starred toggle did not switch on");
+      const firstSpeakerName = document.querySelector(".speaker-item .speaker-name");
+      assert(firstSpeakerName?.textContent.includes("Tim Draper"), "Starred speaker was not moved to the top", firstSpeakerName?.textContent || "");
+
+      document.getElementById("clearSpeakerStarsBtn").click();
+      await sleep(80);
+      assert(!document.getElementById("clearSpeakerStarsModal").classList.contains("hidden"), "Clear starred speakers modal did not open");
+      touchTargets.push(minTouchTarget("#confirmClearSpeakerStarsBtn"));
+      const clearStarsInput = document.getElementById("clearSpeakerStarsInput");
+      const confirmClearStarsBtn = document.getElementById("confirmClearSpeakerStarsBtn");
+      assert(confirmClearStarsBtn.disabled, "Clear-star confirm should start disabled");
+
+      clearStarsInput.value = "Clear Stars";
+      clearStarsInput.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(40);
+      assert(confirmClearStarsBtn.disabled, "Clear-star confirm should stay disabled for the wrong phrase");
+
+      clearStarsInput.value = "clear stars";
+      clearStarsInput.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(40);
+      assert(!confirmClearStarsBtn.disabled, "Clear-star confirm did not enable for the exact phrase");
+
+      confirmClearStarsBtn.click();
+      await sleep(160);
+      const starredSpeakersAfterClear = JSON.parse(localStorage.getItem("emw2026_starred_speakers") || "[]");
+      assert(starredSpeakersAfterClear.length === 0, "Clear starred speakers did not reset localStorage", JSON.stringify(starredSpeakersAfterClear));
+      assert(document.getElementById("showStarredFirstBtn").disabled, "Show-starred button should disable after clearing");
+      assert(document.getElementById("clearSpeakerStarsBtn").disabled, "Clear-stars button should disable after clearing");
+      assert(document.getElementById("showStarredFirstBtn").getAttribute("aria-pressed") === "false", "Show-starred toggle did not reset after clearing");
+      assert(document.getElementById("speakersStarState").textContent.includes("Swipe left"), "Empty starred state did not return after clearing");
+      assert(document.getElementById("clearSpeakerStarsModal").classList.contains("hidden"), "Clear starred speakers modal did not close");
+
+      speakerSearch.value = "Tim Draper";
+      speakerSearch.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(120);
+      const speakerTriggerAfterClear = document.querySelector(".speaker-trigger");
+      assert(speakerTriggerAfterClear, "Missing speaker card after clearing stars");
+      speakerTriggerAfterClear.click();
+      await sleep(80);
 
       const speakerChip = document.querySelector(".speaker-session-chip");
       assert(speakerChip, "Missing speaker session chip");
