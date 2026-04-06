@@ -123,9 +123,15 @@ Speaker stars are stored separately in `localStorage` key `emw2026_starred_speak
 ## Source PDFs
 Original conference data came from two PDFs placed in `~/Coding/HSG-Branding/` at build time. Schedule covers Thursday April 9 only — the group is not attending Wednesday April 8 (Summit at Koʻolau Ballrooms).
 
+## Offline / Service Worker
+`sw.js` provides offline support via a stale-while-revalidate cache. It pre-caches `index.html`, `code-guide.html`, and `favicon.svg` on first visit so the app works without WiFi.
+
+**Important:** After changing any cached file, bump the `CACHE_NAME` version in `sw.js` (e.g. `emw2026-v1` → `emw2026-v2`). Without this, returning visitors may see stale content until the background revalidate completes on their next visit. The old cache is automatically cleaned up when the new version activates.
+
 ## Deploy
 ```bash
-git add index.html
+# If you changed index.html or code-guide.html, bump CACHE_NAME in sw.js first!
+git add index.html sw.js
 git commit -m "your message"
 git push
 # → live at https://lpcode808.github.io/EMW2026 within ~60 seconds

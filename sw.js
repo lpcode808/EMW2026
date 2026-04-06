@@ -1,5 +1,10 @@
 // EMW 2026 Service Worker — offline support for event day
 // Strategy: stale-while-revalidate (fast cache response + background update)
+//
+// CACHE BUSTING: When you change index.html, code-guide.html, or any cached
+// file, bump the version below (e.g. v1 → v2). This forces browsers to
+// re-download everything on next visit. Without the bump, returning users
+// may see stale content until the background revalidate completes.
 
 const CACHE_NAME = 'emw2026-v1';
 const PRECACHE_URLS = [
