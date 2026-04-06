@@ -33,7 +33,7 @@ Accordion animation uses `max-height` transitions with `cubic-bezier(0.16, 1, 0.
 
 ## Three Tabs
 1. **Schedule** — 23 sessions, accordion rows. Each expands to: meta (speaker/location/time), description, Student Summary sub-toggle, session note inline, external link.
-2. **Speakers** — 28 Thursday presenters, alphabetical, searchable. Tap → shows company + session chips + a `g.ai` research link + a person-note field. Tapping a session chip jumps to Schedule tab and opens that accordion.
+2. **Speakers** — 28 Thursday presenters, alphabetical, searchable. Tap → shows company + session chips + a `g.ai` research link + a person-note field. Speaker rows support quick **swipe-right to toggle a star**, with a tap fallback button in expanded details. Tapping a session chip jumps to Schedule tab and opens that accordion.
 3. **Notes** — quick-note composer for unlinked notes, saved session/person notes, export modal, clipboard button.
 
 ## Data Structure
@@ -108,6 +108,8 @@ Each note stores:
 ```
 
 `createdAt` is the real device-local capture time source for the note UI/export (formatted on the client with `Intl.DateTimeFormat`). Existing legacy session notes are migrated automatically on load.
+
+Speaker stars are stored separately in `localStorage` key `emw2026_starred_speakers` as a simple array of speaker IDs.
 
 ## Things to improve / add
 - **Student summaries**: All sessions have placeholder summaries written by the agent. Teacher should review and rewrite with class context before April 9.
