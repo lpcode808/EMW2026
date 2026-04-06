@@ -200,7 +200,21 @@ The larger output of that session was [`SPEAKER_BIOS_PLAN.md`](./SPEAKER_BIOS_PL
 
 The bios themselves weren't merged into `index.html` yet. That was a deliberate call: AI-drafted speaker bios benefit from a human review pass before students read them at a real conference. The plan document is the handoff artifact — the teacher can review, edit, and then implement when ready.
 
-### 15. Last-Minute Readability + Notes Search Pass
+> **Tooling note:** The three Claude Code sessions (PRs #1–#3) handled the initial build and the early feature work. From this point on, all commits are by the teacher directly — either committed straight to main or through `codex/`-prefixed branches. The AI-generated contributions and the teacher's own development started interleaving here, and the repo treats both the same way.
+
+### 15. iPhone Testing Surfaces Real Bugs
+
+After the content review session, the teacher tested the app on a real iPhone — and found three issues that the headless Chrome smoke test hadn't caught, because they're iOS-specific behaviors.
+
+**Issue 1: No way to recover if notes got corrupted.** The app had an export button but no way to fully clear notes if something went wrong. The teacher added a confirmation-guarded **Clear All Notes** button — styled in muted orange to signal it's destructive — alongside the export button. At the same time, the iPhone export flow was fixed: on iOS Safari, the clipboard API requires a slightly different trigger path than desktop Chrome, and the export modal needed to handle that.
+
+**Issue 2: Quick-note blur saves were firing on the wrong elements.** The `blur` event handler for auto-saving notes was attached to any `.note-textarea` — but the quick-note composer in the Notes tab also used that class without the required `data-note-type` attribute. So blurring away from the composer after typing (but before hitting Save) would silently attempt a save with an empty note type, causing undefined-behavior note entries. A one-line guard on `dataset.noteType` fixed it.
+
+**Issue 3: iOS Safari was zooming in on text fields.** iOS Safari automatically zooms the viewport whenever a form field with `font-size` smaller than 16px gets focused. Several of the app's inputs used 14–15px, so the whole page would zoom in unexpectedly every time a student tapped a note field — and didn't zoom back out. The fix was a targeted `@supports (-webkit-touch-callout: none)` CSS block that bumps all `input`, `textarea`, and `select` elements to exactly 16px only on iOS, leaving the visual design unchanged on every other platform.
+
+All three of these issues were invisible in a desktop browser test environment. They only surfaced when a real student-sized thumb interacted with a real iPhone in Safari.
+
+### 16. Last-Minute Readability + Notes Search Pass
 
 One final polish session focused on the parts students would feel most directly while using the app during the event itself.
 
@@ -219,7 +233,7 @@ The other addition was to the **My Notes** tab. By this point, notes had grown i
 
 Importantly, the search feature did **not** add any new storage model or backend. It just filters the already-loaded `localStorage` note records in memory, which kept the implementation small and low-risk a few days before the conference.
 
-### 16. Speaker Stars + Swipe Follow-Through
+### 17. Speaker Stars + Swipe Follow-Through
 
 The next iteration came from a very conference-specific question: how do students quickly keep track of speakers they want to remember without opening every card and losing their place in the list?
 
@@ -251,7 +265,7 @@ This is a good example of how later-stage UI work often happens in this repo: sh
 | **Notes** | Session notes carry a real device-local timestamp, plus multi-sticky quick notes and per-speaker person notes |
 | **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, a `g.ai` research button per speaker, and saved speaker stars with swipe-to-star on mobile plus starred-up-top controls |
 | **My Notes tab** | Quick note composer (each save creates a new sticky), saved session/person notes, delete or jump back into context, distinct visual treatment per note type, and search across saved notes |
-| **Export** | Plain-text formatted copy of all notes, clipboard button |
+| **Export / Clear** | Plain-text formatted copy of all notes to clipboard, plus a confirmation-guarded Clear All button |
 | **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns, with a beginner-first mode, an optional "done a little coding" mode, a viewing/tinkering intent toggle, and a Schedule-tab promo that now collapses down after first load |
 | **Favicon** | Conference-inspired SVG favicon using the app's teal/orange palette |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
@@ -274,6 +288,7 @@ For anyone building something similar:
 - **Separate the draft from the merge.** For content that needs human review before students read it (speaker bios, session summaries), ask Claude to produce a plan document first rather than writing directly into the live file. The plan becomes the review artifact.
 - **Direct edits and AI sessions can coexist.** After the initial build, the teacher made several commits directly — favicon, summary rewrites, tinkering mode on the guide. The AI sessions and manual edits interleaved naturally. The repo doesn't care who authored what.
 - **Ask for the live-clock feature once the data is stable.** The NOW indicator only made sense after the session times were confirmed correct. Timing-dependent features are safer to add late.
+- **Test on the actual device before you ship.** Three iOS-specific bugs — a missing save guard, an import zoom behavior, and an export modal difference — were invisible in every desktop browser and headless test. They only appeared when a real iPhone ran the real app. For anything student-facing, reserve time for a real-hardware smoke run.
 
 ---
 
