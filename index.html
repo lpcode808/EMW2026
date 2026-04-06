@@ -1329,10 +1329,19 @@
       background: var(--surface);
       border: 1px solid var(--border);
       overflow: hidden;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.16s;
     }
 
     .speaker-item.expanded { border-color: var(--border-active); }
+    .speaker-item.is-starred {
+      border-color: rgba(175, 205, 83, 0.52);
+      box-shadow: 0 0 0 1px rgba(175, 205, 83, 0.14);
+    }
+
+    .speaker-item.swipe-starred {
+      transform: translateX(6px);
+      box-shadow: 0 0 0 1px rgba(175, 205, 83, 0.2), 0 10px 24px rgba(175, 205, 83, 0.1);
+    }
 
     .speaker-trigger {
       display: flex;
@@ -1372,6 +1381,24 @@
       font-weight: 700;
       color: var(--text);
       line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .speaker-star-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      line-height: 1;
+      padding: 0.15rem 0.35rem;
+      border-radius: 999px;
+      background: var(--lime-dim);
+      color: var(--lime);
+      letter-spacing: 0.03em;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .speaker-role {
@@ -1430,6 +1457,13 @@
       margin-bottom: 0.45rem;
     }
 
+    .speaker-gesture-hint {
+      margin: 0.1rem 0 0.55rem;
+      color: var(--text-dim);
+      font-size: 0.69rem;
+      line-height: 1.45;
+    }
+
     .speaker-session-chip {
       appearance: none;
       display: inline-flex;
@@ -1449,6 +1483,30 @@
       font-family: var(--font-body);
     }
     .speaker-session-chip:hover { background: rgba(7, 168, 168, 0.12); color: var(--teal); }
+
+    .speaker-star-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.58rem 0.8rem;
+      background: rgba(175, 205, 83, 0.08);
+      border: 1px solid rgba(175, 205, 83, 0.28);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--lime);
+      font-family: var(--font-body);
+      font-size: 0.79rem;
+      font-weight: 600;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+      min-height: 44px;
+    }
+
+    .speaker-star-toggle:hover {
+      background: rgba(175, 205, 83, 0.15);
+    }
 
     .speaker-session-time {
       color: var(--text-dim);
@@ -2102,6 +2160,7 @@
   //  NOTES — localStorage
   // ──────────────────────────────────────────────────────────
   const NOTES_KEY = 'emw2026_notes';
+  const STARRED_SPEAKERS_KEY = 'emw2026_starred_speakers';
   const DELETE_ALL_CONFIRMATION = 'delete all';
   const EXPORT_SHARE_TITLE = 'East Meets West 2026 Notes';
   const NOTE_TYPES = {
@@ -2206,6 +2265,38 @@
   function persistNotes(notes) {
     localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
     updateNoteCount();
+  }
+
+  function getStarredSpeakers() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STARRED_SPEAKERS_KEY) || '[]');
+      if (Array.isArray(raw)) {
+        return new Set(raw.filter(id => typeof id === 'string'));
+      }
+      if (raw && typeof raw === 'object') {
+        return new Set(Object.entries(raw).filter(([, value]) => !!value).map(([id]) => id));
+      }
+      return new Set();
+    } catch {
+      return new Set();
+    }
+  }
+
+  function persistStarredSpeakers(starredSet) {
+    localStorage.setItem(STARRED_SPEAKERS_KEY, JSON.stringify([...starredSet]));
+  }
+
+  function toggleSpeakerStar(speakerId) {
+    const starred = getStarredSpeakers();
+    let isStarred = false;
+    if (starred.has(speakerId)) {
+      starred.delete(speakerId);
+    } else {
+      starred.add(speakerId);
+      isStarred = true;
+    }
+    persistStarredSpeakers(starred);
+    return isStarred;
   }
 
   function getNoteCount() {
@@ -3272,13 +3363,14 @@
 
   function renderSpeakers(filter = '') {
     const notes = getNotes();
+    const starred = getStarredSpeakers();
     const q = filter.toLowerCase().trim();
     const list = q
       ? SPEAKERS.filter(s => s.name.toLowerCase().includes(q) || s.company.toLowerCase().includes(q) || s.role.toLowerCase().includes(q))
       : SPEAKERS;
 
     const countEl = document.getElementById('speakersCount');
-    countEl.textContent = `${list.length} speaker${list.length !== 1 ? 's' : ''} · Thursday Apr 9`;
+    countEl.textContent = `${list.length} speaker${list.length !== 1 ? 's' : ''} · ${starred.size} starred · Thursday Apr 9`;
 
     if (list.length === 0) {
       document.getElementById('speakersList').innerHTML = `<div class="speakers-empty">No speakers match "${esc(filter)}"</div>`;
@@ -3288,6 +3380,7 @@
     document.getElementById('speakersList').innerHTML = list.map(sp => {
       const note = notes[noteKey(NOTE_TYPES.SPEAKER, sp.id)];
       const hasNote = !!note;
+      const isStarred = starred.has(sp.id);
       const sid = 'spk-' + sp.id;
       const notePanelId = `notebody-speaker-${sp.id}`;
       const chips = sp.sessions.map(id => `
@@ -3297,11 +3390,14 @@
         </button>
       `).join('');
       return `
-        <div class="speaker-item" id="${sid}">
+        <div class="speaker-item ${isStarred ? 'is-starred' : ''}" id="${sid}">
           <button class="speaker-trigger" aria-expanded="false" data-spk="${sid}">
             <div class="speaker-avatar" aria-hidden="true">${initials(sp.name)}</div>
             <div class="speaker-info">
-              <div class="speaker-name">${esc(sp.name)}</div>
+              <div class="speaker-name">
+                ${esc(sp.name)}
+                ${isStarred ? '<span class="speaker-star-indicator" aria-hidden="true">★ Starred</span>' : ''}
+              </div>
               <div class="speaker-role">${esc(sp.role)} · ${esc(sp.company)}</div>
             </div>
             <span class="speaker-chevron" aria-hidden="true">▾</span>
@@ -3310,8 +3406,13 @@
             <div class="speaker-body-inner">
               <div class="speaker-company">🏢 ${esc(sp.company)}</div>
               <p class="speaker-sessions-label">Sessions on Thursday</p>
+              <p class="speaker-gesture-hint">Swipe the speaker row right to toggle star quickly.</p>
               <div>${chips}</div>
               <div class="session-actions">
+                <button class="speaker-star-toggle" type="button" data-speaker-star-id="${sp.id}">
+                  <span aria-hidden="true">${isStarred ? '⭐' : '☆'}</span>
+                  <span>${isStarred ? 'Starred — tap to unstar' : 'Keep in mind — tap to star'}</span>
+                </button>
                 <a
                   href="${speakerSearchUrl(sp)}"
                   target="_blank"
@@ -3375,6 +3476,48 @@
       chip.addEventListener('click', () => {
         openSessionContext(chip.dataset.sessionId);
       });
+    });
+
+    document.querySelectorAll('[data-speaker-star-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const speakerId = btn.dataset.speakerStarId;
+        const isStarred = toggleSpeakerStar(speakerId);
+        showToast(isStarred ? 'Speaker starred' : 'Speaker unstarred');
+        renderSpeakers(document.getElementById('speakerSearch').value);
+      });
+    });
+
+    document.querySelectorAll('.speaker-trigger').forEach(trigger => {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let swiped = false;
+
+      trigger.addEventListener('touchstart', event => {
+        const touch = event.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        swiped = false;
+      }, { passive: true });
+
+      trigger.addEventListener('touchmove', event => {
+        if (swiped) return;
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - touchStartX;
+        const dy = touch.clientY - touchStartY;
+        if (Math.abs(dx) > 54 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          swiped = true;
+          event.preventDefault();
+          const speakerId = trigger.dataset.spk.replace('spk-', '');
+          const isStarred = toggleSpeakerStar(speakerId);
+          const item = document.getElementById(trigger.dataset.spk);
+          if (item) {
+            item.classList.add('swipe-starred');
+            setTimeout(() => item.classList.remove('swipe-starred'), 180);
+          }
+          showToast(isStarred ? 'Speaker starred' : 'Speaker unstarred');
+          renderSpeakers(document.getElementById('speakerSearch').value);
+        }
+      }, { passive: false });
     });
   }
 
