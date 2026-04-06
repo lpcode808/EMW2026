@@ -205,7 +205,7 @@ The bios themselves weren't merged into `index.html` yet. That was a deliberate 
 One final polish session focused on the parts students would feel most directly while using the app during the event itself.
 
 The first target was the **Code Guide** promo at the top of the Schedule tab. On first load, it was visually useful but a little too tall relative to the actual conference content. The solution kept the teaching value without letting it dominate the page:
-- The Schedule tab code-guide panel now auto-collapses after about 10 seconds into a one-line reminder
+- The Schedule tab code-guide panel now auto-collapses after about 5 seconds into a one-line reminder
 - Students can still reopen it at any time with a small toggle
 - The secondary action now points to the repo's **README.md** on GitHub instead of "Try safe experiments," which better matches the likely conference use case
 
