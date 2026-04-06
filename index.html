@@ -957,6 +957,77 @@
       font-weight: 700;
     }
 
+    .notes-search-wrap {
+      padding: 0 1.25rem 0.95rem;
+    }
+
+    .notes-search-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: stretch;
+    }
+
+    .notes-search {
+      flex: 1;
+      width: 100%;
+      background: var(--surface-input);
+      border: 1px solid rgba(7, 168, 168, 0.18);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      padding: 0.85rem 0.95rem;
+      outline: none;
+      min-height: 44px;
+    }
+
+    .notes-search:focus {
+      border-color: var(--teal);
+    }
+
+    .notes-search::placeholder {
+      color: var(--text-dim);
+    }
+
+    .notes-search-clear {
+      flex-shrink: 0;
+      min-height: 44px;
+      padding: 0 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 247, 235, 0.05);
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .notes-search-clear:hover:not(:disabled) {
+      background: rgba(7, 168, 168, 0.12);
+      border-color: rgba(7, 168, 168, 0.26);
+      color: var(--teal);
+    }
+
+    .notes-search-clear:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .notes-search-status {
+      min-height: 1.2rem;
+      margin-top: 0.45rem;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    .notes-search-status:empty {
+      display: none;
+    }
+
     .notes-compose-card {
       margin-bottom: 0.85rem;
     }
@@ -1847,6 +1918,13 @@
         </div>
       </div>
       <p class="notes-subtitle">Use <strong>Quick Notes</strong> to jot down scraps, to-dos, or anything not tied to a session or speaker.</p>
+      <div class="notes-search-wrap">
+        <div class="notes-search-row">
+          <input class="notes-search" type="search" id="notesSearch" placeholder="Search your notes..." aria-label="Search your notes">
+          <button class="notes-search-clear" id="clearNotesSearchBtn" type="button" disabled>Clear</button>
+        </div>
+        <p class="notes-search-status" id="notesSearchStatus" aria-live="polite"></p>
+      </div>
       <div id="notesComposer"></div>
       <div id="notesList"></div>
     </section>
@@ -2416,6 +2494,7 @@
     GENERAL: 'general'
   };
   const GENERAL_NOTE_ID = 'quick-note';
+  let notesSearchQuery = '';
 
   function slugify(value = '') {
     return value
@@ -2701,6 +2780,45 @@
     if (type === NOTE_TYPES.SESSION) return 'Session Note';
     if (type === NOTE_TYPES.SPEAKER) return 'Person Note';
     return 'Quick Note';
+  }
+
+  function normalizeSearchText(value = '') {
+    return String(value)
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function noteMatchesSearch(note, query) {
+    if (!query) return true;
+    const searchableText = normalizeSearchText([
+      note.text,
+      getNoteTitle(note),
+      getNoteContext(note),
+      noteTypeLabel(note.type)
+    ].join(' '));
+    return searchableText.includes(query);
+  }
+
+  function updateNotesSearchControls() {
+    const input = document.getElementById('notesSearch');
+    const clearBtn = document.getElementById('clearNotesSearchBtn');
+    if (input && input.value !== notesSearchQuery) {
+      input.value = notesSearchQuery;
+    }
+    if (clearBtn) {
+      clearBtn.disabled = !notesSearchQuery.trim();
+    }
+  }
+
+  function setNotesSearchQuery(value) {
+    notesSearchQuery = value;
+    updateNotesSearchControls();
+    if (document.getElementById('notesTab')?.classList.contains('active')) {
+      renderNotesTab();
+    }
   }
 
   function noteTypeClass(type) {
@@ -3140,8 +3258,31 @@
     const notes = getNotes();
     const quickNotes = getQuickNotes(notes);
     const linkedNotes = getLinkedNotes(notes);
+    const normalizedQuery = normalizeSearchText(notesSearchQuery);
+    const filteredQuickNotes = quickNotes.filter(note => noteMatchesSearch(note, normalizedQuery));
+    const filteredLinkedNotes = linkedNotes.filter(note => noteMatchesSearch(note, normalizedQuery));
+    const totalSavedNotes = quickNotes.length + linkedNotes.length;
+    const totalMatches = filteredQuickNotes.length + filteredLinkedNotes.length;
     const composer = document.getElementById('notesComposer');
     const container = document.getElementById('notesList');
+    const status = document.getElementById('notesSearchStatus');
+
+    updateNotesSearchControls();
+
+    if (status) {
+      if (normalizedQuery) {
+        const queryLabel = notesSearchQuery.trim();
+        if (totalMatches === 0) {
+          status.textContent = `No notes match "${queryLabel}".`;
+        } else {
+          status.textContent = `Showing ${totalMatches} of ${totalSavedNotes} saved notes for "${queryLabel}".`;
+        }
+      } else if (totalSavedNotes > 0) {
+        status.textContent = 'Search across your quick, session, and speaker notes.';
+      } else {
+        status.textContent = '';
+      }
+    }
 
     // Composer: always-blank textarea to create a new sticky note
     composer.innerHTML = `
@@ -3161,7 +3302,7 @@
           <button class="note-add-btn" id="addQuickNote">Add Note ✓</button>
         </div>
       </div>
-      ${quickNotes.map(note => `
+      ${filteredQuickNotes.map(note => `
         <div class="note-card ${noteTypeClass(NOTE_TYPES.GENERAL)}" id="notecard-${slugify(note.key)}">
           <div class="note-card-meta">
             <span class="note-card-badge">Quick Note</span>
@@ -3209,7 +3350,17 @@
       });
     });
 
-    if (linkedNotes.length === 0) {
+    if (normalizedQuery && totalMatches === 0) {
+      container.innerHTML = `
+        <div class="notes-empty">
+          <span class="notes-empty-icon">🔎</span>
+          <p>No notes match <strong>${esc(notesSearchQuery.trim())}</strong>.<br>Try a speaker name, session title, or a word from your note.</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (!normalizedQuery && linkedNotes.length === 0) {
       container.innerHTML = `
         <div class="notes-empty">
           <span class="notes-empty-icon">📝</span>
@@ -3219,7 +3370,12 @@
       return;
     }
 
-    container.innerHTML = linkedNotes.map(note => `
+    if (filteredLinkedNotes.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    container.innerHTML = filteredLinkedNotes.map(note => `
       <div class="note-card ${noteTypeClass(note.type)}" id="notecard-${slugify(note.key)}">
         <div class="note-card-meta">
           <span class="note-card-badge">${esc(noteTypeLabel(note.type))}</span>
@@ -3304,6 +3460,15 @@
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+  });
+
+  document.getElementById('notesSearch').addEventListener('input', e => {
+    setNotesSearchQuery(e.target.value);
+  });
+
+  document.getElementById('clearNotesSearchBtn').addEventListener('click', () => {
+    setNotesSearchQuery('');
+    document.getElementById('notesSearch').focus();
   });
 
   function openModal(modalId) {
