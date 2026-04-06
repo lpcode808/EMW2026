@@ -2554,7 +2554,12 @@
   }
 
   function saveNoteFromTextarea(textarea) {
-    const result = saveNote(textarea.dataset.noteType, textarea.dataset.noteId, textarea.value);
+    const noteType = textarea.dataset.noteType;
+    if (!noteType) {
+      return { status: 'unchanged', note: null };
+    }
+
+    const result = saveNote(noteType, textarea.dataset.noteId, textarea.value);
     syncNoteEditorValues();
     syncNoteIndicators();
     syncNoteMeta();
@@ -2594,6 +2599,7 @@
     });
 
     root.querySelectorAll('.note-textarea').forEach(textarea => {
+      if (!textarea.dataset.noteType) return;
       textarea.addEventListener('blur', () => {
         saveNoteFromTextarea(textarea);
       });
