@@ -1263,6 +1263,89 @@
       border-color: rgba(200, 83, 29, 0.3);
     }
 
+    /* ── COLLAPSIBLE NOTE CARDS ── */
+    .note-card-meta-right {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .note-card-chevron {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 0 0.15rem;
+      line-height: 1;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s;
+      display: flex;
+      align-items: center;
+      min-width: 20px;
+      min-height: 20px;
+      justify-content: center;
+    }
+    .note-card-chevron:hover { color: var(--text); }
+    .note-card:not(.note-collapsed) .note-card-chevron {
+      transform: rotate(90deg);
+    }
+
+    .note-card-summary {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+      margin-top: 0.1rem;
+    }
+    .note-card-summary-title {
+      color: var(--note-title);
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+    }
+    .note-card-summary-preview {
+      color: var(--text-muted);
+    }
+
+    .note-card.note-collapsed {
+      cursor: pointer;
+      user-select: none;
+    }
+    .note-card.note-collapsed .note-card-meta {
+      margin-bottom: 0.15rem;
+    }
+    .note-card.note-collapsed .note-card-summary {
+      display: block;
+    }
+    .note-card.note-collapsed .note-card-body {
+      display: none;
+    }
+
+    .notes-collapse-btn {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 247, 235, 0.12);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, color 0.2s;
+      min-height: 44px;
+      background: rgba(255, 247, 235, 0.06);
+      color: var(--text-muted);
+    }
+    .notes-collapse-btn:hover {
+      background: rgba(255, 247, 235, 0.1);
+      color: var(--text);
+    }
+
     /* ── EXPORT MODAL ── */
     .modal-overlay {
       position: fixed;
@@ -1945,6 +2028,7 @@
       <div class="notes-header">
         <span class="notes-title">My Notes</span>
         <div class="notes-actions">
+          <button class="notes-collapse-btn" id="collapseNotesBtn" type="button">Expand All</button>
           <button class="clear-notes-btn" id="clearNotesBtn" type="button" aria-haspopup="dialog">🗑 Clear All</button>
           <button class="export-btn" id="exportBtn" type="button" aria-haspopup="dialog">Export ↓</button>
         </div>
@@ -2527,6 +2611,7 @@
   };
   const GENERAL_NOTE_ID = 'quick-note';
   let notesSearchQuery = '';
+  let notesCollapsed = null; // null = auto (collapse when ≥ 3 notes), true/false = user override
 
   function slugify(value = '') {
     return value
@@ -3299,6 +3384,19 @@
     const container = document.getElementById('notesList');
     const status = document.getElementById('notesSearchStatus');
 
+    // Auto-determine collapsed state on first render (or reset if null)
+    if (notesCollapsed === null) {
+      notesCollapsed = totalSavedNotes >= 3;
+    }
+    const collapsed = notesCollapsed;
+
+    // Update collapse button
+    const collapseBtn = document.getElementById('collapseNotesBtn');
+    if (collapseBtn) {
+      collapseBtn.textContent = collapsed ? 'Expand All' : 'Collapse All';
+      collapseBtn.style.display = totalSavedNotes >= 2 ? '' : 'none';
+    }
+
     updateNotesSearchControls();
 
     if (status) {
@@ -3334,30 +3432,43 @@
           <button class="note-add-btn" id="addQuickNote">Add Note ✓</button>
         </div>
       </div>
-      ${filteredQuickNotes.map(note => `
-        <div class="note-card ${noteTypeClass(NOTE_TYPES.GENERAL)}" id="notecard-${slugify(note.key)}">
+      ${filteredQuickNotes.map(note => {
+        const preview = note.text.length > 80 ? note.text.slice(0, 80) + '…' : note.text;
+        return `
+        <div class="note-card ${noteTypeClass(NOTE_TYPES.GENERAL)} ${collapsed ? 'note-collapsed' : ''}" id="notecard-${slugify(note.key)}">
           <div class="note-card-meta">
             <span class="note-card-badge">Quick Note</span>
-            <span class="note-card-time">${esc(noteMetaMessage(note))}</span>
+            <span class="note-card-meta-right">
+              <span class="note-card-time">${esc(noteMetaMessage(note))}</span>
+              <button class="note-card-chevron" aria-label="${collapsed ? 'Expand note' : 'Collapse note'}">›</button>
+            </span>
           </div>
-          <textarea
-            class="note-textarea"
-            data-note-type="${NOTE_TYPES.GENERAL}"
-            data-note-id="${esc(note.entityId)}"
-            aria-label="Quick note"
-          >${esc(note.text)}</textarea>
-          <p class="note-meta" data-note-meta-type="${NOTE_TYPES.GENERAL}" data-note-meta-id="${esc(note.entityId)}">${esc(noteMetaMessage(note))}</p>
-          <div class="note-card-actions">
-            <button class="note-card-delete" data-note-key="${note.key}" aria-label="Delete quick note">✕ Delete</button>
-            <button class="note-save-btn" data-note-type="${NOTE_TYPES.GENERAL}" data-note-id="${esc(note.entityId)}">Save ✓</button>
+          <div class="note-card-summary">
+            <span class="note-card-summary-preview">${esc(preview)}</span>
           </div>
-        </div>
-      `).join('')}
+          <div class="note-card-body">
+            <textarea
+              class="note-textarea"
+              data-note-type="${NOTE_TYPES.GENERAL}"
+              data-note-id="${esc(note.entityId)}"
+              aria-label="Quick note"
+            >${esc(note.text)}</textarea>
+            <p class="note-meta" data-note-meta-type="${NOTE_TYPES.GENERAL}" data-note-meta-id="${esc(note.entityId)}">${esc(noteMetaMessage(note))}</p>
+            <div class="note-card-actions">
+              <button class="note-card-delete" data-note-key="${note.key}" aria-label="Delete quick note">✕ Delete</button>
+              <button class="note-save-btn" data-note-type="${NOTE_TYPES.GENERAL}" data-note-id="${esc(note.entityId)}">Save ✓</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
     `;
 
     // Bind save-on-blur and save buttons for existing quick note stickies
     bindNoteEditors(composer);
     syncNoteMeta();
+
+    // Per-card chevron toggle for quick note stickies
+    bindNoteCardChevrons(composer);
 
     // "Add Note" creates a new sticky and clears the composer
     document.getElementById('addQuickNote').addEventListener('click', () => {
@@ -3407,21 +3518,37 @@
       return;
     }
 
-    container.innerHTML = filteredLinkedNotes.map(note => `
-      <div class="note-card ${noteTypeClass(note.type)}" id="notecard-${slugify(note.key)}">
+    container.innerHTML = filteredLinkedNotes.map(note => {
+      const title = getNoteTitle(note);
+      const previewLen = 60;
+      const preview = note.text.length > previewLen ? note.text.slice(0, previewLen) + '…' : note.text;
+      return `
+      <div class="note-card ${noteTypeClass(note.type)} ${collapsed ? 'note-collapsed' : ''}" id="notecard-${slugify(note.key)}">
         <div class="note-card-meta">
           <span class="note-card-badge">${esc(noteTypeLabel(note.type))}</span>
-          <span class="note-card-time">${esc(noteMetaMessage(note))}</span>
+          <span class="note-card-meta-right">
+            <span class="note-card-time">${esc(noteMetaMessage(note))}</span>
+            <button class="note-card-chevron" aria-label="${collapsed ? 'Expand note' : 'Collapse note'}">›</button>
+          </span>
         </div>
-        <div class="note-card-session">${esc(getNoteTitle(note))}</div>
-        <div class="note-card-context">${esc(getNoteContext(note))}</div>
-        <div class="note-card-text">${esc(note.text)}</div>
-        <div class="note-card-actions">
-          <button class="note-card-open" data-note-key="${note.key}">${note.type === NOTE_TYPES.SESSION ? 'Open Session' : 'View Speaker'}</button>
-          <button class="note-card-delete" data-note-key="${note.key}" aria-label="Delete note for ${esc(getNoteTitle(note))}">✕ Delete</button>
+        <div class="note-card-summary">
+          <span class="note-card-summary-title">${esc(title)}</span>
+          <span class="note-card-summary-preview"> — ${esc(preview)}</span>
         </div>
-      </div>
-    `).join('');
+        <div class="note-card-body">
+          <div class="note-card-session">${esc(title)}</div>
+          <div class="note-card-context">${esc(getNoteContext(note))}</div>
+          <div class="note-card-text">${esc(note.text)}</div>
+          <div class="note-card-actions">
+            <button class="note-card-open" data-note-key="${note.key}">${note.type === NOTE_TYPES.SESSION ? 'Open Session' : 'View Speaker'}</button>
+            <button class="note-card-delete" data-note-key="${note.key}" aria-label="Delete note for ${esc(title)}">✕ Delete</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Per-card chevron toggle for linked notes
+    bindNoteCardChevrons(container);
 
     container.querySelectorAll('.note-card-open').forEach(btn => {
       btn.addEventListener('click', () => openNoteContext(btn.dataset.noteKey));
@@ -3432,6 +3559,29 @@
         if (deleteNote(btn.dataset.noteKey)) {
           showToast('Note deleted');
         }
+      });
+    });
+  }
+
+  function bindNoteCardChevrons(root) {
+    root.querySelectorAll('.note-card-chevron').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const card = btn.closest('.note-card');
+        const isNowCollapsed = !card.classList.contains('note-collapsed');
+        card.classList.toggle('note-collapsed', isNowCollapsed);
+        btn.setAttribute('aria-label', isNowCollapsed ? 'Expand note' : 'Collapse note');
+      });
+    });
+
+    // Click anywhere on a collapsed card to expand it
+    root.querySelectorAll('.note-card').forEach(card => {
+      card.addEventListener('click', e => {
+        if (!card.classList.contains('note-collapsed')) return;
+        if (e.target.closest('.note-card-chevron')) return;
+        card.classList.remove('note-collapsed');
+        const chevron = card.querySelector('.note-card-chevron');
+        if (chevron) chevron.setAttribute('aria-label', 'Collapse note');
       });
     });
   }
@@ -3563,6 +3713,23 @@
     }
     return Promise.resolve();
   }
+
+  document.getElementById('collapseNotesBtn').addEventListener('click', () => {
+    // If state is null (auto), treat current button label to determine intent
+    const currentlyCollapsed = notesCollapsed === null ? true : notesCollapsed;
+    notesCollapsed = !currentlyCollapsed;
+    const allCards = [
+      ...document.querySelectorAll('#notesList .note-card'),
+      ...document.querySelectorAll('#notesComposer .note-card:not(.notes-compose-card)')
+    ];
+    allCards.forEach(card => {
+      card.classList.toggle('note-collapsed', notesCollapsed);
+      const chevron = card.querySelector('.note-card-chevron');
+      if (chevron) chevron.setAttribute('aria-label', notesCollapsed ? 'Expand note' : 'Collapse note');
+    });
+    const btn = document.getElementById('collapseNotesBtn');
+    if (btn) btn.textContent = notesCollapsed ? 'Expand All' : 'Collapse All';
+  });
 
   document.getElementById('exportBtn').addEventListener('click', () => {
     document.getElementById('exportTextarea').value = buildExportText();
