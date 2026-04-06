@@ -200,6 +200,25 @@ The larger output of that session was [`SPEAKER_BIOS_PLAN.md`](./SPEAKER_BIOS_PL
 
 The bios themselves weren't merged into `index.html` yet. That was a deliberate call: AI-drafted speaker bios benefit from a human review pass before students read them at a real conference. The plan document is the handoff artifact — the teacher can review, edit, and then implement when ready.
 
+### 15. Last-Minute Readability + Notes Search Pass
+
+One final polish session focused on the parts students would feel most directly while using the app during the event itself.
+
+The first target was the **Code Guide** promo at the top of the Schedule tab. On first load, it was visually useful but a little too tall relative to the actual conference content. The solution kept the teaching value without letting it dominate the page:
+- The Schedule tab code-guide panel now auto-collapses after about 10 seconds into a one-line reminder
+- Students can still reopen it at any time with a small toggle
+- The secondary action now points to the repo's **README.md** on GitHub instead of "Try safe experiments," which better matches the likely conference use case
+
+That same thinking carried into readability inside the schedule cards. Some non-core schedule items (like meals, breaks, and background events) were intentionally lighter-weight visually, but dimming the whole card made the description text harder to read than intended. The styling was rebalanced so those entries still feel secondary while keeping the actual body copy bright enough to read comfortably on a phone.
+
+The other addition was to the **My Notes** tab. By this point, notes had grown into three kinds of saved content: quick notes, session notes, and person notes. That made retrieval matter more than it did in the earliest versions, so the Notes tab gained a lightweight search input that filters saved notes client-side by:
+- Note text
+- Session title
+- Speaker name
+- Context text already shown in the note cards
+
+Importantly, the search feature did **not** add any new storage model or backend. It just filters the already-loaded `localStorage` note records in memory, which kept the implementation small and low-risk a few days before the conference.
+
 ---
 
 ## App Features
@@ -211,9 +230,9 @@ The bios themselves weren't merged into `index.html` yet. That was a deliberate 
 | **Student Summaries** | Reviewed and rewritten plain-language descriptions per session, toggle inside expanded row |
 | **Notes** | Session notes carry a real device-local timestamp, plus multi-sticky quick notes and per-speaker person notes |
 | **Speakers tab** | 28 Thursday presenters, searchable, with session jumps, person notes, and a `g.ai` research button per speaker |
-| **My Notes tab** | Quick note composer (each save creates a new sticky), saved session/person notes, delete or jump back into context, with distinct visual treatment per note type |
+| **My Notes tab** | Quick note composer (each save creates a new sticky), saved session/person notes, delete or jump back into context, distinct visual treatment per note type, and search across saved notes |
 | **Export** | Plain-text formatted copy of all notes, clipboard button |
-| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns, with a beginner-first mode, an optional "done a little coding" mode, and a viewing/tinkering intent toggle |
+| **Code Guide** | Separate mobile-friendly HTML walkthrough that explains the real structure, styling, logic, and note-saving patterns, with a beginner-first mode, an optional "done a little coding" mode, a viewing/tinkering intent toggle, and a Schedule-tab promo that now collapses down after first load |
 | **Favicon** | Conference-inspired SVG favicon using the app's teal/orange palette |
 | **Dark mode** | HSG-Branding color system (navy/teal/orange/lime) |
 | **No install** | The attendee app still runs as a single HTML file in any mobile browser, with no app store or install required |
