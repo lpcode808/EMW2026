@@ -191,6 +191,70 @@
     }
     .note-count:empty { display: none; }
 
+    /* ── EPISODE BANNER ── */
+    .episode-banner {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .episode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      min-height: 44px;
+      transition: background 0.15s;
+    }
+    .episode-toggle:hover { background: rgba(7,168,168,0.07); }
+
+    .episode-toggle-icon {
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .episode-toggle-label { flex: 1; }
+
+    .episode-toggle-eyebrow {
+      display: block;
+      color: var(--teal);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 0.1rem;
+    }
+
+    .episode-toggle-chevron {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+    .episode-banner.open .episode-toggle-chevron { transform: rotate(180deg); }
+
+    .episode-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .episode-banner.open .episode-body { max-height: 200px; }
+
+    .episode-body-inner { padding: 0 1rem 1rem; }
+    .episode-body-inner iframe {
+      display: block;
+      border-radius: var(--radius-sm);
+      width: 100%;
+    }
+
     /* ── TAB PANELS ── */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
@@ -1974,6 +2038,30 @@
     </nav>
   </header>
 
+  <!-- EPISODE BANNER -->
+  <div class="episode-banner" id="episodeBanner">
+    <button class="episode-toggle" onclick="toggleEpisodeBanner()" aria-expanded="false" aria-controls="episodeBody" title="Toggle podcast episode player">
+      <span class="episode-toggle-icon">🎧</span>
+      <span class="episode-toggle-label">
+        <span class="episode-toggle-eyebrow">Listen In</span>
+        Pre-Conference Episode — Tune In Before April 9
+      </span>
+      <span class="episode-toggle-chevron">▾</span>
+    </button>
+    <div class="episode-body" id="episodeBody" aria-hidden="true">
+      <div class="episode-body-inner">
+        <iframe
+          data-src="https://open.spotify.com/embed/episode/2Ums5eA8FVWqrvdr3tw9qw?utm_source=generator&theme=0"
+          height="152"
+          frameborder="0"
+          allowfullscreen
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
   <main>
     <section id="scheduleTab" class="tab-content active" role="tabpanel">
       <div class="date-header">
@@ -3663,6 +3751,23 @@
   //  TOAST
   // ──────────────────────────────────────────────────────────
   let toastTimer;
+  function toggleEpisodeBanner() {
+    const banner = document.getElementById('episodeBanner');
+    const body = document.getElementById('episodeBody');
+    const btn = banner.querySelector('.episode-toggle');
+    const isOpen = banner.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+    body.setAttribute('aria-hidden', !isOpen);
+    // Lazy-load the iframe on first open to avoid unnecessary network requests
+    if (isOpen) {
+      const iframe = banner.querySelector('iframe[data-src]');
+      if (iframe) {
+        iframe.src = iframe.dataset.src;
+        iframe.removeAttribute('data-src');
+      }
+    }
+  }
+
   function showToast(msg) {
     const el = document.getElementById('toast');
     el.textContent = msg;
