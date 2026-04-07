@@ -4,13 +4,13 @@
 
 **Code guide → [https://lpcode808.github.io/EMW2026/code-guide.html](https://lpcode808.github.io/EMW2026/code-guide.html)**
 
-A mobile-first companion app for students from **[Hawai'i School for Girls](https://www.lapietra.edu/academics/techzone)** attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki, Honolulu). Scroll the schedule, tap sessions for details and student-friendly summaries, take notes, and export them at the end of the day.
+A mobile-first companion app for students from **[Hawai'i School for Girls at La Pietra](https://www.lapietra.edu/academics/techzone)** attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki, Honolulu). Scroll the schedule, tap sessions for details and student-friendly summaries, take notes, and export them at the end of the day.
 
 ---
 
 ## How This Was Built
 
-This app was built in an initial Claude Code session and then refined through follow-up conversation. Here's how that process went — useful context if you're continuing development or using this as a template for future conference guides.
+This app was built in an initial Claude Code session and then refined through follow-up conversation. Here's how that process went — useful context if you're continuing development or using this as a template for future conference guides. Orchestrated by faculty in the *Emerging Technologies* department at HSG.
 
 ### 1. Initial Request
 
