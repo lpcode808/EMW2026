@@ -4,7 +4,7 @@
 
 **Code guide → [https://lpcode808.github.io/EMW2026/code-guide.html](https://lpcode808.github.io/EMW2026/code-guide.html)**
 
-A mobile-first companion app for students attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki, Honolulu). Scroll the schedule, tap sessions for details and student-friendly summaries, take notes, and export them at the end of the day.
+A mobile-first companion app for students from **[Hawai'i School for Girls](https://www.lapietra.edu/academics/techzone)** attending **East Meets West 2026** (Thursday, April 9, Sheraton Waikiki, Honolulu). Scroll the schedule, tap sessions for details and student-friendly summaries, take notes, and export them at the end of the day.
 
 ---
 

@@ -6,7 +6,7 @@
 // re-download everything on next visit. Without the bump, returning users
 // may see stale content until the background revalidate completes.
 
-const CACHE_NAME = 'emw2026-v2';
+const CACHE_NAME = 'emw2026-v3';
 const PRECACHE_URLS = [
   './',
   './index.html',
