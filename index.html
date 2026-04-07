@@ -3043,10 +3043,8 @@
 
   function speakerPreview(speaker, type) {
     if (!speaker || type === 'meal' || type === 'break' || type === 'background') return '';
-    const parts = speaker.split('·');
-    const preview = parts[0].trim();
-    const extra = parts.length > 1 ? ` + ${parts.length - 1} more` : '';
-    return `<span class="session-speaker">${esc(preview)}${extra}</span>`;
+    const parts = speaker.split('·').map(s => s.trim());
+    return `<span class="session-speaker">${parts.map(esc).join(' · ')}</span>`;
   }
 
   function renderSchedule() {
