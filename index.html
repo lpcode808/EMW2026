@@ -254,6 +254,12 @@
       display: flex;
       flex-direction: column;
       text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      cursor: pointer;
     }
 
     .learn-callout-inline-link:hover .learn-callout-title {
@@ -1976,10 +1982,10 @@
       </div>
       <section class="learn-callout" id="learnCallout" aria-label="Learn how this site works">
         <div class="learn-callout-row">
-          <a class="learn-callout-inline-link" href="code-guide.html">
+          <button class="learn-callout-inline-link" type="button" aria-controls="learnCalloutBody">
             <span class="learn-callout-label">Code Guide</span>
             <h2 class="learn-callout-title">Curious how this app works?</h2>
-          </a>
+          </button>
           <button
             class="learn-callout-toggle"
             id="learnCalloutToggle"
@@ -4408,11 +4414,9 @@
     learnCallout.addEventListener('focusin', markLearnCalloutTouched);
     learnCallout.addEventListener('pointerdown', markLearnCalloutTouched);
     if (learnCalloutInlineLink) {
-      learnCalloutInlineLink.addEventListener('click', (event) => {
-        if (!learnCallout.classList.contains('collapsed')) return;
-        event.preventDefault();
+      learnCalloutInlineLink.addEventListener('click', () => {
         markLearnCalloutTouched();
-        setLearnCalloutCollapsed(false);
+        setLearnCalloutCollapsed(!learnCallout.classList.contains('collapsed'));
       });
     }
     learnCalloutToggle.addEventListener('click', () => {
