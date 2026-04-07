@@ -1671,6 +1671,59 @@
       text-decoration: none;
     }
 
+    .qr-share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.85rem;
+      padding: 0.6rem 1.1rem;
+      background: rgba(7, 168, 168, 0.12);
+      border: 1px solid rgba(7, 168, 168, 0.35);
+      border-radius: var(--radius-sm);
+      color: var(--teal);
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      min-height: 44px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .qr-share-btn:hover { background: rgba(7, 168, 168, 0.2); border-color: var(--teal); }
+
+    /* ── QR MODAL ── */
+    .qr-modal-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 1.25rem;
+    }
+    .qr-frame {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      line-height: 0;
+    }
+    .qr-frame img {
+      width: 200px;
+      height: 200px;
+      display: block;
+    }
+    .qr-url {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      word-break: break-all;
+      text-align: center;
+    }
+    .qr-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.55;
+      margin: 0;
+    }
+
     /* ── SPEAKERS TAB ── */
     .speakers-search-wrap {
       padding: 0.75rem 0.75rem 0.5rem;
@@ -2103,6 +2156,15 @@
         <a href="code-guide.html">Code Guide</a>
         &nbsp;·&nbsp; Presented by Blue Startups
         <br>Built for students at <a href="https://www.lapietra.edu/academics/techzone" target="_blank" rel="noopener">Hawai'i School for Girls at La Pietra</a>
+        <br>
+        <button class="qr-share-btn" id="openQrModal" type="button" aria-haspopup="dialog">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="5" y="5" width="3" height="3" fill="currentColor" stroke="none"/><rect x="16" y="5" width="3" height="3" fill="currentColor" stroke="none"/><rect x="5" y="16" width="3" height="3" fill="currentColor" stroke="none"/>
+            <path d="M14 14h3v3h-3zM17 17h3v3h-3zM14 20h3"/>
+          </svg>
+          Share this app
+        </button>
       </footer>
     </section>
 
@@ -2213,6 +2275,29 @@
       </div>
       <div class="modal-footer">
         <button class="danger-confirm-btn" id="confirmClearSpeakerStarsBtn" type="button" disabled>Clear Starred Speakers</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR share modal -->
+  <div class="modal-overlay hidden" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <div class="modal-sheet">
+      <div class="modal-top">
+        <span class="modal-top-title" id="qrModalTitle">Share This App</span>
+        <button class="modal-close" id="closeQrModal" aria-label="Close">✕</button>
+      </div>
+      <div class="qr-modal-body">
+        <p class="qr-hint">Point any camera at this code to open the app — no AirDrop needed.</p>
+        <div class="qr-frame">
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=001329&bgcolor=ffffff&data=https%3A%2F%2Flpcode808.github.io%2FEMW2026"
+            alt="QR code for https://lpcode808.github.io/EMW2026"
+            width="200"
+            height="200"
+            loading="lazy"
+          >
+        </div>
+        <p class="qr-url">lpcode808.github.io/EMW2026</p>
       </div>
     </div>
   </div>
@@ -4438,6 +4523,20 @@
       showToast('Starred speakers cleared');
       renderSpeakers(getSpeakerSearchValue());
     }
+  });
+
+  // ──────────────────────────────────────────────────────────
+  //  QR SHARE MODAL
+  // ──────────────────────────────────────────────────────────
+
+  document.getElementById('openQrModal').addEventListener('click', () => {
+    openModal('qrModal');
+  });
+  document.getElementById('closeQrModal').addEventListener('click', () => {
+    closeModal('qrModal');
+  });
+  document.getElementById('qrModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('qrModal')) closeModal('qrModal');
   });
 
   // ──────────────────────────────────────────────────────────
