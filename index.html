@@ -241,18 +241,41 @@
     }
     .episode-banner.open .episode-toggle-chevron { transform: rotate(180deg); }
 
+    .episode-banner.open {
+      box-shadow: 0 0 0 2px rgba(200, 83, 29, 0.35), 0 8px 32px rgba(200, 83, 29, 0.22);
+      border-bottom-color: rgba(200, 83, 29, 0.55);
+    }
+
     .episode-body {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .episode-banner.open .episode-body { max-height: 200px; }
+    .episode-banner.open .episode-body { max-height: 280px; }
 
     .episode-body-inner { padding: 0 1rem 1rem; }
     .episode-body-inner iframe {
       display: block;
       border-radius: var(--radius-sm);
       width: 100%;
+    }
+
+    .episode-transcript-link {
+      display: inline-block;
+      margin-top: 0.65rem;
+      padding: 0.45rem 1rem;
+      border-radius: 2rem;
+      background: rgba(200, 83, 29, 0.18);
+      border: 1px solid rgba(200, 83, 29, 0.4);
+      color: #f0b283;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .episode-transcript-link:hover {
+      background: rgba(200, 83, 29, 0.28);
+      border-color: rgba(200, 83, 29, 0.65);
     }
 
     /* ── TAB PANELS ── */
@@ -2111,6 +2134,7 @@
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
         ></iframe>
+        <a class="episode-transcript-link" href="podcast.html">📄 Read the full transcript + TL;DR →</a>
       </div>
     </div>
   </div>
@@ -2146,7 +2170,7 @@
           <div class="learn-callout-links">
             <a class="learn-callout-link primary" href="code-guide.html">Open the code walkthrough</a>
             <a class="learn-callout-link secondary" href="https://github.com/lpcode808/EMW2026/blob/main/README.md" target="_blank" rel="noopener">Open the repo README</a>
-            <a class="learn-callout-link secondary" href="podcast.html">🎧 Pre-conference Deep Dive</a>
+
           </div>
         </div>
       </section>
