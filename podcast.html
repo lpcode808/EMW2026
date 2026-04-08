@@ -207,6 +207,46 @@
       text-decoration: none;
     }
 
+    /* ── TLDR PANEL ── */
+    .tldr-panel {
+      background: linear-gradient(135deg, rgba(7, 168, 168, 0.10), rgba(0, 32, 64, 0.60));
+      border: 1px solid rgba(7, 168, 168, 0.22);
+    }
+
+    .tldr-panel h2 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin: 0 0 0.75rem;
+    }
+
+    .tldr-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .tldr-list li {
+      display: flex;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .tldr-list li::before {
+      content: "→";
+      color: var(--teal);
+      flex-shrink: 0;
+      font-weight: 700;
+      margin-top: 0.02em;
+    }
+
     @media (min-width: 760px) {
       .page { padding-top: 1.4rem; }
       .panel { padding: 1.4rem; }
@@ -241,6 +281,18 @@
           style="border-radius: 12px;"
         ></iframe>
       </div>
+    </section>
+
+    <section class="panel tldr-panel">
+      <h2>TL;DR — Your Thursday Action Plan</h2>
+      <ul class="tldr-list">
+        <li>Ask every startup pitch three questions: What painful problem does it solve? Who is the actual paying customer? Why can it scale globally?</li>
+        <li>Watch the investors in the room, not just the slides — their body language tells you what the founder's graphics are hiding.</li>
+        <li>Your superpower is being a student with nothing to sell. People's defenses drop instantly, giving you access no adult in the room has.</li>
+        <li>Don't ask speakers what their company does — you can Google that. Ask: "What did you believe at my age that turned out to be completely wrong?"</li>
+        <li>Collect emails in every conversation and follow up within 24 hours. The students who say hello are the ones people remember.</li>
+        <li>The big question hanging over the whole room: can Hawaii be a real global innovation hub, or just a beautiful place to import tech? Watch for evidence either way.</li>
+      </ul>
     </section>
 
     <section class="panel transcript-panel">
