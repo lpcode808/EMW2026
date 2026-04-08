@@ -241,18 +241,41 @@
     }
     .episode-banner.open .episode-toggle-chevron { transform: rotate(180deg); }
 
+    .episode-banner.open {
+      box-shadow: 0 0 0 2px rgba(200, 83, 29, 0.35), 0 8px 32px rgba(200, 83, 29, 0.22);
+      border-bottom-color: rgba(200, 83, 29, 0.55);
+    }
+
     .episode-body {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .episode-banner.open .episode-body { max-height: 200px; }
+    .episode-banner.open .episode-body { max-height: 280px; }
 
     .episode-body-inner { padding: 0 1rem 1rem; }
     .episode-body-inner iframe {
       display: block;
       border-radius: var(--radius-sm);
       width: 100%;
+    }
+
+    .episode-transcript-link {
+      display: inline-block;
+      margin-top: 0.65rem;
+      padding: 0.45rem 1rem;
+      border-radius: 2rem;
+      background: rgba(200, 83, 29, 0.18);
+      border: 1px solid rgba(200, 83, 29, 0.4);
+      color: #f0b283;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .episode-transcript-link:hover {
+      background: rgba(200, 83, 29, 0.28);
+      border-color: rgba(200, 83, 29, 0.65);
     }
 
     /* ── TAB PANELS ── */
@@ -487,65 +510,6 @@
     .learn-callout.collapsed .learn-callout-toggle-icon {
       font-size: 0.72rem;
       line-height: 1;
-    }
-
-    /* ── PODCAST CALLOUT ── */
-    .podcast-callout {
-      margin: 0 0.75rem 0.9rem;
-      padding: 0.7rem 1rem;
-      border-radius: var(--radius);
-      background:
-        linear-gradient(135deg, rgba(200, 83, 29, 0.14), rgba(0, 53, 113, 0.38)),
-        var(--surface);
-      border: 1px solid rgba(200, 83, 29, 0.25);
-    }
-
-    .podcast-callout-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .podcast-callout-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .podcast-callout-text .learn-callout-label {
-      color: #f0b283;
-      margin-bottom: 0.25rem;
-    }
-
-    .podcast-callout-text .learn-callout-title {
-      font-size: 0.92rem;
-      margin-bottom: 0;
-    }
-
-    .podcast-callout-body {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin-top 0.25s ease;
-    }
-
-    .podcast-callout.expanded .podcast-callout-body {
-      max-height: 600px;
-      opacity: 1;
-      margin-top: 0.65rem;
-    }
-
-    .podcast-callout .learn-callout-toggle-icon {
-      transform: rotate(0deg);
-    }
-
-    .podcast-callout.expanded .learn-callout-toggle-icon {
-      transform: rotate(180deg);
-    }
-
-    .podcast-player-wrap {
-      margin-top: 0.75rem;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
     }
 
     /* ── SESSION ITEM ── */
@@ -2170,6 +2134,7 @@
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
         ></iframe>
+        <a class="episode-transcript-link" href="podcast.html">📄 Read the full transcript + TL;DR →</a>
       </div>
     </div>
   </div>
@@ -2205,41 +2170,6 @@
           <div class="learn-callout-links">
             <a class="learn-callout-link primary" href="code-guide.html">Open the code walkthrough</a>
             <a class="learn-callout-link secondary" href="https://github.com/lpcode808/EMW2026/blob/main/README.md" target="_blank" rel="noopener">Open the repo README</a>
-          </div>
-        </div>
-      </section>
-      <section class="podcast-callout" id="podcastCallout" aria-label="Pre-conference deep dive audio">
-        <div class="podcast-callout-row">
-          <div class="podcast-callout-text">
-            <span class="learn-callout-label">🎧 Deep Dive</span>
-            <h2 class="learn-callout-title">Pre-Conference Audio Briefing</h2>
-          </div>
-          <button
-            class="learn-callout-toggle"
-            id="podcastCalloutToggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="podcastCalloutBody"
-            aria-label="Expand podcast player"
-          >
-            <span class="learn-callout-toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
-        <div class="podcast-callout-body" id="podcastCalloutBody">
-          <p class="learn-callout-copy">
-            Listen to a student-focused walkthrough of what to expect on the conference floor, how to decode startup pitches, and how to make the most of every conversation.
-          </p>
-          <div class="podcast-player-wrap">
-            <iframe
-              src="https://open.spotify.com/embed/episode/2Ums5eA8FVWqrvdr3tw9qw?utm_source=generator&theme=0"
-              height="152"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-              style="border-radius: 12px; width: 100%; border: none;"
-            ></iframe>
-          </div>
-          <div class="learn-callout-links">
-            <a class="learn-callout-link primary" href="podcast.html">Read the full transcript</a>
           </div>
         </div>
       </section>
@@ -4740,21 +4670,6 @@
     learnCalloutToggle.addEventListener('click', () => {
       markLearnCalloutTouched();
       setLearnCalloutCollapsed(!learnCallout.classList.contains('collapsed'));
-    });
-  }
-
-  // ──────────────────────────────────────────────────────────
-  //  PODCAST CALLOUT
-  // ──────────────────────────────────────────────────────────
-  const podcastCallout = document.getElementById('podcastCallout');
-  const podcastToggle = document.getElementById('podcastCalloutToggle');
-
-  if (podcastCallout && podcastToggle) {
-    podcastToggle.addEventListener('click', () => {
-      const isExpanded = podcastCallout.classList.contains('expanded');
-      podcastCallout.classList.toggle('expanded', !isExpanded);
-      podcastToggle.setAttribute('aria-expanded', !isExpanded ? 'true' : 'false');
-      podcastToggle.setAttribute('aria-label', !isExpanded ? 'Collapse podcast player' : 'Expand podcast player');
     });
   }
 
