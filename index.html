@@ -251,9 +251,14 @@
       overflow: hidden;
       transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .episode-banner.open .episode-body { max-height: 280px; }
 
-    .episode-body-inner { padding: 0 1rem 1rem; }
+    .episode-body-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0 1rem 1rem;
+    }
     .episode-body-inner iframe {
       display: block;
       border-radius: var(--radius-sm);
@@ -261,21 +266,28 @@
     }
 
     .episode-transcript-link {
-      display: inline-block;
-      margin-top: 0.65rem;
-      padding: 0.45rem 1rem;
-      border-radius: 2rem;
-      background: rgba(200, 83, 29, 0.18);
-      border: 1px solid rgba(200, 83, 29, 0.4);
-      color: #f0b283;
-      font-size: 0.8rem;
-      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.68rem 1rem;
+      border-radius: 999px;
+      background: var(--orange);
+      border: 1px solid rgba(200, 83, 29, 0.95);
+      box-shadow: 0 10px 24px rgba(200, 83, 29, 0.26);
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1;
       text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
+      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
     }
     .episode-transcript-link:hover {
-      background: rgba(200, 83, 29, 0.28);
-      border-color: rgba(200, 83, 29, 0.65);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(200, 83, 29, 0.34);
+      filter: brightness(1.05);
     }
 
     /* ── TAB PANELS ── */
@@ -3878,6 +3890,13 @@
   //  TOAST
   // ──────────────────────────────────────────────────────────
   let toastTimer;
+  function syncEpisodeBannerHeight() {
+    const banner = document.getElementById('episodeBanner');
+    const body = document.getElementById('episodeBody');
+    if (!banner || !body) return;
+    body.style.maxHeight = banner.classList.contains('open') ? `${body.scrollHeight}px` : '0px';
+  }
+
   function toggleEpisodeBanner() {
     const banner = document.getElementById('episodeBanner');
     const body = document.getElementById('episodeBody');
@@ -3891,9 +3910,17 @@
       if (iframe) {
         iframe.src = iframe.dataset.src;
         iframe.removeAttribute('data-src');
+        iframe.addEventListener('load', syncEpisodeBannerHeight, { once: true });
       }
     }
+    requestAnimationFrame(syncEpisodeBannerHeight);
   }
+
+  const episodeBodyInner = document.querySelector('#episodeBody .episode-body-inner');
+  if (window.ResizeObserver && episodeBodyInner) {
+    new ResizeObserver(syncEpisodeBannerHeight).observe(episodeBodyInner);
+  }
+  window.addEventListener('resize', syncEpisodeBannerHeight);
 
   function showToast(msg) {
     const el = document.getElementById('toast');
