@@ -3,6 +3,7 @@
 import { execFileSync } from "node:child_process";
 
 const BASE_URL = process.env.BASE_URL || "http://127.0.0.1:8765/index.html";
+const PODCAST_URL = process.env.PODCAST_URL || new URL("podcast.html", BASE_URL).toString();
 const CDP_BASE = process.env.CDP_BASE || "http://127.0.0.1:9222";
 
 function sleep(ms) {
@@ -162,14 +163,32 @@ async function main() {
       if (typeof activateTab === "function") activateTab("schedule");
       await sleep(120);
 
+      const swText = await fetch("sw.js").then(response => response.text());
+      assert(swText.includes("./podcast.html"), "Service worker precache is missing podcast.html");
+
       const sessionItems = document.querySelectorAll(".session-item");
-      assert(sessionItems.length === 23, "Expected 23 schedule items", String(sessionItems.length));
+      assert(sessionItems.length === SCHEDULE.length, "Rendered schedule item count drifted from SCHEDULE", sessionItems.length + " vs " + SCHEDULE.length);
       assert(document.documentElement.scrollWidth <= window.innerWidth + 2, "Detected horizontal overflow on mobile viewport", document.documentElement.scrollWidth + " > " + window.innerWidth);
       const touchTargets = [
         minTouchTarget(".header-link"),
         minTouchTarget(".learn-callout-link.primary"),
         minTouchTarget('.tab-btn[data-tab="notes"]')
       ];
+
+      const originalDateNow = Date.now;
+      Date.now = () => Date.UTC(2026, 3, 8, 18, 0);
+      if (typeof updateYouAreHere === "function") updateYouAreHere();
+      await sleep(60);
+      assert(document.querySelectorAll(".status-now-badge, .status-upcoming-badge").length === 0, "Live timing badges should stay hidden outside conference day");
+
+      Date.now = () => Date.UTC(2026, 3, 9, 17, 40);
+      if (typeof updateYouAreHere === "function") updateYouAreHere();
+      await sleep(60);
+      assert(document.querySelector("#item-thu-02 .status-now-badge"), "Conference-day timing did not mark the live session");
+
+      Date.now = originalDateNow;
+      if (typeof updateYouAreHere === "function") updateYouAreHere();
+      await sleep(60);
 
       const firstTrigger = document.querySelector('.session-trigger[data-id="thu-04"]');
       assert(firstTrigger, "Could not find the welcome session trigger");
@@ -199,11 +218,18 @@ async function main() {
       assert(vcTrigger, "Could not find the VC meetings trigger");
       vcTrigger.click();
       await sleep(80);
+      const vcSpeakerMeta = document.querySelector("#body-thu-14 .meta-speaker-list");
+      assert(vcSpeakerMeta, "Missing VC speaker metadata");
+      assert(!vcSpeakerMeta.textContent.includes("+"), "VC speaker metadata should list the full roster", vcSpeakerMeta.textContent);
       const subItemsToggle = document.querySelector('.sub-items-toggle[data-id="thu-14"]');
       assert(subItemsToggle, "Missing sub-items toggle on VC session");
       subItemsToggle.click();
       await sleep(80);
       assert(subItemsToggle.getAttribute("aria-expanded") === "true", "VC participant list did not open");
+      const vcTables = [...document.querySelectorAll("#subitems-thu-14 .sub-item")].map((item) => item.textContent.trim());
+      assert(vcTables.length === 15, "VC table list should show 15 published tables", vcTables.join(" | "));
+      assert(vcTables.some(text => text.includes("Table 1") && text.includes("Andrew Ogawa")), "VC table list missing Table 1 roster entry", vcTables.join(" | "));
+      assert(vcTables.some(text => text.includes("Table 15") && text.includes("Bill Reichert")), "VC table list missing Table 15 roster entry", vcTables.join(" | "));
 
       const sessionNoteToggle = document.querySelector('.note-toggle[data-note-type="session"][data-note-id="thu-04"]');
       assert(sessionNoteToggle, "Missing session note toggle");
@@ -381,6 +407,34 @@ async function main() {
     })();
   `);
 
+  client.loadEventFired = false;
+  await client.send("Page.navigate", { url: `${PODCAST_URL}?smoke=${Date.now()}` });
+  for (let i = 0; i < 50 && !client.loadEventFired; i += 1) {
+    await sleep(100);
+  }
+  await sleep(250);
+
+  const podcastResults = await client.evaluate(`
+    (() => {
+      const assert = (condition, message, extra = null) => {
+        if (!condition) {
+          throw new Error(extra ? message + " :: " + extra : message);
+        }
+      };
+
+      const heading = document.querySelector(".hero h1");
+      assert(heading, "Podcast page hero heading is missing");
+      assert(heading.textContent.includes("Strategic Playbook for Thursday, April 9"), "Podcast page hero title drifted", heading.textContent);
+      assert(document.body.textContent.includes("Thursday Action Plan"), "Podcast page TL;DR block is missing");
+      assert(document.documentElement.scrollWidth <= window.innerWidth + 2, "Podcast page has horizontal overflow on mobile viewport", document.documentElement.scrollWidth + " > " + window.innerWidth);
+
+      return {
+        heading: heading.textContent.trim(),
+        hasThursdayPlan: document.body.textContent.includes("Thursday Action Plan"),
+      };
+    })();
+  `);
+
   await sleep(150);
   const consoleIssues = client.consoleMessages
     .filter(entry => ["error", "warning", "assert"].includes(entry.type))
@@ -394,6 +448,7 @@ async function main() {
     ok: true,
     baseUrl: BASE_URL,
     results,
+    podcastResults,
     issues: {
       console: consoleIssues,
       runtime: runtimeIssues,

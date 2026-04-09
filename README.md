@@ -21,7 +21,7 @@ Tap sessions for details and student-friendly summaries, take timestamped notes,
 | `favicon.svg` | Conference-inspired SVG favicon (teal + orange) |
 | `scripts/chrome-mobile-smoke.mjs` | Headless smoke test for student flows in a phone viewport |
 | `CLAUDE.md` | Architecture reference for AI agents and future developers |
-| `SPEAKER_BIOS_PLAN.md` | Draft bios + curated links for all 27 Thursday speakers (pending teacher review) |
+| `SPEAKER_BIOS_PLAN.md` | Draft bios + curated links for Thursday speakers; the original plan targeted 27 on-stage speakers and the current guide now surfaces 38 total entries after adding the published VC 1-on-1 roster |
 
 ---
 
@@ -29,11 +29,11 @@ Tap sessions for details and student-friendly summaries, take timestamped notes,
 
 | Feature | Details |
 |---|---|
-| **Schedule tab** | 23 Thursday sessions, tap-to-expand accordion rows |
-| **NOW / Up Next** | Pulsing teal **NOW** badge on the live session, lime **Up Next** on the next — updates every minute against HST |
+| **Schedule tab** | 24 Thursday schedule items, including the all-day Exhibitors Hall row and the session-by-session accordion flow |
+| **NOW / Up Next** | Pulsing teal **NOW** badge on the live session, lime **Up Next** on the next — updates every minute against HST during the Thursday event window |
 | **Student Summaries** | Plain-language session recaps inside each accordion, reviewed and rewritten for the student audience |
 | **Speaker jumps** | Tap a speaker name inside an expanded session to jump to their profile in the Speakers tab |
-| **Speakers tab** | 27 Thursday presenters — alphabetical, searchable by name/role/company, expandable cards |
+| **Speakers tab** | 38 Thursday speaker entries — on-stage Thursday speakers plus the published VC 1-on-1 roster, all alphabetical, searchable by name/role/company, and expandable |
 | **Star speakers** | Swipe left to star on mobile; tap-to-star button also in expanded card; pull starred speakers to top or clear them |
 | **g.ai research** | One-tap Google AI Mode search pre-filled with speaker name + title |
 | **All speaker names** | Session previews show every presenter instead of truncating with "+ N more" |
@@ -42,7 +42,7 @@ Tap sessions for details and student-friendly summaries, take timestamped notes,
 | **Collapsed notes view** | Compact single-line display for long note lists; tap to expand |
 | **Export / Clear** | Copy all notes as plain text; confirmation-guarded Clear All button |
 | **Code Guide** | Linked explainer page with beginner and "done a little coding" audience modes, a view/tinker intent toggle, and a Schedule-tab callout that collapses after first load |
-| **Offline support** | Service worker pre-caches the app on first visit so it loads at the venue without WiFi |
+| **Offline support** | Service worker pre-caches the guide, transcript, and code walkthrough on first visit so they load at the venue without WiFi |
 | **Social meta** | Open Graph and Twitter Card tags for clean link previews when sharing the URL |
 | **Dark mode** | HSG-Branding design system — navy/teal/orange/lime color tokens |
 | **No install** | Single HTML file, runs in any mobile browser, no app store required |
@@ -78,7 +78,7 @@ Three quick questions clarified the rest before any code was written:
 
 The initial `index.html` came out in one pass:
 - Dark-mode HSG-Branding design tokens applied throughout
-- 23 Thursday sessions with descriptions and student-friendly summaries
+- 23 Thursday sessions plus the all-day Exhibitors Hall row, all with student-friendly summaries
 - Accordion interactions (session → student summary → note)
 - Notes tab with `localStorage` persistence and plain-text export
 - Single self-contained file, zero dependencies, no build step
@@ -87,7 +87,7 @@ The initial `index.html` came out in one pass:
 
 After seeing the schedule the teacher asked: *"How would a speakers list look since I think you have access to that data?"*
 
-That added a third tab with 27 Thursday speakers, live search, initials avatars, and session chips that jump to the relevant accordion.
+That added a third tab with an initial 27 Thursday speakers, live search, initials avatars, and session chips that jump to the relevant accordion.
 
 ### 5. Deeper Notes Model
 
@@ -138,7 +138,7 @@ A starring system was added with swipe-to-star on mobile (swipe left on any spea
 
 ### 11. Content + Offline
 
-A content review pass went through all 23 sessions and corrected two summaries with misleading framing. Research annotations with learn-more links were added to several sessions.
+A content review pass went through the then-current Thursday agenda and corrected two summaries with misleading framing. Research annotations with learn-more links were added to several sessions.
 
 `sw.js` added offline support via a stale-while-revalidate service worker — the app now loads at the venue even without WiFi. The Notes tab also gained a search input that filters all saved notes by text, session title, or speaker name entirely in memory (no backend needed).
 
@@ -151,7 +151,7 @@ The last round of improvements addressed what students would feel most directly 
 - **"Curious how this app works?" button** — Fixed to toggle the code-guide callout panel in place rather than navigating away.
 - **Social sharing meta** — Open Graph + Twitter Card tags for clean previews when the app URL gets shared.
 - **Hawai'i School attribution** — The app now surfaces the school's [TechZone](https://www.lapietra.edu/academics/techzone) link for context.
-- **Enhanced summaries** — All 23 session summaries and research sections reviewed and rewritten once more with updated context.
+- **Enhanced summaries** — All Thursday session summaries and research sections were reviewed and rewritten once more with updated context.
 
 ---
 
@@ -186,7 +186,7 @@ See [`CLAUDE.md`](./CLAUDE.md) for the full architecture reference: data schemas
 
 ### Service Worker Cache
 
-After editing any cached file (`index.html`, `code-guide.html`, `favicon.svg`), bump `CACHE_NAME` in `sw.js` (e.g. `emw2026-v3` → `emw2026-v4`). Without this bump, returning visitors may see stale content until the background revalidate completes.
+After editing any cached file (`index.html`, `podcast.html`, `code-guide.html`, `favicon.svg`), bump `CACHE_NAME` in `sw.js` (e.g. `emw2026-v3` → `emw2026-v4`). Without this bump, returning visitors may see stale content until the background revalidate completes.
 
 ### Mobile Smoke Test
 
@@ -216,7 +216,7 @@ node scripts/chrome-mobile-smoke.mjs
 ### Deploy
 
 ```bash
-# If you changed index.html, code-guide.html, or favicon.svg — bump CACHE_NAME in sw.js first!
+# If you changed index.html, podcast.html, code-guide.html, or favicon.svg — bump CACHE_NAME in sw.js first!
 git add index.html sw.js   # or whichever files changed
 git commit -m "describe your change"
 git push
