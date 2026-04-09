@@ -32,8 +32,8 @@ Dark mode adaptation of HSG-Branding (`~/Coding/HSG-Branding/`). CSS custom prop
 Accordion animation uses `max-height` transitions with `cubic-bezier(0.16, 1, 0.3, 1)`. Tap targets are minimum 44px throughout.
 
 ## Three Tabs
-1. **Schedule** — 23 sessions, accordion rows. Each expands to: meta (speaker/location/time), description, Student Summary sub-toggle, session note inline, external link.
-2. **Speakers** — 28 Thursday presenters, alphabetical, searchable. Tap → shows company + session chips + a `g.ai` research link + a person-note field. Speaker rows support quick **swipe-left to toggle a star** on mobile, with a tap fallback button in expanded details plus top-of-list controls to pull starred people up top or clear them with confirmation. Tapping a session chip jumps to Schedule tab and opens that accordion.
+1. **Schedule** — 24 Thursday schedule items, including the all-day Exhibitors Hall row plus the accordion session flow. Each expands to: meta (speaker/location/time), description, Student Summary sub-toggle, session note inline, external link.
+2. **Speakers** — 38 Thursday speaker entries, including the published VC 1-on-1 roster, alphabetical and searchable. Tap → shows company + session chips + a `g.ai` research link + a person-note field. Speaker rows support quick **swipe-left to toggle a star** on mobile, with a tap fallback button in expanded details plus top-of-list controls to pull starred people up top or clear them with confirmation. Tapping a session chip jumps to Schedule tab and opens that accordion.
 3. **Notes** — quick-note composer for unlinked notes, saved session/person notes, export modal, clipboard button.
 
 ## Data Structure
@@ -92,7 +92,7 @@ Notes are stored as typed objects keyed by context:
 
 - `session:<sessionId>` for inline session notes
 - `speaker:<speakerId>` for notes attached to a speaker profile
-- `general:quick-note` for the unlinked quick note in the Notes tab
+- `general:quick-note-<timestamp>` for unlinked quick notes created from the Notes-tab composer
 
 Each note stores:
 
@@ -112,25 +112,23 @@ Each note stores:
 Speaker stars are stored separately in `localStorage` key `emw2026_starred_speakers` as a simple array of speaker IDs.
 
 ## Things to improve / add
-- **Student summaries**: All sessions have placeholder summaries written by the agent. Teacher should review and rewrite with class context before April 9.
-- **"You are here" indicator**: Could highlight the current/next session based on `new Date()` — compare `time` strings against current HST time.
+- **Event-day data spot check**: Compare the local Thursday speaker/session list against the official EMW 2026 site before shipping any new content changes, especially for closing-panel names and VC meeting participants.
 - **Bookmark/star sessions**: Could add a ⭐ toggle per session stored in localStorage alongside notes.
 - **Speaker photos**: Could add a `photo` field to SPEAKERS and render `<img>` in the avatar circle instead of initials.
-- **Share notes**: Instead of clipboard export, could generate a mailto: link or use Web Share API (`navigator.share()`).
-- **Offline support**: A service worker would make this work without internet at the venue — one script block, no dependencies needed.
+- **Share notes**: Clipboard export is live; a future pass could add `navigator.share()` on supported mobile browsers.
 - **Filter by type**: A row of badge-type filter pills above the schedule list (e.g., tap "Keynote" to show only keynotes).
 
 ## Source PDFs
 Original conference data came from two PDFs placed in `~/Coding/HSG-Branding/` at build time. Schedule covers Thursday April 9 only — the group is not attending Wednesday April 8 (Summit at Koʻolau Ballrooms).
 
 ## Offline / Service Worker
-`sw.js` provides offline support via a stale-while-revalidate cache. It pre-caches `index.html`, `code-guide.html`, and `favicon.svg` on first visit so the app works without WiFi.
+`sw.js` provides offline support via a stale-while-revalidate cache. It pre-caches `index.html`, `podcast.html`, `code-guide.html`, and `favicon.svg` on first visit so the app works without WiFi.
 
 **Important:** After changing any cached file, bump the `CACHE_NAME` version in `sw.js` (e.g. `emw2026-v1` → `emw2026-v2`). Without this, returning visitors may see stale content until the background revalidate completes on their next visit. The old cache is automatically cleaned up when the new version activates.
 
 ## Deploy
 ```bash
-# If you changed index.html or code-guide.html, bump CACHE_NAME in sw.js first!
+# If you changed index.html, podcast.html, code-guide.html, or favicon.svg, bump CACHE_NAME in sw.js first!
 git add index.html sw.js
 git commit -m "your message"
 git push
